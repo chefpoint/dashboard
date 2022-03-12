@@ -1,16 +1,5 @@
-import Link from 'next/link';
+import Sidebar from '../components/dashboard/sidebar/container/Sidebar';
 
-export default function Kiosk() {
-  return (
-    <div>
-      <Link href='/pos'>
-        <a>Point of Sale</a>
-      </Link>
-      <br />
-      <br />
-      <Link href='/dashboard'>
-        <a>Dashboard</a>
-      </Link>
-    </div>
-  );
+export default function Dashboard() {
+  return <Sidebar>Home</Sidebar>;
 }

@@ -1,0 +1,21 @@
+.orderTotal {
+  font-size: 60px;
+  color: var(--theme-fill);
+  font-weight: var(--font-bold);
+  margin: 0 -15px;
+  padding: 30px;
+  padding-top: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 2px solid var(--gray-medium);
+}
+
+.paymentOptionsContainer {
+  display: grid;
+  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-rows: 180px;
+  min-width: 750px;
+  margin: 15px 0;
+}

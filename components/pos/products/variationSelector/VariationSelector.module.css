@@ -1,0 +1,79 @@
+.variationGrid {
+  display: grid;
+  place-items: stretch;
+  place-content: stretch;
+  grid-template-columns: repeat(2, minmax(130px, 1fr));
+  gap: 15px;
+  /* margin: 15px 0; */
+}
+
+.image {
+  height: 70%;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.label {
+  height: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 300px;
+  min-width: 600px;
+  gap: 30px;
+}
+
+.qtyContainer {
+  width: 100%;
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+  overflow: hidden;
+  background-color: var(--white);
+  border: 2px solid var(--gray-medium);
+  border-radius: var(--radius-medium);
+  font-weight: var(--font-bold);
+  font-size: 20px;
+}
+
+.qtyMinus,
+.qtyPlus {
+  width: 80px;
+  aspect-ratio: 1;
+  background-color: var(--gray-light);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.qtyMinus:active,
+.qtyPlus:active {
+  background-color: var(--theme-fill);
+  border-color: var(--theme-border);
+  color: var(--white);
+}
+
+.qtyDisplay {
+  width: 100%;
+  border-left: 2px solid var(--gray-medium);
+  border-right: 2px solid var(--gray-medium);
+  color: var(--gray-strong);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttonsContainer {
+  display: grid;
+  width: 100%;
+  grid-template-columns: minmax(100px, 70%) minmax(100px, 30%);
+  gap: 15px;
+}

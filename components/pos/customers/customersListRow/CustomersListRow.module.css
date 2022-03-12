@@ -1,0 +1,71 @@
+.customerRow {
+  border: 2px solid var(--gray-medium);
+  border-radius: var(--radius-medium);
+  background-color: var(--gray-light);
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+  align-items: stretch;
+}
+
+.selected {
+  background-color: var(--theme-fill);
+  border-color: var(--theme-border);
+  box-shadow: var(--effect-shadow-pronounced);
+}
+
+.customerDetailsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 15px;
+  width: 100%;
+}
+
+.name {
+  font-size: 20px;
+  font-weight: var(--font-bold);
+  color: var(--black);
+}
+
+.selected .name {
+  color: var(--white);
+}
+
+.additionalInfoContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  overflow: hidden;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.additionalInfo {
+  font-size: 12px;
+  font-weight: var(--font-medium);
+  color: var(--gray-strong);
+  text-transform: uppercase;
+}
+
+.selected .additionalInfo {
+  color: var(--white);
+  opacity: 0.8;
+}
+
+.viewCustomerButton {
+  height: 100%;
+  aspect-ratio: var(--aspect-square);
+  border-left: 2px solid var(--gray-medium);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 60px;
+  color: var(--gray-strong);
+}
+
+.selected .viewCustomerButton {
+  border-color: var(--theme-border);
+  color: var(--white);
+}

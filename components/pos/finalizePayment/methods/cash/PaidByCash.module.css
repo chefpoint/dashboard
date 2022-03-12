@@ -1,0 +1,42 @@
+.player {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 200px;
+  overflow: hidden;
+}
+
+.container {
+  margin: 0 -15px;
+  padding: 30px;
+  padding-top: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 15px;
+  align-items: center;
+  min-width: 400px;
+}
+
+.orderTotal {
+  font-size: 60px;
+  color: var(--status-warning-fill);
+  font-weight: var(--font-bold);
+}
+
+.paymentMethod {
+  font-size: 15px;
+  text-transform: uppercase;
+  color: var(--status-warning-fill);
+  font-weight: var(--font-medium);
+}
+
+.paymentOptionsContainer {
+  display: grid;
+  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-rows: 180px;
+  min-width: 750px;
+  margin: 15px 0;
+}

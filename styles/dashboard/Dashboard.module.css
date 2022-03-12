@@ -1,0 +1,24 @@
+.container {
+  background-color: var(--white);
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
+.leftSide {
+  width: 70%;
+  height: 100%;
+  float: left;
+  padding-right: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: stretch;
+}
+
+.rightSide {
+  width: 30%;
+  height: 100%;
+  float: right;
+}

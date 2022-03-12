@@ -1,0 +1,11 @@
+.variationsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border: 1px solid black;
+}
+
+.variationGroup {
+  padding: 15px;
+  border-bottom: 1px solid black;
+}

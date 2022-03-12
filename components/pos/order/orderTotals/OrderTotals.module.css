@@ -1,0 +1,37 @@
+.container {
+  padding: 12px;
+}
+
+.innerContainer {
+  border-top: 1px solid var(--gray-medium);
+  padding: 10px 0;
+}
+
+.row {
+  padding: 3px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.row p {
+  font-weight: var(--font-bold);
+  text-transform: uppercase;
+  color: var(--gray-dark);
+}
+
+.subtotalLabel,
+.discountsLabel {
+  font-size: 12px;
+}
+
+.subtotalValue,
+.discountsValue {
+  font-size: 15px;
+}
+
+.active .discountsLabel,
+.active .discountsValue {
+  color: var(--theme-fill);
+}

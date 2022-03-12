@@ -1,0 +1,47 @@
+.emptySlot,
+.container {
+  /* aspect-ratio: 6/5; */
+  width: 100%;
+}
+
+.emptySlot {
+  /* background-color: var(--gray-light); */
+  background-color: var(--gray-superlight);
+  border-radius: 3px;
+}
+
+.container {
+  background-color: var(--white);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius-small);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 100ms ease;
+}
+
+.container:active {
+  transform: scale(1.05);
+  opacity: 0.6;
+}
+
+.image {
+  position: relative;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: var(--font-bold);
+  text-transform: uppercase;
+  text-align: center;
+  padding: 15px 5px;
+  line-height: 0;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-top: 1px solid var(--gray-light);
+}

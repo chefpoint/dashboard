@@ -1,0 +1,54 @@
+.formContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputsContainer {
+  display: grid;
+  gap: 0;
+  grid-template-columns: 150px 500px;
+  margin-bottom: 15px;
+}
+
+.inputsContainer input {
+  padding: 15px;
+  padding-left: 30px;
+  font-size: 50px;
+  font-weight: var(--font-bold);
+  background-color: var(--gray-light);
+  border: 2px solid var(--gray-medium);
+  outline: none;
+  text-align: center;
+  letter-spacing: 15px;
+  text-transform: uppercase;
+  border-spacing: 0;
+  margin: 0;
+}
+
+.inputsContainer input:focus::placeholder {
+  color: transparent;
+}
+
+.nifRegion {
+  border-radius: var(--radius-small) 0 0 var(--radius-small);
+}
+
+.nifRegion::placeholder {
+  color: black;
+}
+
+.nifNumber {
+  border-radius: 0 var(--radius-small) var(--radius-small) 0;
+  border-left-width: 0 !important;
+}
+
+.nifNumber::placeholder {
+  color: var(--gray-medium);
+}
+
+.buttonsContainer {
+  display: grid;
+  width: 100%;
+  grid-template-columns: minmax(100px, 70%) minmax(100px, 30%);
+  gap: 15px;
+}

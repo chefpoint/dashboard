@@ -1,0 +1,86 @@
+.container {
+  display: grid;
+  grid-template-columns: 100%;
+  gap: 15px;
+}
+
+.keyboardContainer {
+  display: grid;
+  place-items: stretch;
+  place-content: stretch;
+  grid-template-columns: repeat(4, 80px);
+  grid-template-rows: repeat(3, 80px);
+  gap: 15px;
+}
+
+.inputBackground {
+  width: 100%;
+  background-color: var(--gray-light);
+  border: 2px solid var(--gray-medium);
+  border-radius: var(--radius-medium);
+  padding: 30px;
+}
+
+.isError {
+  background-color: var(--status-danger-fill);
+  border-color: var(--status-danger-border);
+  color: var(--white);
+}
+
+.inputContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
+.inputSlot {
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+}
+
+.unfilled {
+  border: 2px solid var(--gray-strong);
+}
+
+.filled {
+  background-color: var(--theme-fill);
+  border: 2px solid var(--theme-border);
+}
+
+.isError .unfilled {
+  border: 2px solid var(--status-danger-border);
+}
+.isError .filled {
+  background-color: var(--status-danger-border);
+  border: 2px solid var(--status-danger-border);
+}
+
+.keyboardKey,
+.keyboardKeyDelete {
+  background-color: var(--gray-light);
+  border: 2px solid var(--gray-medium);
+  color: var(--gray-strong);
+  border-radius: var(--radius-medium);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  font-weight: var(--font-bold);
+}
+
+.keyboardKey:active,
+.keyboardKeyDelete:active {
+  background-color: var(--theme-fill);
+  border: 2px solid var(--theme-border);
+  color: var(--white);
+  box-shadow: var(--effect-shadow);
+}
+
+.keyboardKeyDelete {
+  font-size: 50px;
+}

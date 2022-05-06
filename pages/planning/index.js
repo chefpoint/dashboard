@@ -10,9 +10,9 @@ export default function DashboardLayouts() {
   const { data: layouts } = useSWR('/api/layouts/*');
 
   return (
-    <Sidebar title={'Layouts'}>
+    <Sidebar title={'Planeamento'}>
       <div className={styles.toolbar}>
-        <IconButton icon={'plus'} label={'New Layout'} href={'/dashboard/layouts/new'} />
+        <IconButton icon={'plus'} label={'Adicionar Dia'} href={'/planning/new'} />
       </div>
       <div className={styles.layoutList}>{layouts ? layouts.map((layout) => <LayoutListItem key={layout._id} layout={layout} />) : <Loading />}</div>
     </Sidebar>

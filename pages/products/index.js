@@ -1,9 +1,9 @@
-import styles from '../../../styles/dashboard/DashboardProducts.module.css';
-import Sidebar from '../../../components/dashboard/sidebar/container/Sidebar';
+import styles from '../../styles/dashboard/DashboardProducts.module.css';
+import Sidebar from '../../components/dashboard/sidebar/container/Sidebar';
 import useSWR from 'swr';
-import ProductListItem from '../../../components/dashboard/products/productListItem/ProductListItem';
-import Loading from '../../../components/common/loading/Loading';
-import IconButton from '../../../components/common/iconButton/IconButton';
+import ProductListItem from '../../components/dashboard/products/productListItem/ProductListItem';
+import Loading from '../../components/common/loading/Loading';
+import IconButton from '../../components/common/iconButton/IconButton';
 
 export default function DashboardProducts() {
   //

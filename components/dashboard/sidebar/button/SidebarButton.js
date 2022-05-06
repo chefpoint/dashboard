@@ -4,17 +4,26 @@ import Icon from '../../../common/icon/Icon';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-export default function SidebarButton({ icon, title, destination, active }) {
+export default function SidebarButton({ icon, title, destination }) {
+  //
+
   const router = useRouter();
 
-  const href = '/dashboard' + destination;
+  // Is current button selected
+
+  let isActive;
+  if (destination == '/' && router.asPath == '/') {
+    isActive = true;
+  } else if (router.asPath != '/' && destination != '/') {
+    isActive = router.asPath.includes(destination);
+  }
 
   return (
-    <Link href={href}>
+    <Link href={destination}>
       <a
         className={cn({
           [styles.button]: true,
-          [styles.active]: router.asPath.includes(title.toLowerCase()),
+          [styles.active]: isActive,
         })}
       >
         <Icon name={icon} />

@@ -1,10 +1,10 @@
-import styles from '../../../styles/dashboard/DashboardProducts.module.css';
-import Sidebar from '../../../components/dashboard/sidebar/container/Sidebar';
+import styles from '../../styles/dashboard/DashboardProducts.module.css';
+import Sidebar from '../../components/dashboard/sidebar/container/Sidebar';
 import useSWR from 'swr';
-import Loading from '../../../components/common/loading/Loading';
+import Loading from '../../components/common/loading/Loading';
 import { useRouter } from 'next/router';
-import VariationListItem from '../../../components/dashboard/products/variationListItem/VariationListItem';
-import IconButton from '../../../components/common/iconButton/IconButton';
+import VariationListItem from '../../components/dashboard/products/variationListItem/VariationListItem';
+import IconButton from '../../components/common/iconButton/IconButton';
 
 export default function DashboardProductView() {
   //

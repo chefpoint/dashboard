@@ -21,6 +21,10 @@
   z-index: 999;
 }
 
+.userContainer {
+  margin-bottom: 30px;
+}
+
 .buttonsContainer {
   display: grid;
   gap: 15px;

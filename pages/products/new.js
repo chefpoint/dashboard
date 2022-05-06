@@ -1,8 +1,8 @@
-import styles from '../../../styles/dashboard/DashboardProductsAdd.module.css';
-import Sidebar from '../../../components/dashboard/sidebar/container/Sidebar';
+import styles from '../../styles/dashboard/DashboardProductsAdd.module.css';
+import Sidebar from '../../components/dashboard/sidebar/container/Sidebar';
 import useSWR from 'swr';
-import Loading from '../../../components/common/loading/Loading';
-import IconButton from '../../../components/common/iconButton/IconButton';
+import Loading from '../../components/common/loading/Loading';
+import IconButton from '../../components/common/iconButton/IconButton';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 

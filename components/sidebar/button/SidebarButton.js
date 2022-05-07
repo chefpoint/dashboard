@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import styles from './SidebarButton.module.css';
-import Icon from '../../../common/icon/Icon';
+import Icon from '../../icon/Icon';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 

@@ -1,6 +1,6 @@
 import styles from './Loading.module.css';
 
-import Player from '../../../utils/Player';
+import Player from '../player/Player';
 import loadingDots from '/public/media/animations/loading-dots.json';
 
 export default function Loading() {

@@ -27,40 +27,45 @@ export default withAuth(async (req, res) => {
 
   // 2. CHECK IF TOKEN IS STILL VALID
   // Ask Apicbase API if access_token is valid
-  // If the token is still valid, send the set back to the client
-  if (currentUser.private_metadata.apicbase.access_token) {
-    const tokenIsValid = await introspect(currentUser.private_metadata.apicbase.access_token);
-    if (tokenIsValid) return res.status(200).json(currentUser.private_metadata.apicbase.access_token);
-  }
+  if (currentUser.private_metadata.apicbase) {
+    //
+    // 2.1. CHECK IF TOKEN IS STILL VALID
+    // Ask Apicbase API if access_token is valid
+    // If the token is still valid, send the set back to the client
+    if (currentUser.private_metadata.apicbase.access_token) {
+      const tokenIsValid = await introspect(currentUser.private_metadata.apicbase.access_token);
+      if (tokenIsValid) return res.status(200).json(currentUser.private_metadata.apicbase.access_token);
+    }
 
-  // 3. REFRESH THE TOKEN
-  // If the token is NOT valid, try to refresh it
-  // and send the new set back to the client
-  if (currentUser.private_metadata.apicbase.refresh_token) {
-    const newSetOfTokens = await refresh(currentUser.private_metadata.apicbase.refresh_token);
-    if (!('error' in newSetOfTokens)) {
-      await fetch('https://api.clerk.dev/v1/users/' + req.auth.userId + '/metadata', {
-        method: 'PATCH',
-        headers: {
-          Authorization: 'Bearer ' + process.env.CLERK_API_KEY,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          private_metadata: {
-            apicbase: {
-              access_token: newSetOfTokens.access_token,
-              refresh_token: newSetOfTokens.refresh_token,
-            },
+    // 2.2. REFRESH THE TOKEN
+    // If the token is NOT valid, try to refresh it
+    // and send the new set back to the client
+    if (currentUser.private_metadata.apicbase.refresh_token) {
+      const newSetOfTokens = await refresh(currentUser.private_metadata.apicbase.refresh_token);
+      if (!('error' in newSetOfTokens)) {
+        await fetch('https://api.clerk.dev/v1/users/' + req.auth.userId + '/metadata', {
+          method: 'PATCH',
+          headers: {
+            Authorization: 'Bearer ' + process.env.CLERK_API_KEY,
+            'Content-Type': 'application/json',
           },
-        }),
-      });
-      // .then(() => res.status(200).send('OK'))
-      // .catch(() => res.status(500).send('Not OK'));
-      return res.status(200).json(newSetOfTokens.access_token);
+          body: JSON.stringify({
+            private_metadata: {
+              apicbase: {
+                access_token: newSetOfTokens.access_token,
+                refresh_token: newSetOfTokens.refresh_token,
+              },
+            },
+          }),
+        });
+        // .then(() => res.status(200).send('OK'))
+        // .catch(() => res.status(500).send('Not OK'));
+        return res.status(200).json(newSetOfTokens.access_token);
+      }
     }
   }
 
-  // 4. GET A NEW PAIR OF TOKENS FROM THE ORIGINAL AUTH_CODE
+  // 3. GET A NEW PAIR OF TOKENS FROM THE ORIGINAL AUTH_CODE
   // If the token is STILL NOT valid, get a new token from the auth_code
   // that is stored in Clerk->UserId->private_metadata->apicbase_auth_code
   //   const { userId } = req.auth;
@@ -88,7 +93,7 @@ export default withAuth(async (req, res) => {
     return res.status(200).json(firstSetOfTokens.access_token);
   }
 
-  // 5. THE USER MUST REAUTHENTICATE WITH APICABSE
+  // 4. THE USER MUST REAUTHENTICATE WITH APICABSE
   // If nothing above worked, then the user must re-authenticate with Apicbase again
   // Return with 401 Unauthorized
   return res.status(401).json({ error: 'All authentication methods failed. User must reauthorize with Apicbase.' });

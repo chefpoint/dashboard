@@ -21,8 +21,8 @@ export default withAuth(async (req, res) => {
       private_metadata: {
         apicbase: {
           auth_code: req.body.apicbaseAuthCode,
-          access_token: null,
-          refresh_token: null,
+          access_token: 'null',
+          refresh_token: 'null',
         },
       },
     }),

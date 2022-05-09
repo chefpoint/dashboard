@@ -27,7 +27,7 @@ export default withAuth(async (req, res) => {
 
   // 2. CHECK IF TOKEN IS STILL VALID
   // Ask Apicbase API if access_token is valid
-  if (currentUser.private_metadata.apicbase) {
+  if (currentUser.private_metadata && currentUser.private_metadata.apicbase) {
     //
     // 2.1. CHECK IF TOKEN IS STILL VALID
     // Ask Apicbase API if access_token is valid

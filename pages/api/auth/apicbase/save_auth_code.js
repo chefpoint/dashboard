@@ -10,6 +10,8 @@ export default withAuth(async (req, res) => {
   // Retrieve userId from authenticated request
   const { userId } = req.auth;
 
+  console.log(userId);
+
   // Save the apicbaseAuthCode in Clerk's user profile
   await fetch('https://api.clerk.dev/v1/users/' + userId, {
     method: 'PATCH',

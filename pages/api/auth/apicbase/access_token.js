@@ -25,8 +25,8 @@ export default requireAuth(async (req, res) => {
       currentUser = data;
     });
 
-  // 2. CHECK IF TOKEN IS STILL VALID
-  // Ask Apicbase API if access_token is valid
+  // 2. CHECK IF USER ALREADY HAS TOKENS
+  // Check if this user's 'private_metadata' object has value
   if (currentUser.private_metadata && currentUser.private_metadata.apicbase) {
     //
     // 2.1. CHECK IF TOKEN IS STILL VALID

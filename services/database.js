@@ -9,7 +9,7 @@ import mongoose from 'mongoose';
 module.exports.connect = async function () {
   await mongoose
     .connect(process.env.MONGODB_CONNECTION_STRING)
-    // .then(() => console.log('Connected.'))
+    .then(() => console.log('Connected.'))
     .catch((error) => {
       console.log('Connection to MongoDB failed.');
       console.log('At database.js > mongoose.connect()');

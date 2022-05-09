@@ -2,7 +2,7 @@ import _ from 'lodash';
 import database from '../../../services/database';
 import Product from '../../../models/Product';
 
-export default async function products(req, res) {
+export default withAuth(async (req, res) => {
   //
   // Connect to the Database
   database.connect();
@@ -36,7 +36,7 @@ export default async function products(req, res) {
       res.status(405).end(`Method ${req.method} Not Allowed`);
       break;
   }
-}
+});
 
 /* * */
 /* REST: GET */

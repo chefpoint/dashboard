@@ -1,0 +1,65 @@
+.container {
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.container * {
+  cursor: pointer;
+}
+
+.container:hover {
+  transform: scale(1.05);
+}
+
+.recipes {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-top: 10px;
+}
+
+.date {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 10px;
+}
+
+.date .day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  font-weight: var(--font-medium);
+  font-size: 25px;
+  aspect-ratio: 1/1;
+}
+
+.today .day {
+  color: var(--theme-fill);
+  background-color: var(--gray-light);
+  border-radius: 100%;
+}
+
+.date .dateInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.today .dateInfo {
+  color: var(--theme-fill);
+}
+
+.date .dateInfo .weekday {
+  text-transform: uppercase;
+  font-weight: var(--font-medium);
+  font-size: 12px;
+}
+
+.date .dateInfo .month {
+  text-transform: uppercase;
+  font-weight: var(--font-medium);
+  font-size: 10px;
+}

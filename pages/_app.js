@@ -1,11 +1,10 @@
 import { SWRConfig } from 'swr';
-import GlobalProvider from '../services/context';
-import BrowserConfig from '../utils/BrowserConfig';
-import Refresh from '../utils/Refresh.js';
 import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/nextjs';
 import { MantineProvider } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
 import { ModalsProvider } from '@mantine/modals';
+import BrowserConfig from '../utils/BrowserConfig';
+import Refresh from '../utils/Refresh.js';
 
 // Styles
 import '../styles/globals.css';
@@ -13,7 +12,7 @@ import '../styles/icons.css';
 import '../styles/common/forms.css';
 import '../styles/variables.css';
 
-export default function Kiosk({ Component, pageProps }) {
+export default function Dashboard({ Component, pageProps }) {
   //
 
   return (
@@ -22,16 +21,14 @@ export default function Kiosk({ Component, pageProps }) {
         <MantineProvider>
           <NotificationsProvider>
             <ModalsProvider>
-              <GlobalProvider>
-                <Refresh />
-                <BrowserConfig />
-                <SignedIn>
-                  <Component {...pageProps} />
-                </SignedIn>
-                <SignedOut>
-                  <RedirectToSignIn />
-                </SignedOut>
-              </GlobalProvider>
+              <Refresh />
+              <BrowserConfig />
+              <SignedIn>
+                <Component {...pageProps} />
+              </SignedIn>
+              <SignedOut>
+                <RedirectToSignIn />
+              </SignedOut>
             </ModalsProvider>
           </NotificationsProvider>
         </MantineProvider>

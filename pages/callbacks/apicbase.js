@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import fetch from '../../services/fetch';
+import authFetch from '../../services/fetch';
 import { UserButton, useUser } from '@clerk/clerk-react';
 
 export default function AuthCallback() {
@@ -10,7 +10,7 @@ export default function AuthCallback() {
   const { user } = useUser();
 
   useEffect(() => {
-    fetch('/api/auth/apicbase/save_auth_code', {
+    authFetch('/api/auth/apicbase/save_auth_code', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ apicbaseAuthCode: query.code }),

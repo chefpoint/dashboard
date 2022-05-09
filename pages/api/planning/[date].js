@@ -1,9 +1,9 @@
-import { withAuth } from '@clerk/nextjs/api';
+import { requireAuth } from '@clerk/nextjs/api';
 import _ from 'lodash';
 import database from '../../../services/database';
 import Day from '../../../models/Day';
 
-export default withAuth(async (req, res) => {
+export default requireAuth(async (req, res) => {
   //
 
   if (!req.auth.userId) res.status(401).send('User is not authenticated.');

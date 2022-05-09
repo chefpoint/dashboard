@@ -16,7 +16,7 @@ export default function DashboardPlanning() {
   const [error, setError] = useState(false);
 
   // Date ranges
-  const [dateRangeValue, setDateRangeValue] = useState([new Date('2022-01-01'), new Date('2022-07-31')]);
+  const [dateRangeValue, setDateRangeValue] = useState(getRangeCurrentMonth());
 
   // Recipes storage
   const [veganRecipes, setVeganRecipes] = useState([]);
@@ -74,17 +74,19 @@ export default function DashboardPlanning() {
   }
 
   // SET DATE RANGE TO CURRENT MONTH
-  function setViewToCurrentMonth() {
+  function getRangeCurrentMonth() {
     const monthStart = dayjs().startOf('month').toDate();
     const monthEnd = dayjs().endOf('month').toDate();
-    setDateRangeValue([monthStart, monthEnd]);
+    return [monthStart, monthEnd];
+    // setDateRangeValue([monthStart, monthEnd]);
   }
 
   // SET DATE RANGE TO NEXT MONTH
-  function setViewToNextMonth() {
+  function getRangeNextMonth() {
     const monthStart = dayjs().add(1, 'month').startOf('month').toDate();
     const monthEnd = dayjs().add(1, 'month').endOf('month').toDate();
-    setDateRangeValue([monthStart, monthEnd]);
+    return [monthStart, monthEnd];
+    // setDateRangeValue([monthStart, monthEnd]);
   }
 
   // INIT AUTH
@@ -141,8 +143,8 @@ export default function DashboardPlanning() {
       <Sidebar title={'Planeamento'}>
         <div className={styles.toolbar}>
           <DateRangePicker amountOfMonths={2} placeholder='Pick dates range' value={dateRangeValue} onChange={setDateRangeValue} />
-          <Button onClick={setViewToCurrentMonth}>Current Month</Button>
-          <Button onClick={setViewToNextMonth}>Next Month</Button>
+          <Button onClick={() => setDateRangeValue(getRangeCurrentMonth)}>Current Month</Button>
+          <Button onClick={() => setDateRangeValue(getRangeNextMonth)}>Next Month</Button>
         </div>
         <div className={styles.weekHeader}>
           <p>Segunda</p>

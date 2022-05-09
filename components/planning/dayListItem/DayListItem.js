@@ -1,12 +1,10 @@
 import styles from './DayListItem.module.css';
 import cn from 'classnames';
 import { useState } from 'react';
-import { Modal, Select, Switch, Divider, Stack, Badge, Button, Space, Paper } from '@mantine/core';
+import { Modal, Switch, Divider, Stack, Button, Space, Paper, Group, Input, SimpleGrid } from '@mantine/core';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 dayjs.extend(isoWeek);
-import { Text } from '@mantine/core';
-import { useModals } from '@mantine/modals';
 import { showNotification, updateNotification } from '@mantine/notifications';
 import { GoCheck } from 'react-icons/go';
 import DayStatusBadge from '../dayStatusBadge/DayStatusBadge';
@@ -16,7 +14,11 @@ export default function DayListItem({ day, recipes }) {
   //
 
   const [opened, setOpened] = useState(false);
-  const [checked, setChecked] = useState(false);
+
+  const [specialDay, setSpecialDay] = useState(day.special_day ? true : false);
+  const [specialDayIcon, setSpecialDayIcon] = useState(day.special_day ? day.special_day.icon : '');
+  const [specialDayLabel, setSpecialDayLabel] = useState(day.special_day ? day.special_day.label : '');
+
   const [veganValue, setVeganValue] = useState(day.vegan ? day.vegan : null);
   const [fishValue, setFishValue] = useState(day.fish ? day.fish : null);
   const [meatValue, setMeatValue] = useState(day.meat ? day.meat : null);
@@ -52,15 +54,25 @@ export default function DayListItem({ day, recipes }) {
 
   async function saveChanges() {
     //
+
+    if (specialDay) {
+      day.special_day = {
+        icon: specialDayIcon,
+        label: specialDayLabel,
+      };
+    }
+
     day.vegan = veganValue;
     day.fish = fishValue;
     day.meat = meatValue;
 
+    const randomId = performance.now();
+
     showNotification({
-      id: 'load-data-' + day.date,
+      id: 'load-data-' + randomId,
       loading: true,
-      title: 'Saving changes...',
-      message: 'Please wait while changes are published...',
+      title: 'A guardar alterações...',
+      message: 'Por favor aguarde enquanto as alterações são publicadas...',
       autoClose: false,
       disallowClose: true,
     });
@@ -69,19 +81,30 @@ export default function DayListItem({ day, recipes }) {
       method: 'PUT',
       body: JSON.stringify(day),
     }).then((response) => {
-      console.log(response);
       updateNotification({
-        id: 'load-data-' + day.date,
+        id: 'load-data-' + randomId,
         color: 'teal',
         title: 'Alterações publicadas',
         message: 'Alterações guardadas e publicadas na plataforma.',
-        // icon: <CheckIcon />,
+        icon: <GoCheck />,
       });
     });
     setOpened(false);
   }
 
+  function resetData() {
+    setSpecialDay(day.specialDay ? true : false);
+    setSpecialDayIcon(day.specialDay ? day.specialDay.icon : '');
+    setSpecialDayLabel(day.specialDay ? day.specialDay.label : '');
+    setVeganValue(day.vegan);
+    setFishValue(day.fish);
+    setMeatValue(day.meat);
+  }
+
   function clearData() {
+    setSpecialDay(false);
+    setSpecialDayIcon('');
+    setSpecialDayLabel('');
     setVeganValue(null);
     setFishValue(null);
     setMeatValue(null);
@@ -93,14 +116,28 @@ export default function DayListItem({ day, recipes }) {
 
   return (
     <>
-      <Modal opened={opened} onClose={() => setOpened(false)} title={formatDate(day.date, 'full')}>
+      <Modal
+        opened={opened}
+        onClose={() => {
+          resetData();
+          setOpened(false);
+        }}
+        title={formatDate(day.date, 'full')}
+      >
         <Divider my='sm' />
         <Space h='md' />
-        <Stack justify='flex-start' spacing='xl'>
-          <Switch label='Special Day' size='md' checked={checked} onChange={(event) => setChecked(event.currentTarget.checked)} />
-          <SelectRecipe data={recipes.vegan} value={veganValue} onChange={setVeganValue} />
-          <SelectRecipe data={recipes.fish} value={fishValue} onChange={setFishValue} />
-          <SelectRecipe data={recipes.meat} value={meatValue} onChange={setMeatValue} />
+        <Stack justify='flex-start' spacing='sm'>
+          <Switch label='Special Day' size='md' checked={specialDay} onChange={(event) => setSpecialDay(event.currentTarget.checked)} />
+          {specialDay ? (
+            <SimpleGrid cols={2}>
+              <Input title='Icon' value={specialDayIcon} onChange={(event) => setSpecialDayIcon(event.currentTarget.value)}></Input>
+              <Input title='Label' value={specialDayLabel} onChange={(event) => setSpecialDayLabel(event.currentTarget.value)}></Input>
+            </SimpleGrid>
+          ) : null}
+          <SelectRecipe label='Receita Vegan' data={recipes.vegan} value={veganValue} onChange={setVeganValue} />
+          <SelectRecipe label='Receita de Peixe' data={recipes.fish} value={fishValue} onChange={setFishValue} />
+          <SelectRecipe label='Receita de Carne' data={recipes.meat} value={meatValue} onChange={setMeatValue} />
+          <Space h='md' />
           <Button onClick={saveChanges}>Guardar Alterações</Button>
           <Button onClick={clearData}>Limpar</Button>
         </Stack>

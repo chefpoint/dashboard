@@ -17,7 +17,7 @@ import '../styles/variables.css';
 export default function Kiosk({ Component, pageProps }) {
   return (
     <ClerkProvider {...pageProps}>
-      <SWRConfig value={{ fetcher: fetch, refreshInterval: 1000 }}>
+      <SWRConfig value={{ fetcher: fetch, refreshInterval: 60000 }}>
         <MantineProvider>
           <NotificationsProvider>
             <ModalsProvider>

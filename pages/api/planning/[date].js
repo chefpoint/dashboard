@@ -1,8 +1,7 @@
 import { withAuth } from '@clerk/nextjs/api';
 import _ from 'lodash';
 import database from '../../../services/database';
-import Day from '../../../models/day';
-import daysJSON from '../../../data/days.json';
+import Day from '../../../models/Day';
 
 export default withAuth(async (req, res) => {
   //

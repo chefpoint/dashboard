@@ -5,23 +5,31 @@ import { UserButton, useUser } from '@clerk/clerk-react';
 
 export default function AuthCallback() {
   //
+
+  const { getToken } = useAuth();
+
   const { query } = useRouter();
 
   const { user } = useUser();
 
   useEffect(() => {
-    authFetch('/api/auth/apicbase/save_auth_code', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ apicbaseAuthCode: query.code }),
-    })
-      .then((response) => {
-        console.log(response);
-        window.location = '/planning';
+    (async function getdata() {
+      fetch('/api/auth/apicbase/save_auth_code', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${await getToken()}`,
+        },
+        body: JSON.stringify({ apicbaseAuthCode: query.code }),
       })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((response) => {
+          console.log(response);
+          window.location = '/planning';
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })();
   });
 
   return (

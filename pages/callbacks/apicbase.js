@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import fetch from '../../services/fetch';
 import { UserButton, useUser } from '@clerk/clerk-react';
 
 export default function AuthCallback() {

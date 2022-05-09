@@ -1,4 +1,4 @@
-import useSWR from 'swr';
+import useSWR from '../services/swr';
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import { GlobalContext } from '../services/context';

@@ -1,5 +1,4 @@
 import { SWRConfig } from 'swr';
-import fetch from '../services/fetch.js';
 import GlobalProvider from '../services/context';
 import BrowserConfig from '../utils/BrowserConfig';
 import Refresh from '../utils/Refresh.js';
@@ -15,9 +14,11 @@ import '../styles/common/forms.css';
 import '../styles/variables.css';
 
 export default function Kiosk({ Component, pageProps }) {
+  //
+
   return (
     <ClerkProvider {...pageProps}>
-      <SWRConfig value={{ fetcher: fetch, refreshInterval: 60000 }}>
+      <SWRConfig value={{ fetcher: (resource, init) => fetch(resource, init).then((res) => res.json()), refreshInterval: 60000 }}>
         <MantineProvider>
           <NotificationsProvider>
             <ModalsProvider>

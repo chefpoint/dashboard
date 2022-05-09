@@ -1,6 +1,6 @@
 import styles from '../../styles/dashboard/DashboardPlanning.module.css';
 import Sidebar from '../../components/sidebar/container/Sidebar';
-import useSWR from '../../services/swr';
+import useSWR from 'swr';
 import dayjs from 'dayjs';
 import { useState, useEffect } from 'react';
 import DayListItem from '../../components/planning/dayListItem/DayListItem';

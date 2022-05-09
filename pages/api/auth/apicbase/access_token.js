@@ -1,4 +1,4 @@
-import { requireAuth } from '@clerk/nextjs/api';
+import { withAuth } from '@clerk/nextjs/api';
 
 /* OVERVIEW
  * 1. Get auth details for the current user from Clerk (GET Clerk API)
@@ -8,7 +8,7 @@ import { requireAuth } from '@clerk/nextjs/api';
  * 5. If the refresh_token is not valid, user must reauthenticate
  */
 
-export default requireAuth(async (req, res) => {
+export default withAuth(async (req, res) => {
   //
   // 1. GET AUTH DETAILS FROM CLERK
   // Get the current user's 'private_metadata' object from Clerk

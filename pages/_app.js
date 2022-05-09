@@ -18,7 +18,7 @@ export default function Kiosk({ Component, pageProps }) {
 
   return (
     <ClerkProvider {...pageProps}>
-      <SWRConfig value={{ fetcher: (resource, init) => fetch(resource, init).then((res) => res.json()), refreshInterval: 60000 }}>
+      <SWRConfig value={{ fetcher: (...args) => fetch(...args).then((res) => res.json()), refreshInterval: 60000 }}>
         <MantineProvider>
           <NotificationsProvider>
             <ModalsProvider>

@@ -1,35 +1,28 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import authFetch from '../../services/fetch';
 import { UserButton, useUser } from '@clerk/clerk-react';
 
 export default function AuthCallback() {
   //
-
-  const { getToken } = useAuth();
-
   const { query } = useRouter();
 
   const { user } = useUser();
 
   useEffect(() => {
-    (async function getdata() {
-      fetch('/api/auth/apicbase/save_auth_code', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${await getToken()}`,
-        },
-        body: JSON.stringify({ apicbaseAuthCode: query.code }),
+    fetch('/api/auth/apicbase/save_auth_code', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ apicbaseAuthCode: query.code }),
+    })
+      .then((response) => {
+        console.log(response);
+        window.location = '/planning';
       })
-        .then((response) => {
-          console.log(response);
-          window.location = '/planning';
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    })();
+      .catch((err) => {
+        console.log(err);
+      });
   });
 
   return (

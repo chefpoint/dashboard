@@ -1,6 +1,3 @@
-// import lstore from '../utils/lstore';
-import authFetch from './fetch';
-
 // CONSTANTS
 const APICBASE_API_BASE_URL = 'https://app.apicbase.com/api/v1';
 

@@ -1,6 +1,6 @@
-import { requireAuth } from '@clerk/nextjs/api';
+import { withAuth } from '@clerk/nextjs/api';
 
-export default requireAuth(async (req, res) => {
+export default withAuth(async (req, res) => {
   // Refuse if method is not POST
   if (req.method !== 'POST') {
     res.status(405).send({ message: 'Only POST requests allowed' });

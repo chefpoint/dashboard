@@ -1,0 +1,114 @@
+[
+  {
+    "date": "2022-05-02",
+    "special_day": false,
+    "vegan": {
+      "title_pt": "Tortilla Espanhola de Batata e Pimento",
+      "title_en": "Spanish Potato and Pepper Tortilla"
+    },
+    "fish": {
+      "title_pt": "Tiras de Pota Frita c/ Arroz de Coentros e Maionese de Limão",
+      "title_en": "Fried Cuttlefish Strips w/ Coriander Rice and Lemon Mayonnaise"
+    },
+    "meat": {
+      "title_pt": "Costeleta de Porco c/ Batata Frita e Coleslaw",
+      "title_en": "Pork Chop w/ French Fries and Coleslaw"
+    }
+  },
+  {
+    "date": "2022-05-03",
+    "special_day": false,
+    "vegan": {
+      "title_pt": "Tortilla Espanhola de Batata e Pimento",
+      "title_en": "Spanish Potato and Pepper Tortilla"
+    },
+    "fish": {
+      "title_pt": "Tiras de Pota Frita c/ Arroz de Coentros e Maionese de Limão",
+      "title_en": "Fried Cuttlefish Strips w/ Coriander Rice and Lemon Mayonnaise"
+    },
+    "meat": {
+      "title_pt": "Costeleta de Porco c/ Batata Frita e Coleslaw",
+      "title_en": "Pork Chop w/ French Fries and Coleslaw"
+    }
+  },
+  {
+    "date": "2022-05-04",
+    "special_day": false,
+    "vegan": {
+      "title_pt": "Tortilla Espanhola de Batata e Pimento",
+      "title_en": "Spanish Potato and Pepper Tortilla"
+    },
+    "fish": {
+      "title_pt": "Tiras de Pota Frita c/ Arroz de Coentros e Maionese de Limão",
+      "title_en": "Fried Cuttlefish Strips w/ Coriander Rice and Lemon Mayonnaise"
+    },
+    "meat": {
+      "title_pt": "Costeleta de Porco c/ Batata Frita e Coleslaw",
+      "title_en": "Pork Chop w/ French Fries and Coleslaw"
+    }
+  },
+  {
+    "date": "2022-05-05",
+    "special_day": false,
+    "vegan": {
+      "title_pt": "Tortilla Espanhola de Batata e Pimento",
+      "title_en": "Spanish Potato and Pepper Tortilla"
+    },
+    "fish": {
+      "title_pt": "Tiras de Pota Frita c/ Arroz de Coentros e Maionese de Limão",
+      "title_en": "Fried Cuttlefish Strips w/ Coriander Rice and Lemon Mayonnaise"
+    },
+    "meat": {
+      "title_pt": "Costeleta de Porco c/ Batata Frita e Coleslaw",
+      "title_en": "Pork Chop w/ French Fries and Coleslaw"
+    }
+  },
+  {
+    "date": "2022-05-06",
+    "special_day": false,
+    "vegan": {
+      "title_pt": "Tortilla Espanhola de Batata e Pimento",
+      "title_en": "Spanish Potato and Pepper Tortilla"
+    },
+    "fish": {
+      "title_pt": "Tiras de Pota Frita c/ Arroz de Coentros e Maionese de Limão",
+      "title_en": "Fried Cuttlefish Strips w/ Coriander Rice and Lemon Mayonnaise"
+    },
+    "meat": {
+      "title_pt": "Costeleta de Porco c/ Batata Frita e Coleslaw",
+      "title_en": "Pork Chop w/ French Fries and Coleslaw"
+    }
+  },
+  {
+    "date": "2022-05-07",
+    "special_day": false,
+    "vegan": {
+      "title_pt": "Tortilla Espanhola de Batata e Pimento",
+      "title_en": "Spanish Potato and Pepper Tortilla"
+    },
+    "fish": {
+      "title_pt": "Tiras de Pota Frita c/ Arroz de Coentros e Maionese de Limão",
+      "title_en": "Fried Cuttlefish Strips w/ Coriander Rice and Lemon Mayonnaise"
+    },
+    "meat": {
+      "title_pt": "Costeleta de Porco c/ Batata Frita e Coleslaw",
+      "title_en": "Pork Chop w/ French Fries and Coleslaw"
+    }
+  },
+  {
+    "date": "2022-05-08",
+    "special_day": false,
+    "vegan": {
+      "title_pt": "Tortilla Espanhola de Batata e Pimento",
+      "title_en": "Spanish Potato and Pepper Tortilla"
+    },
+    "fish": {
+      "title_pt": "Tiras de Pota Frita c/ Arroz de Coentros e Maionese de Limão",
+      "title_en": "Fried Cuttlefish Strips w/ Coriander Rice and Lemon Mayonnaise"
+    },
+    "meat": {
+      "title_pt": "Costeleta de Porco c/ Batata Frita e Coleslaw",
+      "title_en": "Pork Chop w/ French Fries and Coleslaw"
+    }
+  }
+]

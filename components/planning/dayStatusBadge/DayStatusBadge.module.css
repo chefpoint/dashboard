@@ -1,0 +1,51 @@
+.container {
+  padding: 3px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border: 1px solid var(--gray-2);
+  border-radius: var(--border-radius);
+}
+
+.label {
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: var(--font-medium);
+  color: var(--gray-5);
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-5);
+}
+
+/* Vegan */
+.container.vegan.active .label,
+.container.vegan.active .icon {
+  color: var(--dish-vegan);
+}
+.container.vegan.active {
+  border-color: var(--dish-vegan);
+}
+
+/* Fish */
+.container.fish.active .label,
+.container.fish.active .icon {
+  color: var(--dish-fish);
+}
+.container.fish.active {
+  border-color: var(--dish-fish);
+}
+
+/* Meat */
+.container.meat.active .label,
+.container.meat.active .icon {
+  color: var(--dish-meat);
+}
+.container.meat.active {
+  border-color: var(--dish-meat);
+}

@@ -19,9 +19,9 @@ export default function DayListItem({ day, recipes }) {
   const [specialDayIcon, setSpecialDayIcon] = useState(day.special_day ? day.special_day.icon : '');
   const [specialDayLabel, setSpecialDayLabel] = useState(day.special_day ? day.special_day.label : '');
 
-  const [veganValue, setVeganValue] = useState(day.vegan ? day.vegan : null);
-  const [fishValue, setFishValue] = useState(day.fish ? day.fish : null);
-  const [meatValue, setMeatValue] = useState(day.meat ? day.meat : null);
+  const [veganValue, setVeganValue] = useState(day.vegan ? day.vegan.apicbase_id : null);
+  const [fishValue, setFishValue] = useState(day.fish ? day.fish.apicbase_id : null);
+  const [meatValue, setMeatValue] = useState(day.meat ? day.meat.apicbase_id : null);
 
   function formatDate(date, type) {
     const dateObject = new Date(date);
@@ -52,6 +52,12 @@ export default function DayListItem({ day, recipes }) {
     return date.getDate() == today.getDate() && date.getMonth() == today.getMonth() && date.getFullYear() == today.getFullYear();
   }
 
+  function getRecipeById(list, id) {
+    const result = list.find((item) => item.value == id);
+    if (result) return { apicbase_id: result.value, title_pt: result.title_pt, title_en: result.title_en };
+    else return null;
+  }
+
   async function saveChanges() {
     //
 
@@ -62,9 +68,9 @@ export default function DayListItem({ day, recipes }) {
       };
     }
 
-    day.vegan = veganValue;
-    day.fish = fishValue;
-    day.meat = meatValue;
+    day.vegan = getRecipeById(recipes.vegan, veganValue);
+    day.fish = getRecipeById(recipes.fish, fishValue);
+    day.meat = getRecipeById(recipes.meat, meatValue);
 
     const randomId = performance.now();
 
@@ -80,7 +86,7 @@ export default function DayListItem({ day, recipes }) {
     await fetch('/api/planning/' + day.date, {
       method: 'PUT',
       body: JSON.stringify(day),
-    }).then((response) => {
+    }).then(() => {
       updateNotification({
         id: 'load-data-' + randomId,
         color: 'teal',
@@ -96,9 +102,9 @@ export default function DayListItem({ day, recipes }) {
     setSpecialDay(day.specialDay ? true : false);
     setSpecialDayIcon(day.specialDay ? day.specialDay.icon : '');
     setSpecialDayLabel(day.specialDay ? day.specialDay.label : '');
-    setVeganValue(day.vegan);
-    setFishValue(day.fish);
-    setMeatValue(day.meat);
+    setVeganValue(day.vegan ? day.vegan.apicbase_id : null);
+    setFishValue(day.fish ? day.fish.apicbase_id : null);
+    setMeatValue(day.meat ? day.meat.apicbase_id : null);
   }
 
   function clearData() {

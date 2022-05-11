@@ -6,8 +6,9 @@ import { useState, useEffect } from 'react';
 import DayListItem from '../../components/planning/dayListItem/DayListItem';
 import { LoadingOverlay } from '@mantine/core';
 import { Button, Modal, Text, Divider } from '@nextui-org/react';
-import { DateRangePicker } from '@mantine/dates';
+// import { DateRangePicker } from '@mantine/dates';
 import { apicbaseAPI } from '../../services/apicbase';
+import DateRangePicker from '@wojtekmaj/react-daterange-picker/dist/entry.nostyle';
 
 export default function DashboardPlanning() {
   //

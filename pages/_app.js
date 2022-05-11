@@ -12,6 +12,8 @@ import '../styles/globals.css';
 import '../styles/icons.css';
 import '../styles/common/forms.css';
 import '../styles/variables.css';
+import '../styles/DateRangePicker.css';
+import 'react-calendar/dist/Calendar.css';
 
 export default function Dashboard({ Component, pageProps }) {
   //

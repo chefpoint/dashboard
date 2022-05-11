@@ -13,6 +13,20 @@ export default function RecipeSelectorCard({ value, title, options, color, onCha
     );
   };
 
+  const colourStyles = {
+    option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+      return {
+        ...styles,
+        backgroundColor: isDisabled ? undefined : isSelected ? '#c0e8ff' : isFocused ? '#c0e8ff' : undefined,
+
+        ':active': {
+          ...styles[':active'],
+          backgroundColor: !isDisabled ? (isSelected ? '#F9F9F9' : '#F9F9F9') : undefined,
+        },
+      };
+    },
+  };
+
   return (
     <Card bordered shadow={false} css={{ borderColor: color, overflow: 'visible' }}>
       <Card.Header>
@@ -23,8 +37,10 @@ export default function RecipeSelectorCard({ value, title, options, color, onCha
       <Divider />
       <Card.Body css={{ p: '$sm', overflow: 'visible' }}>
         <Select
+          closeMenuOnSelect={false}
           isClearable
           isSearchable
+          styles={colourStyles}
           options={options}
           value={value}
           onChange={onChange}

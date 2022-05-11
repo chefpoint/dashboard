@@ -4,7 +4,8 @@ import useSWR from 'swr';
 import dayjs from 'dayjs';
 import { useState, useEffect } from 'react';
 import DayListItem from '../../components/planning/dayListItem/DayListItem';
-import { Modal, Stack, Button, Text, LoadingOverlay } from '@mantine/core';
+import { LoadingOverlay } from '@mantine/core';
+import { Button, Modal, Text, Divider } from '@nextui-org/react';
 import { DateRangePicker } from '@mantine/dates';
 import { apicbaseAPI } from '../../services/apicbase';
 
@@ -24,7 +25,7 @@ export default function DashboardPlanning() {
   const [meatRecipes, setMeatRecipes] = useState([]);
 
   // Get days from API
-  const { data: days, mutate } = useSWR('/api/planning/*');
+  const { data: days } = useSWR('/api/planning/*');
 
   // GET RECIPES FROM APICBASE API
   useEffect(() => {
@@ -38,8 +39,7 @@ export default function DashboardPlanning() {
 
         function formatRecipes(data) {
           return data.map((item) => ({
-            value: item.id,
-            label: item.name,
+            apicbase_id: item.id,
             title_pt: item.name,
             title_en: item.custom_fields[6].value || '',
           }));
@@ -96,48 +96,23 @@ export default function DashboardPlanning() {
     );
   }
 
-  async function addDay() {
-    const dayCopy = JSON.parse(JSON.stringify(days)).pop();
-
-    const nextDay = new Date(dayCopy.date);
-    nextDay.setDate(nextDay.getDate() + 1);
-
-    dayCopy.date = nextDay.toISOString();
-
-    delete dayCopy._id;
-
-    await mutate(
-      await fetch('/api/planning/new', {
-        method: 'POST',
-        body: JSON.stringify(dayCopy),
-      }),
-      {
-        optimisticData: [...days, dayCopy],
-        rollbackOnError: true,
-        populateCache: (newItem) => {
-          const updatedDays = [...days, newItem];
-          return updatedDays.sort((a, b) => new Date(a.date) - new Date(b.date));
-        },
-        revalidate: true,
-      }
-    );
-  }
-
   return (
     <>
-      <Modal
-        opened={error}
-        onClose={() => setError(false)}
-        closeOnClickOutside={false}
-        closeOnEscape={false}
-        withCloseButton={false}
-        overlayBlur={5}
-        title='Connect to Apicbase'
-      >
-        <Stack>
-          <Text>Authentication with Apicbase is necessary in order to continue to this page.</Text>
-          <Button onClick={initApicbaseAuth}>Login with Apicbase</Button>
-        </Stack>
+      <Modal blur preventClose open={error} onClose={() => setError(false)}>
+        <Modal.Header>
+          <Text b size={18} css={{ textTransform: 'uppercase' }}>
+            Apicbase Connection
+          </Text>
+        </Modal.Header>
+        <Divider />
+        <Modal.Body css={{ p: '$lg', gap: '$lg' }}>
+          <Text size={18} css={{ textAlign: 'center' }}>
+            Apicbase is required for this page to work.
+          </Text>
+          <Button size='lg' onClick={initApicbaseAuth}>
+            Login with Apicbase
+          </Button>
+        </Modal.Body>
       </Modal>
 
       <Sidebar title={'Planeamento'}>
@@ -164,7 +139,6 @@ export default function DashboardPlanning() {
             <LoadingOverlay visible={loading} />
           )}
         </div>
-        <Button onClick={addDay}>Adicionar Dia</Button>
       </Sidebar>
     </>
   );

@@ -15,9 +15,9 @@
   --gray-7: rgb(0, 0, 0);
 
   /* - DISH TYPES */
-  --dish-vegan: rgb(65, 180, 71);
-  --dish-fish: rgb(0, 150, 255);
-  --dish-meat: rgb(160, 75, 0);
+  --dish-vegan: #41b447;
+  --dish-fish: #0096ff;
+  --dish-meat: #a04b00;
 
   /* BOX SHADOW */
   --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);

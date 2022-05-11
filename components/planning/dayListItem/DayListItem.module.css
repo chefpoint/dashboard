@@ -32,7 +32,8 @@
   text-transform: uppercase;
   font-weight: var(--font-medium);
   font-size: 25px;
-  aspect-ratio: 1/1;
+  aspect-ratio: 1;
+  width: 40px;
 }
 
 .today .day {

@@ -1,27 +1,27 @@
 import styles from './DayListItem.module.css';
 import cn from 'classnames';
 import { useState } from 'react';
-import { Modal, Switch, Divider, Stack, Button, Space, Paper, Group, Input, SimpleGrid } from '@mantine/core';
+import { Divider, Input, Card, Modal, Switch, Button, Text, Loading } from '@nextui-org/react';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 dayjs.extend(isoWeek);
-import { showNotification, updateNotification } from '@mantine/notifications';
-import { GoCheck } from 'react-icons/go';
 import DayStatusBadge from '../dayStatusBadge/DayStatusBadge';
-import SelectRecipe from '../selectRecipe/SelectRecipe';
+import RecipeSelectorCard from '../recipeSelectorCard/RecipeSelectorCard';
+import { toast } from 'react-toastify';
 
 export default function DayListItem({ day, recipes }) {
   //
 
-  const [opened, setOpened] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [specialDay, setSpecialDay] = useState(day.special_day ? true : false);
   const [specialDayIcon, setSpecialDayIcon] = useState(day.special_day ? day.special_day.icon : '');
   const [specialDayLabel, setSpecialDayLabel] = useState(day.special_day ? day.special_day.label : '');
 
-  const [veganValue, setVeganValue] = useState(day.vegan ? day.vegan.apicbase_id : null);
-  const [fishValue, setFishValue] = useState(day.fish ? day.fish.apicbase_id : null);
-  const [meatValue, setMeatValue] = useState(day.meat ? day.meat.apicbase_id : null);
+  const [veganValue, setVeganValue] = useState(day.vegan);
+  const [fishValue, setFishValue] = useState(day.fish);
+  const [meatValue, setMeatValue] = useState(day.meat);
 
   function formatDate(date, type) {
     const dateObject = new Date(date);
@@ -52,59 +52,60 @@ export default function DayListItem({ day, recipes }) {
     return date.getDate() == today.getDate() && date.getMonth() == today.getMonth() && date.getFullYear() == today.getFullYear();
   }
 
-  function getRecipeById(list, id) {
-    const result = list.find((item) => item.value == id);
-    if (result) return { apicbase_id: result.value, title_pt: result.title_pt, title_en: result.title_en };
-    else return null;
-  }
-
   async function saveChanges() {
     //
 
-    if (specialDay) {
+    if (!specialDay) day.special_day = null;
+    else {
       day.special_day = {
         icon: specialDayIcon,
         label: specialDayLabel,
       };
     }
 
-    day.vegan = getRecipeById(recipes.vegan, veganValue);
-    day.fish = getRecipeById(recipes.fish, fishValue);
-    day.meat = getRecipeById(recipes.meat, meatValue);
+    day.vegan = veganValue;
+    day.fish = fishValue;
+    day.meat = meatValue;
 
-    const randomId = performance.now();
-
-    showNotification({
-      id: 'load-data-' + randomId,
-      loading: true,
-      title: 'A guardar alterações...',
-      message: 'Por favor aguarde enquanto as alterações são publicadas...',
+    setIsLoading(true);
+    const notification = toast.loading('A guardar as alterações...', {
       autoClose: false,
-      disallowClose: true,
     });
 
     await fetch('/api/planning/' + day.date, {
       method: 'PUT',
       body: JSON.stringify(day),
-    }).then(() => {
-      updateNotification({
-        id: 'load-data-' + randomId,
-        color: 'teal',
-        title: 'Alterações publicadas',
-        message: 'Alterações guardadas e publicadas na plataforma.',
-        icon: <GoCheck />,
+    })
+      .then(() => {
+        toast.update(notification, {
+          type: 'success',
+          render: 'Alterações publicadas!',
+          isLoading: false,
+          autoClose: 5000,
+        });
+        setIsLoading(false);
+        setIsOpen(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.update(notification, {
+          type: 'error',
+          render: 'Erro ao publicar.',
+          isLoading: false,
+          autoClose: 5000,
+        });
+        setIsLoading(false);
+        setIsOpen(true);
       });
-    });
-    setOpened(false);
   }
 
   function resetData() {
-    setSpecialDay(day.specialDay ? true : false);
-    setSpecialDayIcon(day.specialDay ? day.specialDay.icon : '');
-    setSpecialDayLabel(day.specialDay ? day.specialDay.label : '');
-    setVeganValue(day.vegan ? day.vegan.apicbase_id : null);
-    setFishValue(day.fish ? day.fish.apicbase_id : null);
-    setMeatValue(day.meat ? day.meat.apicbase_id : null);
+    setSpecialDay(day.special_day ? true : false);
+    setSpecialDayIcon(day.special_day ? day.special_day.icon : '');
+    setSpecialDayLabel(day.special_day ? day.special_day.label : '');
+    setVeganValue(day.vegan);
+    setFishValue(day.fish);
+    setMeatValue(day.meat);
   }
 
   function clearData() {
@@ -122,31 +123,78 @@ export default function DayListItem({ day, recipes }) {
 
   return (
     <>
-      <Modal
-        opened={opened}
-        onClose={() => {
-          resetData();
-          setOpened(false);
-        }}
-        title={formatDate(day.date, 'full')}
-      >
-        <Divider my='sm' />
-        <Space h='md' />
-        <Stack justify='flex-start' spacing='sm'>
-          <Switch label='Special Day' size='md' checked={specialDay} onChange={(event) => setSpecialDay(event.currentTarget.checked)} />
-          {specialDay ? (
-            <SimpleGrid cols={2}>
-              <Input title='Icon' value={specialDayIcon} onChange={(event) => setSpecialDayIcon(event.currentTarget.value)}></Input>
-              <Input title='Label' value={specialDayLabel} onChange={(event) => setSpecialDayLabel(event.currentTarget.value)}></Input>
-            </SimpleGrid>
-          ) : null}
-          <SelectRecipe label='Receita Vegan' data={recipes.vegan} value={veganValue} onChange={setVeganValue} />
-          <SelectRecipe label='Receita de Peixe' data={recipes.fish} value={fishValue} onChange={setFishValue} />
-          <SelectRecipe label='Receita de Carne' data={recipes.meat} value={meatValue} onChange={setMeatValue} />
-          <Space h='md' />
-          <Button onClick={saveChanges}>Guardar Alterações</Button>
-          <Button onClick={clearData}>Limpar</Button>
-        </Stack>
+      <Modal blur open={isOpen} width={500} onOpen={resetData} onClose={() => setIsOpen(false)}>
+        <Modal.Header>
+          <Text b size={18} css={{ textTransform: 'uppercase' }}>
+            {formatDate(day.date, 'full')}
+          </Text>
+        </Modal.Header>
+        <Divider />
+        <Modal.Body css={{ p: '$lg' }}>
+          <Card bordered shadow={false}>
+            <Card.Body css={{ d: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', p: '$sm' }}>
+              <Text b size={18}>
+                É um dia especial?
+              </Text>
+              <Switch size='lg' checked={specialDay ? true : false} onChange={(event) => setSpecialDay(event.target.checked)} />
+            </Card.Body>
+            {specialDay ? <Divider /> : null}
+            {specialDay ? (
+              <Card.Body css={{ d: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: '$sm', p: '$sm' }}>
+                <Input
+                  placeholder='Ícone'
+                  clearable
+                  bordered
+                  aria-label='Special Day Icon'
+                  value={specialDayIcon}
+                  onChange={(event) => setSpecialDayIcon(event.target.value)}
+                />
+                <Input
+                  placeholder='Descrição'
+                  clearable
+                  bordered
+                  width='100%'
+                  aria-label='Special Day Label'
+                  value={specialDayLabel}
+                  onChange={(event) => setSpecialDayLabel(event.target.value)}
+                />
+              </Card.Body>
+            ) : null}
+          </Card>
+          <RecipeSelectorCard
+            title='Receitas Vegan e Vegetarianas'
+            color='$vegan'
+            options={recipes.vegan}
+            value={veganValue}
+            onChange={(selection) => setVeganValue(selection)}
+          />
+          <RecipeSelectorCard
+            title='Receitas de Peixe'
+            color='$fish'
+            options={recipes.fish}
+            value={fishValue}
+            onChange={(selection) => setFishValue(selection)}
+          />
+          <RecipeSelectorCard
+            title='Receitas de Carne'
+            color='$meat'
+            options={recipes.meat}
+            value={meatValue}
+            onChange={(selection) => setMeatValue(selection)}
+          />
+          {!isLoading ? (
+            <Button onPress={saveChanges} css={{ width: '100%' }}>
+              Guardar Alterações
+            </Button>
+          ) : (
+            <Button disabled css={{ width: '100%' }}>
+              <Loading type='points' color='currentColor' size='sm' />
+            </Button>
+          )}
+          <Button disabled={isLoading} onPress={clearData} flat color='error' css={{ width: '100%' }}>
+            Limpar Tudo
+          </Button>
+        </Modal.Body>
       </Modal>
 
       <div
@@ -155,10 +203,10 @@ export default function DayListItem({ day, recipes }) {
           [styles.weekend]: isWeekend(day.date),
           [styles.today]: isToday(day.date),
         })}
-        onClick={() => setOpened(true)}
+        onClick={() => setIsOpen(true)}
         style={{ gridColumnStart: getDayOfWeek(day.date), gridColumnEnd: getDayOfWeek(day.date) }}
       >
-        <Paper shadow='xs' p='xs'>
+        <Card>
           <div className={styles.date}>
             <div className={styles.day}>{formatDate(day.date, 'day')}</div>
             <div className={styles.dateInfo}>
@@ -167,11 +215,11 @@ export default function DayListItem({ day, recipes }) {
             </div>
           </div>
           <div className={styles.recipes}>
-            <DayStatusBadge variant='vegan' status={veganValue ? true : false} />
-            <DayStatusBadge variant='fish' status={fishValue ? true : false} />
-            <DayStatusBadge variant='meat' status={meatValue ? true : false} />
+            <DayStatusBadge variant='vegan' status={day.vegan ? true : false} />
+            <DayStatusBadge variant='fish' status={day.fish ? true : false} />
+            <DayStatusBadge variant='meat' status={day.meat ? true : false} />
           </div>
-        </Paper>
+        </Card>
       </div>
     </>
   );

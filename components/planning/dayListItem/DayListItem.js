@@ -197,16 +197,16 @@ export default function DayListItem({ day, recipes }) {
         </Modal.Body>
       </Modal>
 
-      <div
+      <Card
         className={cn({
           [styles.container]: true,
           [styles.weekend]: isWeekend(day.date),
           [styles.today]: isToday(day.date),
         })}
         onClick={() => setIsOpen(true)}
-        style={{ gridColumnStart: getDayOfWeek(day.date), gridColumnEnd: getDayOfWeek(day.date) }}
+        css={{ gridColumn: getDayOfWeek(day.date) }}
       >
-        <Card>
+        <Card.Body css={{ px: '$sm', py: '$xs' }}>
           <div className={styles.date}>
             <div className={styles.day}>{formatDate(day.date, 'day')}</div>
             <div className={styles.dateInfo}>
@@ -214,13 +214,16 @@ export default function DayListItem({ day, recipes }) {
               <div className={styles.weekday}>{formatDate(day.date, 'weekday')}</div>
             </div>
           </div>
+        </Card.Body>
+        <Divider />
+        <Card.Body css={{ p: '$sm' }}>
           <div className={styles.recipes}>
             <DayStatusBadge variant='vegan' status={day.vegan ? true : false} />
             <DayStatusBadge variant='fish' status={day.fish ? true : false} />
             <DayStatusBadge variant='meat' status={day.meat ? true : false} />
           </div>
-        </Card>
-      </div>
+        </Card.Body>
+      </Card>
     </>
   );
 }

@@ -1,4 +1,5 @@
 import { SWRConfig } from 'swr';
+import fetch from '../services/fetch.js';
 import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/nextjs';
 import BrowserConfig from '../utils/BrowserConfig';
 import Refresh from '../utils/Refresh.js';
@@ -20,7 +21,7 @@ export default function Dashboard({ Component, pageProps }) {
 
   return (
     <ClerkProvider {...pageProps}>
-      <SWRConfig value={{ fetcher: (...args) => fetch(...args).then((res) => res.json()), refreshInterval: 10000 }}>
+      <SWRConfig value={{ fetcher: fetch, refreshInterval: 1000 }}>
         <NextUIProvider theme={lightTheme}>
           <Refresh />
           <BrowserConfig />

@@ -28,6 +28,7 @@ export const lightTheme = createTheme({
     },
     colors: {
       // Brand
+      muted: '#d2d2d2',
       // primaryLight: '$blue200',
       // primaryLightHover: '$blue300', // commonly used on hover state
       // primaryLightActive: '$blue400', // commonly used on pressed state

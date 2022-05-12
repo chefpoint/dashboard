@@ -30,8 +30,13 @@ export default requireAuth(async (req, res) => {
       res.status(putResult.status).json(putResult.data);
       break;
     //
+    case 'DELETE':
+      const deleteResult = await deleteDayWith(req.query.date);
+      res.status(deleteResult.status).json(deleteResult.data);
+      break;
+    //
     default:
-      res.setHeader('Allow', ['GET', 'PUT']);
+      res.setHeader('Allow', ['GET', 'POST', 'PUT']);
       res.status(405).end(`Method ${req.method} Not Allowed`);
       break;
   }
@@ -85,6 +90,7 @@ async function putDayWith(date, query) {
     new: true, // Return the updated document
     upsert: true, // If no document is found, create it
     runValidators: true,
+    overwrite: true, // Replaces the document with the new contents
   });
 
   if (updatedDay.date) {
@@ -93,5 +99,20 @@ async function putDayWith(date, query) {
   } else {
     // An Error Occurred
     return { status: 500, data: { message: 'An Error Occurred.' } };
+  }
+}
+
+/* * */
+/* REST: DELETE */
+async function deleteDayWith(date) {
+  // Fetch documents from the database that match the requested 'date'
+  const foundDay = await Day.findOneAndRemove({ date: date });
+
+  if (foundDay > 0) {
+    // If document with date exists
+    return { status: 200, data: foundDay[0] };
+  } else {
+    // If document with date does not exist
+    return { status: 404, data: { message: `Day with date: ${date} not found.` } };
   }
 }

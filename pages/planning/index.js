@@ -1,6 +1,7 @@
 import styles from '../../styles/dashboard/DashboardPlanning.module.css';
 import Sidebar from '../../components/sidebar/container/Sidebar';
 import useSWR from 'swr';
+import fetcher from '../../services/fetch';
 import dayjs from 'dayjs';
 import { useState, useEffect } from 'react';
 import DayListItem from '../../components/planning/dayListItem/DayListItem';
@@ -20,12 +21,11 @@ export default function DashboardPlanning() {
   const [dateRangeValue, setDateRangeValue] = useState(getRangeCurrentMonth());
 
   // Recipes storage
-  const [veganRecipes, setVeganRecipes] = useState([]);
-  const [fishRecipes, setFishRecipes] = useState([]);
-  const [meatRecipes, setMeatRecipes] = useState([]);
+  const [recipes, setRecipes] = useState(null);
+  const [days, setDays] = useState();
 
   // Get days from API
-  const { data: days } = useSWR('/api/planning/*');
+  const { data: daysFromDB } = useSWR('/api/planning/*', fetcher, { onSuccess: (data) => filterDaysToSelectedDate(data) });
 
   // GET RECIPES FROM APICBASE API
   useEffect(() => {
@@ -40,14 +40,17 @@ export default function DashboardPlanning() {
         function formatRecipes(data) {
           return data.map((item) => ({
             apicbase_id: item.id,
+            apicbase_url: item.web_page,
             title_pt: item.name,
             title_en: item.custom_fields[6].value || '',
           }));
         }
 
-        setVeganRecipes(formatRecipes(vegan.results));
-        setFishRecipes(formatRecipes(fish.results));
-        setMeatRecipes(formatRecipes(meat.results));
+        setRecipes({
+          vegan: formatRecipes(vegan.results),
+          fish: formatRecipes(fish.results),
+          meat: formatRecipes(meat.results),
+        });
 
         setLoading(false);
       } catch (err) {
@@ -59,18 +62,38 @@ export default function DashboardPlanning() {
   }, []);
 
   // FILTER DATES BASED ON INPUT
-  function filterDaysToSelectedDate() {
-    return days.filter(({ date }) => {
-      //
-      const objectDate = dayjs(date);
-      const startDate = dayjs(dateRangeValue[0]);
-      const endDate = dayjs(dateRangeValue[1]);
-      //
-      const isSame = objectDate.isSame(startDate, 'day') || objectDate.isSame(endDate, 'day');
-      const isBetween = objectDate.isAfter(startDate) && objectDate.isBefore(endDate);
-      //
-      return isSame || isBetween;
-    });
+  function filterDaysToSelectedDate(data) {
+    //
+    const daysArray = [];
+    let currentDate = new Date(dateRangeValue[0]);
+
+    while (currentDate <= new Date(dateRangeValue[1])) {
+      const thisDaysDate = dayjs(currentDate).format('YYYY-MM-DD');
+      const dayExistsInDB = data.find((item) => item.date == thisDaysDate);
+      console.log(thisDaysDate);
+      daysArray.push({ ...dayExistsInDB, date: thisDaysDate });
+      // Use UTC date to prevent problems with time zones and DST
+      currentDate.setUTCDate(currentDate.getUTCDate() + 1);
+    }
+
+    setDays(daysArray);
+  }
+
+  function getDaysFromRange() {
+    //
+    const daysArray = [];
+    let currentDate = new Date(dateRangeValue[0]);
+
+    while (currentDate <= new Date(dateRangeValue[1])) {
+      const thisDaysDate = dayjs(currentDate).format('YYYY-MM-DD');
+      const dayExistsInDB = daysFromDB.find((item) => item.date == thisDaysDate);
+      console.log(thisDaysDate);
+      daysArray.push({ ...dayExistsInDB, date: thisDaysDate });
+      // Use UTC date to prevent problems with time zones and DST
+      currentDate.setUTCDate(currentDate.getUTCDate() + 1);
+    }
+
+    return daysArray;
   }
 
   // SET DATE RANGE TO CURRENT MONTH
@@ -78,7 +101,6 @@ export default function DashboardPlanning() {
     const monthStart = dayjs().startOf('month').toDate();
     const monthEnd = dayjs().endOf('month').toDate();
     return [monthStart, monthEnd];
-    // setDateRangeValue([monthStart, monthEnd]);
   }
 
   // SET DATE RANGE TO NEXT MONTH
@@ -86,7 +108,6 @@ export default function DashboardPlanning() {
     const monthStart = dayjs().add(1, 'month').startOf('month').toDate();
     const monthEnd = dayjs().add(1, 'month').endOf('month').toDate();
     return [monthStart, monthEnd];
-    // setDateRangeValue([monthStart, monthEnd]);
   }
 
   // INIT AUTH
@@ -98,7 +119,7 @@ export default function DashboardPlanning() {
 
   return (
     <>
-      <Modal blur preventClose open={error} onClose={() => setError(false)}>
+      <Modal blur preventClose open={error}>
         <Modal.Header>
           <Text b size={18} css={{ textTransform: 'uppercase' }}>
             Apicbase Connection
@@ -118,8 +139,22 @@ export default function DashboardPlanning() {
       <Sidebar title={'Planeamento'}>
         <div className={styles.toolbar}>
           <DateRangePicker amountOfMonths={2} placeholder='Pick dates range' value={dateRangeValue} onChange={setDateRangeValue} />
-          <Button onClick={() => setDateRangeValue(getRangeCurrentMonth)}>Current Month</Button>
-          <Button onClick={() => setDateRangeValue(getRangeNextMonth)}>Next Month</Button>
+          <Button
+            onClick={() => {
+              setDateRangeValue(getRangeCurrentMonth);
+              filterDaysToSelectedDate(daysFromDB);
+            }}
+          >
+            Current Month
+          </Button>
+          <Button
+            onClick={() => {
+              setDateRangeValue(getRangeNextMonth);
+              filterDaysToSelectedDate(daysFromDB);
+            }}
+          >
+            Next Month
+          </Button>
         </div>
         <div className={styles.weekHeader}>
           <p>Segunda</p>
@@ -131,10 +166,8 @@ export default function DashboardPlanning() {
           <p>Domingo</p>
         </div>
         <div className={styles.dayList}>
-          {!loading && days ? (
-            filterDaysToSelectedDate().map((day) => (
-              <DayListItem key={day.date} day={day} recipes={{ vegan: veganRecipes, fish: fishRecipes, meat: meatRecipes }} />
-            ))
+          {!loading && daysFromDB ? (
+            getDaysFromRange().map((day) => <DayListItem key={day.date} day={day} recipes={recipes} />)
           ) : (
             <LoadingOverlay visible={loading} />
           )}

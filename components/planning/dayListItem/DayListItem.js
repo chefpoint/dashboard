@@ -19,9 +19,10 @@ export default function DayListItem({ day, recipes }) {
   const [specialDayIcon, setSpecialDayIcon] = useState(day.special_day ? day.special_day.icon : '');
   const [specialDayLabel, setSpecialDayLabel] = useState(day.special_day ? day.special_day.label : '');
 
-  const [veganValue, setVeganValue] = useState(day.vegan);
-  const [fishValue, setFishValue] = useState(day.fish);
-  const [meatValue, setMeatValue] = useState(day.meat);
+  const [dishSelection, setDishSelection] = useState(day.dishes);
+  // const [veganValue, setVeganValue] = useState(day.vegan);
+  // const [fishValue, setFishValue] = useState(day.fish);
+  // const [meatValue, setMeatValue] = useState(day.meat);
 
   function formatDate(date, type) {
     const dateObject = new Date(date);
@@ -48,12 +49,16 @@ export default function DayListItem({ day, recipes }) {
 
   function isToday(date) {
     const today = new Date();
-    date = new Date(date);
-    return date.getDate() == today.getDate() && date.getMonth() == today.getMonth() && date.getFullYear() == today.getFullYear();
+    const dateObj = new Date(date);
+    return dateObj.getDate() == today.getDate() && dateObj.getMonth() == today.getMonth() && dateObj.getFullYear() == today.getFullYear();
   }
 
   async function saveChanges() {
     //
+    setIsLoading(true);
+    const notification = toast.loading('A guardar as alterações...', {
+      autoClose: false,
+    });
 
     if (!specialDay) day.special_day = null;
     else {
@@ -63,18 +68,22 @@ export default function DayListItem({ day, recipes }) {
       };
     }
 
-    day.vegan = veganValue;
-    day.fish = fishValue;
-    day.meat = meatValue;
+    day.dishes = dishSelection;
 
-    setIsLoading(true);
-    const notification = toast.loading('A guardar as alterações...', {
-      autoClose: false,
-    });
+    day.is_public = false;
+    if (day.dishes) {
+      if (day.dishes.vegan && day.dishes.fish && day.dishes.meat) day.is_public = true;
+      else day.is_public = false;
+    } else day.is_public = false;
 
     await fetch('/api/planning/' + day.date, {
       method: 'PUT',
-      body: JSON.stringify(day),
+      body: JSON.stringify({
+        date: day.date,
+        is_public: day.is_public,
+        special_day: day.special_day,
+        dishes: day.dishes,
+      }),
     })
       .then(() => {
         toast.update(notification, {
@@ -103,27 +112,39 @@ export default function DayListItem({ day, recipes }) {
     setSpecialDay(day.special_day ? true : false);
     setSpecialDayIcon(day.special_day ? day.special_day.icon : '');
     setSpecialDayLabel(day.special_day ? day.special_day.label : '');
-    setVeganValue(day.vegan);
-    setFishValue(day.fish);
-    setMeatValue(day.meat);
+    setDishSelection(day.dishes);
   }
 
-  function clearData() {
-    setSpecialDay(false);
-    setSpecialDayIcon('');
-    setSpecialDayLabel('');
-    setVeganValue(null);
-    setFishValue(null);
-    setMeatValue(null);
+  async function clearData() {
+    setIsLoading(true);
+    delete day.specialDay; // Imediate in frontend
+    delete day.dishes; // Imediate in frontend
+    await fetch('/api/planning/' + day.date, {
+      method: 'DELETE',
+    })
+      .then(() => {
+        setIsLoading(false);
+        setIsOpen(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+        setIsOpen(true);
+      });
   }
 
   function getDayOfWeek(date) {
     return dayjs(date).isoWeekday();
   }
 
+  function hasDishSelection(dish, type) {
+    if (dish && dish[type]) return true;
+    else return false;
+  }
+
   return (
     <>
-      <Modal blur open={isOpen} width={500} onOpen={resetData} onClose={() => setIsOpen(false)}>
+      <Modal blur open={isOpen} width={600} onOpen={resetData} onClose={() => setIsOpen(false)}>
         <Modal.Header>
           <Text b size={18} css={{ textTransform: 'uppercase' }}>
             {formatDate(day.date, 'full')}
@@ -165,23 +186,24 @@ export default function DayListItem({ day, recipes }) {
             title='Receitas Vegan e Vegetarianas'
             color='$vegan'
             options={recipes.vegan}
-            value={veganValue}
-            onChange={(selection) => setVeganValue(selection)}
+            selection={dishSelection ? dishSelection.vegan : null}
+            onChange={(selection) => setDishSelection({ ...dishSelection, vegan: selection })}
           />
           <RecipeSelectorCard
             title='Receitas de Peixe'
             color='$fish'
             options={recipes.fish}
-            value={fishValue}
-            onChange={(selection) => setFishValue(selection)}
+            selection={dishSelection ? dishSelection.fish : null}
+            onChange={(selection) => setDishSelection({ ...dishSelection, fish: selection })}
           />
           <RecipeSelectorCard
             title='Receitas de Carne'
             color='$meat'
             options={recipes.meat}
-            value={meatValue}
-            onChange={(selection) => setMeatValue(selection)}
+            selection={dishSelection ? dishSelection.meat : null}
+            onChange={(selection) => setDishSelection({ ...dishSelection, meat: selection })}
           />
+
           {!isLoading ? (
             <Button onPress={saveChanges} css={{ width: '100%' }}>
               Guardar Alterações
@@ -218,9 +240,9 @@ export default function DayListItem({ day, recipes }) {
         <Divider />
         <Card.Body css={{ p: '$sm' }}>
           <div className={styles.recipes}>
-            <DayStatusBadge variant='vegan' status={day.vegan ? true : false} />
-            <DayStatusBadge variant='fish' status={day.fish ? true : false} />
-            <DayStatusBadge variant='meat' status={day.meat ? true : false} />
+            <DayStatusBadge variant='vegan' status={hasDishSelection(day.dishes, 'vegan')} />
+            <DayStatusBadge variant='fish' status={hasDishSelection(day.dishes, 'fish')} />
+            <DayStatusBadge variant='meat' status={hasDishSelection(day.dishes, 'meat')} />
           </div>
         </Card.Body>
       </Card>

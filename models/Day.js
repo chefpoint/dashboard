@@ -18,6 +18,9 @@ module.exports =
         maxlength: 50,
         unique: true,
       },
+      is_public: {
+        type: Boolean,
+      },
       special_day: {
         icon: {
           type: String,
@@ -28,64 +31,61 @@ module.exports =
           maxlength: 500,
         },
       },
-      vegan: {
-        apicbase_id: {
-          type: String,
-          maxlength: 500,
+      dishes: {
+        vegan: {
+          apicbase_id: {
+            type: String,
+            maxlength: 500,
+          },
+          apicbase_url: {
+            type: String,
+            maxlength: 500,
+          },
+          title_pt: {
+            type: String,
+            maxlength: 500,
+          },
+          title_en: {
+            type: String,
+            maxlength: 500,
+          },
         },
-        title_pt: {
-          type: String,
-          maxlength: 500,
+        fish: {
+          apicbase_id: {
+            type: String,
+            maxlength: 500,
+          },
+          apicbase_url: {
+            type: String,
+            maxlength: 500,
+          },
+          title_pt: {
+            type: String,
+            maxlength: 500,
+          },
+          title_en: {
+            type: String,
+            maxlength: 500,
+          },
         },
-        title_en: {
-          type: String,
-          maxlength: 500,
-        },
-      },
-      fish: {
-        apicbase_id: {
-          type: String,
-          maxlength: 500,
-        },
-        title_pt: {
-          type: String,
-          maxlength: 500,
-        },
-        title_en: {
-          type: String,
-          maxlength: 500,
-        },
-      },
-      meat: {
-        apicbase_id: {
-          type: String,
-          maxlength: 500,
-        },
-        title_pt: {
-          type: String,
-          maxlength: 500,
-        },
-        title_en: {
-          type: String,
-          maxlength: 500,
+        meat: {
+          apicbase_id: {
+            type: String,
+            maxlength: 500,
+          },
+          apicbase_url: {
+            type: String,
+            maxlength: 500,
+          },
+          title_pt: {
+            type: String,
+            maxlength: 500,
+          },
+          title_en: {
+            type: String,
+            maxlength: 500,
+          },
         },
       },
     })
   );
-
-// {
-//   "date": "2022-05-02",
-//   "special_day": false,
-//   "vegan": {
-//     "pt": "Tortilla Espanhola de Batata e Pimento",
-//     "en": "Spanish Potato and Pepper Tortilla"
-//   },
-//   "fish": {
-//     "pt": "Tiras de Pota Frita c/ Arroz de Coentros e Maionese de Limão",
-//     "en": "Fried Cuttlefish Strips w/ Coriander Rice and Lemon Mayonnaise"
-//   },
-//   "meat": {
-//     "pt": "Costeleta de Porco c/ Batata Frita e Coleslaw",
-//     "en": "Pork Chop w/ French Fries and Coleslaw"
-//   }
-// }

@@ -13,6 +13,9 @@ import { apicbaseAPI } from '../../services/apicbase';
 export default function DashboardPlanning() {
   //
 
+  // Get days from API
+  const { data: daysFromDB } = useSWR('/api/planning/*');
+
   // State definitions
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -22,10 +25,6 @@ export default function DashboardPlanning() {
 
   // Recipes storage
   const [recipes, setRecipes] = useState(null);
-  const [days, setDays] = useState();
-
-  // Get days from API
-  const { data: daysFromDB } = useSWR('/api/planning/*', fetcher, { onSuccess: (data) => filterDaysToSelectedDate(data) });
 
   // GET RECIPES FROM APICBASE API
   useEffect(() => {
@@ -60,24 +59,6 @@ export default function DashboardPlanning() {
       }
     })();
   }, []);
-
-  // FILTER DATES BASED ON INPUT
-  function filterDaysToSelectedDate(data) {
-    //
-    const daysArray = [];
-    let currentDate = new Date(dateRangeValue[0]);
-
-    while (currentDate <= new Date(dateRangeValue[1])) {
-      const thisDaysDate = dayjs(currentDate).format('YYYY-MM-DD');
-      const dayExistsInDB = data.find((item) => item.date == thisDaysDate);
-      console.log(thisDaysDate);
-      daysArray.push({ ...dayExistsInDB, date: thisDaysDate });
-      // Use UTC date to prevent problems with time zones and DST
-      currentDate.setUTCDate(currentDate.getUTCDate() + 1);
-    }
-
-    setDays(daysArray);
-  }
 
   function getDaysFromRange() {
     //
@@ -139,22 +120,8 @@ export default function DashboardPlanning() {
       <Sidebar title={'Planeamento'}>
         <div className={styles.toolbar}>
           <DateRangePicker amountOfMonths={2} placeholder='Pick dates range' value={dateRangeValue} onChange={setDateRangeValue} />
-          <Button
-            onClick={() => {
-              setDateRangeValue(getRangeCurrentMonth);
-              filterDaysToSelectedDate(daysFromDB);
-            }}
-          >
-            Current Month
-          </Button>
-          <Button
-            onClick={() => {
-              setDateRangeValue(getRangeNextMonth);
-              filterDaysToSelectedDate(daysFromDB);
-            }}
-          >
-            Next Month
-          </Button>
+          <Button onClick={() => setDateRangeValue(getRangeCurrentMonth)}>Current Month</Button>
+          <Button onClick={() => setDateRangeValue(getRangeNextMonth)}>Next Month</Button>
         </div>
         <div className={styles.weekHeader}>
           <p>Segunda</p>

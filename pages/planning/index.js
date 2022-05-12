@@ -17,8 +17,8 @@ export default function DashboardPlanning() {
   const { data: daysFromDB } = useSWR('/api/planning/*');
 
   // State definitions
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
   const [isRefreshhing, setIsRefreshing] = useState(false);
 
   // Date ranges
@@ -29,7 +29,7 @@ export default function DashboardPlanning() {
 
   // GET RECIPES FROM APICBASE API
   useEffect(() => {
-    setLoading(true);
+    setIsLoading(true);
     getRecipes();
   }, []);
 
@@ -62,11 +62,11 @@ export default function DashboardPlanning() {
         meat: formatRecipes(meat.results),
       });
 
-      setLoading(false);
+      setIsLoading(false);
     } catch (err) {
       console.log(err);
-      setLoading(false);
-      setError(true);
+      setIsLoading(false);
+      seIstError(true);
     }
   }
 
@@ -109,7 +109,7 @@ export default function DashboardPlanning() {
 
   return (
     <>
-      <Modal blur preventClose open={error}>
+      <Modal blur preventClose open={isError}>
         <Modal.Header>
           <Text b size={18} css={{ textTransform: 'uppercase' }}>
             Apicbase Connection
@@ -131,15 +131,15 @@ export default function DashboardPlanning() {
           <DateRangePicker amountOfMonths={2} placeholder='Pick dates range' value={dateRangeValue} onChange={setDateRangeValue} />
           <Button onClick={() => setDateRangeValue(getRangeCurrentMonth)}>Current Month</Button>
           <Button onClick={() => setDateRangeValue(getRangeNextMonth)}>Next Month</Button>
-          <Button disabled={isRefreshhing} onClick={() => refreshRecipes()}>
-            {!isRefreshhing ? (
+          <Button disabled={isRefreshhing || isLoading} onClick={() => refreshRecipes()}>
+            {isRefreshhing || isLoading ? (
+              <Loading size='xs' />
+            ) : (
               <>
                 <GoSync />
                 <Spacer x={0.25} />
                 Sync Apicbase
               </>
-            ) : (
-              <Loading size='xs' />
             )}
           </Button>
         </div>
@@ -153,10 +153,10 @@ export default function DashboardPlanning() {
           <p>Domingo</p>
         </div>
         <div className={styles.dayList}>
-          {!loading && daysFromDB ? (
+          {!isLoading && daysFromDB ? (
             getDaysFromRange().map((day) => <DayListItem key={day.date} day={day} recipes={recipes} />)
           ) : (
-            <LoadingOverlay visible={loading} />
+            <LoadingOverlay visible={isLoading} />
           )}
         </div>
       </Sidebar>

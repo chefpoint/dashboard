@@ -1,14 +1,14 @@
 import styles from '../../styles/dashboard/DashboardPlanning.module.css';
 import Sidebar from '../../components/sidebar/container/Sidebar';
 import useSWR from 'swr';
-import fetcher from '../../services/fetch';
 import dayjs from 'dayjs';
 import { useState, useEffect } from 'react';
 import DayListItem from '../../components/planning/dayListItem/DayListItem';
 import { LoadingOverlay } from '@mantine/core';
-import { Button, Modal, Text, Divider } from '@nextui-org/react';
+import { Button, Modal, Text, Divider, Loading, Spacer } from '@nextui-org/react';
 import { DateRangePicker } from '@mantine/dates';
 import { apicbaseAPI } from '../../services/apicbase';
+import { GoSync } from 'react-icons/go';
 
 export default function DashboardPlanning() {
   //
@@ -19,6 +19,7 @@ export default function DashboardPlanning() {
   // State definitions
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [isRefreshhing, setIsRefreshing] = useState(false);
 
   // Date ranges
   const [dateRangeValue, setDateRangeValue] = useState(getRangeCurrentMonth());
@@ -28,37 +29,46 @@ export default function DashboardPlanning() {
 
   // GET RECIPES FROM APICBASE API
   useEffect(() => {
-    (async function getRecipes() {
-      try {
-        setLoading(true);
-
-        const vegan = await apicbaseAPI('/products/recipes?page_size=200&custom_fields={"Tipo de Receita": ["Vegan", "Vegetariana"]}', 'GET');
-        const fish = await apicbaseAPI('/products/recipes?page_size=200&custom_fields={"Tipo de Receita": ["Peixe"]}', 'GET');
-        const meat = await apicbaseAPI('/products/recipes?page_size=200&custom_fields={"Tipo de Receita": ["Carne"]}', 'GET');
-
-        function formatRecipes(data) {
-          return data.map((item) => ({
-            apicbase_id: item.id,
-            apicbase_url: item.web_page,
-            title_pt: item.name,
-            title_en: item.custom_fields[6].value || '',
-          }));
-        }
-
-        setRecipes({
-          vegan: formatRecipes(vegan.results),
-          fish: formatRecipes(fish.results),
-          meat: formatRecipes(meat.results),
-        });
-
-        setLoading(false);
-      } catch (err) {
-        console.log(err);
-        setLoading(false);
-        setError(true);
-      }
-    })();
+    setLoading(true);
+    getRecipes();
   }, []);
+
+  async function refreshRecipes() {
+    setIsRefreshing(true);
+    await getRecipes();
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 1000);
+  }
+
+  async function getRecipes() {
+    try {
+      const vegan = await apicbaseAPI('/products/recipes?page_size=200&custom_fields={"Tipo de Receita": ["Vegan", "Vegetariana"]}', 'GET');
+      const fish = await apicbaseAPI('/products/recipes?page_size=200&custom_fields={"Tipo de Receita": ["Peixe"]}', 'GET');
+      const meat = await apicbaseAPI('/products/recipes?page_size=200&custom_fields={"Tipo de Receita": ["Carne"]}', 'GET');
+
+      function formatRecipes(data) {
+        return data.map((item) => ({
+          apicbase_id: item.id,
+          apicbase_url: item.web_page,
+          title_pt: item.name,
+          title_en: item.custom_fields[6].value || '',
+        }));
+      }
+
+      setRecipes({
+        vegan: formatRecipes(vegan.results),
+        fish: formatRecipes(fish.results),
+        meat: formatRecipes(meat.results),
+      });
+
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      setError(true);
+    }
+  }
 
   function getDaysFromRange() {
     //
@@ -68,7 +78,6 @@ export default function DashboardPlanning() {
     while (currentDate <= new Date(dateRangeValue[1])) {
       const thisDaysDate = dayjs(currentDate).format('YYYY-MM-DD');
       const dayExistsInDB = daysFromDB.find((item) => item.date == thisDaysDate);
-      console.log(thisDaysDate);
       daysArray.push({ ...dayExistsInDB, date: thisDaysDate });
       // Use UTC date to prevent problems with time zones and DST
       currentDate.setUTCDate(currentDate.getUTCDate() + 1);
@@ -122,6 +131,17 @@ export default function DashboardPlanning() {
           <DateRangePicker amountOfMonths={2} placeholder='Pick dates range' value={dateRangeValue} onChange={setDateRangeValue} />
           <Button onClick={() => setDateRangeValue(getRangeCurrentMonth)}>Current Month</Button>
           <Button onClick={() => setDateRangeValue(getRangeNextMonth)}>Next Month</Button>
+          <Button disabled={isRefreshhing} onClick={() => refreshRecipes()}>
+            {!isRefreshhing ? (
+              <>
+                <GoSync />
+                <Spacer x={0.25} />
+                Sync Apicbase
+              </>
+            ) : (
+              <Loading size='xs' />
+            )}
+          </Button>
         </div>
         <div className={styles.weekHeader}>
           <p>Segunda</p>

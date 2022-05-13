@@ -12,6 +12,7 @@ export default function Sidebar({ title, children }) {
         <div className={styles.buttonsContainer}>
           <SidebarButton icon={'housefill'} title={'Home'} destination={'/'} />
           <SidebarButton icon={'checkmarkcirclefill'} title={'Planeamento'} destination={'/planning'} />
+          <SidebarButton icon={'checkmarkcirclefill'} title={'Recrutamento'} destination={'/hr'} />
           {/* <SidebarButton icon={'chartbarxaxis'} title={'Relatórios'} destination={'/reports'} /> */}
           {/* <SidebarButton icon={'tagfill'} title={'Produtos'} destination={'/products'} /> */}
           {/* <SidebarButton icon={'person2fill'} title={'Clientes'} destination={'/customers'} /> */}

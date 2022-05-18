@@ -1,5 +1,6 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { CssBaseline } from '@nextui-org/react';
+import { getCssText } from '../stitches.config';
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
@@ -28,6 +29,7 @@ export default class MyDocument extends Document {
           <link rel='mask-icon' href='/safari-pinned-tab.svg' color='#ff0000' />
           <meta name='HandheldFriendly' content='true' />
           <link rel='stylesheet' href='https://use.typekit.net/tto7hgg.css' />
+          <style id='stitches' dangerouslySetInnerHTML={{ __html: getCssText() }} />
         </Head>
         <body>
           <Main />

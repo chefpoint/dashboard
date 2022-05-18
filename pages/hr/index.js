@@ -5,7 +5,9 @@ import { useState, useEffect } from 'react';
 import { LoadingOverlay } from '@mantine/core';
 import { IconButton } from '../../components/iconButton2/IconButton';
 import { Badge } from '../../components/badge/Badge';
-import { Button, Table, Row, Col, Tooltip, User, Text, Modal, Divider, Loading, Spacer } from '@nextui-org/react';
+import Button from '../../theme/components/Button';
+import Table from '../../theme/components/Table';
+import { Row, Col, Tooltip, User, Text, Modal, Divider, Loading, Spacer } from '@nextui-org/react';
 import { AiFillStar } from 'react-icons/ai';
 
 export default function DashboardHR() {

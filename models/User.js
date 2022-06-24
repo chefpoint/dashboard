@@ -18,6 +18,11 @@ module.exports =
         maxlength: 30,
         required: true,
       },
+      role: {
+        type: String,
+        maxlength: 30,
+        required: true,
+      },
       pwd: {
         type: String,
         maxlength: 4,

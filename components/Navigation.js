@@ -69,7 +69,7 @@ export default function Navigation({ children }) {
           <NavigationButton disabled icon={<IoBarChart />} label={'Relatórios'} destination={'/reports'} />
           <NavigationButton disabled icon={<IoPricetags />} label={'Produtos'} destination={'/products'} />
           <NavigationButton disabled icon={<IoPeople />} label={'Clientes'} destination={'/customers'} />
-          <NavigationButton disabled icon={<IoShieldCheckmark />} label={'Colaboradores'} destination={'/users'} />
+          <NavigationButton icon={<IoShieldCheckmark />} label={'Colaboradores'} destination={'/users'} />
           <NavigationButton disabled icon={<IoPrism />} label={'Equipamentos'} destination={'/devices'} />
           <NavigationButton disabled icon={<IoReceipt />} label={'Transações'} destination={'/transactions'} />
           <NavigationButton disabled icon={<IoLayers />} label={'Layouts'} destination={'/layouts'} />

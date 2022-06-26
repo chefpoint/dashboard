@@ -8,12 +8,12 @@ export default styled('button', {
   justifyContent: 'center',
   //
   // width: '100%',
-  padding: '$md $lg',
+  padding: '$sm $md',
   borderWidth: '2px',
   borderStyle: 'solid',
   borderRadius: '$md',
   //
-  fontSize: '25px',
+  fontSize: '15px',
   fontWeight: '$bold',
   textTransform: 'uppercase',
   //
@@ -37,6 +37,10 @@ export default styled('button', {
         color: '$gray11',
         backgroundColor: '$gray3',
         borderColor: '$gray7',
+        '&:hover': {
+          backgroundColor: '$gray6',
+          borderColor: '$gray8',
+        },
         '&:active': {
           color: '$gray12',
           backgroundColor: '$gray8',
@@ -95,6 +99,6 @@ export default styled('button', {
   },
   //
   defaultVariants: {
-    color: 'primary',
+    color: 'secondary',
   },
 });

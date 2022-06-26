@@ -25,8 +25,8 @@ import {
 
 const Container = styled('div', {
   position: 'fixed',
-  top: '0',
-  left: '0',
+  top: 0,
+  left: 0,
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'stretch',
@@ -36,13 +36,14 @@ const Container = styled('div', {
 });
 
 const Sidebar = styled('div', {
-  width: '250px',
-  minWidth: '250px',
-  maxWidth: '250px',
+  width: '20%',
+  minWidth: '275px',
+  maxWidth: '500px',
   backgroundColor: '$gray1',
   padding: '$lg',
   boxShadow: '$md',
   zIndex: 999,
+  overflowY: 'scroll',
 });
 
 const NavContainer = styled('div', {
@@ -54,8 +55,8 @@ const NavContainer = styled('div', {
 const AppContainer = styled('div', {
   width: '100%',
   padding: '50px',
-  overflow: 'scroll',
   backgroundColor: '$gray0',
+  overflowY: 'scroll',
 });
 
 export default function Navigation({ children }) {
@@ -70,6 +71,7 @@ export default function Navigation({ children }) {
           <NavigationButton icon={<IoReceipt />} label={'Transações'} destination={'/transactions'} />
           <NavigationButton disabled icon={<IoPricetags />} label={'Produtos'} destination={'/products'} />
           <NavigationButton disabled icon={<IoPeople />} label={'Clientes'} destination={'/customers'} />
+          <NavigationButton disabled icon={<IoPeople />} label={'Contas Correntes'} destination={'/checking_accounts'} />
           <NavigationButton icon={<IoShieldCheckmark />} label={'Colaboradores'} destination={'/users'} />
           <NavigationButton disabled icon={<IoLayers />} label={'Layouts'} destination={'/layouts'} />
           <NavigationButton disabled icon={<IoPrism />} label={'Equipamentos'} destination={'/devices'} />

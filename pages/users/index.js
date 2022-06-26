@@ -3,12 +3,7 @@ import { useRouter } from 'next/router';
 import { styled } from '@stitches/react';
 import Button from '../../components/Button';
 import Table from '../../components/Table';
-
-const PageTitle = styled('p', {
-  fontSize: '30px',
-  fontWeight: '$bold',
-  marginBottom: '$md',
-});
+import PageContainer from '../../components/PageContainer';
 
 export default function Users() {
   //
@@ -22,8 +17,7 @@ export default function Users() {
   }
 
   return (
-    <div>
-      <PageTitle>Users</PageTitle>
+    <PageContainer title={'Colaboradores'}>
       <Table
         columns={[
           { label: 'Name', key: 'name' },
@@ -32,6 +26,6 @@ export default function Users() {
         data={users}
         onRowClick={handleRowClick}
       />
-    </div>
+    </PageContainer>
   );
 }

@@ -9,20 +9,12 @@ import Loading from './Loading';
 
 const Container = styled('div', {
   width: '100%',
-  boxShadow: '$md',
+  // boxShadow: '$md',
   borderRadius: '$md',
   overflow: 'hidden',
-});
-
-const Header = styled('div', {
-  backgroundColor: '$gray2',
-  fontWeight: '$bold',
-  textTransform: 'uppercase',
-  fontSize: '14px',
-});
-
-const Body = styled('div', {
-  width: '100%',
+  borderWidth: '$md',
+  borderStyle: 'solid',
+  borderColor: '$gray5',
 });
 
 const Row = styled('div', {
@@ -31,17 +23,54 @@ const Row = styled('div', {
   alignItems: 'stretch',
   gap: '$md',
   padding: '$md',
+});
+
+const HeaderRow = styled(Row, {
+  padding: '$sm $md',
+  position: 'relative',
+  backgroundColor: '$gray2',
   borderBottomWidth: '$md',
   borderBottomStyle: 'solid',
-  borderBottomColor: '$gray2',
+  borderBottomColor: '$gray5',
+  fontWeight: '$bold',
+  fontSize: '13px',
+  color: '$gray11',
+  textTransform: 'uppercase',
+});
+
+const BodyRow = styled(Row, {
+  borderBottomWidth: '$md',
+  borderBottomStyle: 'solid',
+  borderBottomColor: '$gray5',
   cursor: 'pointer',
+  '&:last-child': {
+    borderBottomWidth: '0',
+  },
   '&:hover': {
-    backgroundColor: '$gray1',
+    color: '$primary5',
+    backgroundColor: '$gray2',
   },
 });
 
+const Body = styled('div', {
+  width: '100%',
+});
+
 const Cell = styled('div', {
+  color: 'inherit',
   // backgroundColor: 'yellow',
+});
+
+const NoData = styled('div', {
+  width: '100%',
+  padding: '$lg',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontWeight: '$medium',
+  fontSize: '20px',
+  textTransform: 'uppercase',
+  color: '$gray4',
 });
 
 export default function Table(props) {
@@ -65,21 +94,23 @@ export default function Table(props) {
 
   return props.data ? (
     <Container>
-      <Header>
-        <Row css={{ gridTemplateColumns: colsLength }}>
-          {props.columns.map((col, index) => (
-            <Cell key={index}>{col.label}</Cell>
-          ))}
-        </Row>
-      </Header>
-      <Body>
-        {props.data?.map((row, index) => (
-          <Row key={index} css={{ gridTemplateColumns: colsLength }} onClick={() => props.onRowClick(row)}>
-            {props.columns.map((col, index) => (
-              <Cell key={index}>{row[col.key] || '-'}</Cell>
-            ))}
-          </Row>
+      <HeaderRow css={{ gridTemplateColumns: colsLength }}>
+        {props.columns.map((col, index) => (
+          <Cell key={index}>{col.label}</Cell>
         ))}
+      </HeaderRow>
+      <Body>
+        {props.data?.length ? (
+          props.data.map((row, index) => (
+            <BodyRow key={index} css={{ gridTemplateColumns: colsLength }} onClick={() => props.onRowClick(row)}>
+              {props.columns.map((col, index) => (
+                <Cell key={index}>{row[col.key] || '-'}</Cell>
+              ))}
+            </BodyRow>
+          ))
+        ) : (
+          <NoData>Nenhum dado disponível</NoData>
+        )}
       </Body>
     </Container>
   ) : (

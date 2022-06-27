@@ -35,7 +35,7 @@ module.exports =
         new mongoose.Schema({
           title: {
             type: String,
-            maxlength: 30,
+            maxlength: 50,
             default: 'Normal',
           },
           price: {

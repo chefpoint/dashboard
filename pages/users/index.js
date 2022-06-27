@@ -10,7 +10,7 @@ export default function Users() {
 
   const router = useRouter();
 
-  const { data: users } = useSWR('/api/users/*');
+  const { data: users } = useSWR('/api/users/');
 
   function handleRowClick(row) {
     router.push('/users/' + row._id);

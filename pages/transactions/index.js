@@ -12,7 +12,7 @@ export default function Users() {
 
   const router = useRouter();
 
-  const { data: transactions } = useSWR('/api/transactions/*');
+  const { data: transactions } = useSWR('/api/transactions/');
 
   function handleRowClick(row) {
     router.push('/transactions/' + row._id);

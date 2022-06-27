@@ -31,9 +31,9 @@ async function getCustomer(req, res) {
 
   // 2. Try to fetch the correct Customer from the database
   try {
-    const customer = await Customer.findOne({ _id: req.query._id });
-    if (!customer) return await res.status(404).json({ message: `Customer with _id: ${req.query._id} not found.` });
-    await res.status(200).send(customer);
+    const foundCustomer = await Customer.findOne({ _id: req.query._id });
+    if (!foundCustomer) return await res.status(404).json({ message: `Customer with _id: ${req.query._id} not found.` });
+    await res.status(200).send(foundCustomer);
     return;
   } catch (err) {
     console.log(err);

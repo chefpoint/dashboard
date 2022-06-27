@@ -75,7 +75,7 @@ export default function Navigation({ children }) {
           <NavigationButton disabled icon={<IoBookmarks />} label={'Contas Correntes'} destination={'/checking_accounts'} />
           <NavigationButton icon={<IoShieldCheckmark />} label={'Colaboradores'} destination={'/users'} />
           <NavigationButton disabled icon={<IoLayers />} label={'Layouts'} destination={'/layouts'} />
-          <NavigationButton disabled icon={<IoPrism />} label={'Equipamentos'} destination={'/devices'} />
+          <NavigationButton icon={<IoPrism />} label={'Equipamentos'} destination={'/devices'} />
           <NavigationButton disabled icon={<IoSettings />} label={'Definições'} destination={'/settings'} />
         </NavContainer>
       </Sidebar>

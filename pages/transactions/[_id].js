@@ -3,40 +3,13 @@ import { DateTime } from 'luxon';
 import { useRouter } from 'next/router';
 import { styled } from '@stitches/react';
 import Button from '../../components/Button';
+import Toolbar from '../../components/Toolbar';
 import Table from '../../components/Table';
 import Loading from '../../components/Loading';
 import PageContainer from '../../components/PageContainer';
 import Group from '../../components/Group';
 
-const Toolbar = styled('div', {
-  display: 'flex',
-  flexDirection: 'row',
-  marginBottom: '$md',
-  gap: '$md',
-});
-
-const Panel = styled('div', {
-  display: 'flex',
-  flexDirection: 'column',
-  marginBottom: '$md',
-  // boxShadow: '$md',
-  backgroundColor: '$gray0',
-  width: '100%',
-  padding: '$md',
-  borderRadius: '$md',
-  borderWidth: '$md',
-  borderStyle: 'solid',
-  borderColor: '$gray3',
-});
-
-// const Grid = styled('div', {
-//   display: 'grid',
-//   gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
-//   borderRadius: '$md',
-//   gap: '$md',
-// });
-
-const Grid = styled('div', {
+export const Grid = styled('div', {
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
   borderRadius: '$md',
@@ -103,7 +76,7 @@ export default function Users() {
   }
 
   function handleOpenCustomer() {
-    console.log(transaction);
+    router.push('/customers/' + transaction.customer.customer_id);
   }
 
   function handleOpenUser() {
@@ -118,14 +91,33 @@ export default function Users() {
     console.log(transaction);
   }
 
-  function handleOpenProduct(product_id) {
-    console.log(product_id);
+  function handleOpenProduct(product) {
+    console.log(product.product_id);
+  }
+
+  function formatTableData() {
+    // Transform data for table
+    const arrayOfData = [];
+    transaction.items.forEach((i) => {
+      //
+      const formated = {
+        variation_id: i.variation_id,
+        product_id: i.product_id,
+        product_variation_title: i.product_title + ' - ' + i.variation_title,
+        qty_price: i.qty + ' x ' + i.price + '€',
+        line_total: i.qty * i.price + '€' + ' (' + i.vat_percentage * 100 + '% IVA)',
+      };
+      // console.log(formated);
+      arrayOfData.push(formated);
+    });
+    // Return array
+    return arrayOfData;
   }
 
   return transaction ? (
     <PageContainer title={'Transações › Detalhe'}>
       <Toolbar>
-        <Button onClick={handleOpenCustomer}>Abrir Cliente</Button>
+        {transaction.customer && <Button onClick={handleOpenCustomer}>Abrir Cliente</Button>}
         <Button onClick={handleOpenInvoice}>Abrir Fatura</Button>
       </Toolbar>
 
@@ -190,14 +182,15 @@ export default function Users() {
         </Grid>
       </Group>
 
-      <Group title={'Produtos'}>
-        {transaction.items.map((item) => (
-          <ProductInfo clickable key={item.variation_id} onClick={() => handleOpenProduct(item.product_id)}>
-            <ProductTitle>{item.qty + ' x ' + item.product_title + ' - ' + item.variation_title}</ProductTitle>
-            <ProductPrice>{item.price + '€ (' + item.vat_percentage * 100 + '% IVA)'}</ProductPrice>
-          </ProductInfo>
-        ))}
-      </Group>
+      <Table
+        columns={[
+          { label: 'Produto', key: 'product_variation_title' },
+          { label: 'Quantidade x Preço', key: 'qty_price' },
+          { label: 'Total de Linha', key: 'line_total' },
+        ]}
+        data={formatTableData()}
+        onRowClick={handleOpenProduct}
+      />
     </PageContainer>
   ) : (
     <Loading />

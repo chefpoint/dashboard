@@ -74,9 +74,13 @@ export default styled('button', {
         color: '$gray0',
         backgroundColor: '$danger5',
         borderColor: '$danger6',
-        '&:active': {
-          color: '$danger9',
+        '&:hover': {
           backgroundColor: '$danger6',
+          borderColor: '$danger7',
+        },
+        '&:active': {
+          color: '$primary10',
+          backgroundColor: '$danger7',
           borderColor: '$danger9',
           boxShadow: '$sm',
         },

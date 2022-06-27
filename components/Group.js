@@ -16,7 +16,7 @@ const Container = styled('div', {
   overflow: 'hidden',
   borderWidth: '$md',
   borderStyle: 'solid',
-  borderColor: '$gray4',
+  borderColor: '$gray5',
   maxHeight: '100vh',
 });
 
@@ -26,7 +26,7 @@ const Header = styled('div', {
   backgroundColor: '$gray2',
   borderBottomWidth: '$md',
   borderBottomStyle: 'solid',
-  borderBottomColor: '$gray7',
+  borderBottomColor: '$gray5',
   display: 'flex',
   alignItems: 'center',
   fontWeight: '$bold',

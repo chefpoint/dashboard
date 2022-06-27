@@ -12,6 +12,7 @@ import {
   IoPrism,
   IoReceipt,
   IoSettings,
+  IoBookmarks,
   IoLayers,
 } from 'react-icons/io5';
 
@@ -70,8 +71,8 @@ export default function Navigation({ children }) {
           <NavigationButton disabled icon={<IoBarChart />} label={'Relatórios'} destination={'/reports'} />
           <NavigationButton icon={<IoReceipt />} label={'Transações'} destination={'/transactions'} />
           <NavigationButton disabled icon={<IoPricetags />} label={'Produtos'} destination={'/products'} />
-          <NavigationButton disabled icon={<IoPeople />} label={'Clientes'} destination={'/customers'} />
-          <NavigationButton disabled icon={<IoPeople />} label={'Contas Correntes'} destination={'/checking_accounts'} />
+          <NavigationButton icon={<IoPeople />} label={'Clientes'} destination={'/customers'} />
+          <NavigationButton disabled icon={<IoBookmarks />} label={'Contas Correntes'} destination={'/checking_accounts'} />
           <NavigationButton icon={<IoShieldCheckmark />} label={'Colaboradores'} destination={'/users'} />
           <NavigationButton disabled icon={<IoLayers />} label={'Layouts'} destination={'/layouts'} />
           <NavigationButton disabled icon={<IoPrism />} label={'Equipamentos'} destination={'/devices'} />

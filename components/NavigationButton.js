@@ -32,6 +32,11 @@ const Container = styled('a', {
     backgroundColor: '$gray4',
     borderColor: '$gray7',
   },
+  '&:active': {
+    color: '$gray12',
+    backgroundColor: '$gray6',
+    borderColor: '$gray8',
+  },
   variants: {
     active: {
       true: {
@@ -40,6 +45,7 @@ const Container = styled('a', {
         borderColor: '$primary7',
         boxShadow: '$md',
         '&:hover': {
+          color: '$gray0',
           backgroundColor: '$primary6',
           borderColor: '$primary8',
         },

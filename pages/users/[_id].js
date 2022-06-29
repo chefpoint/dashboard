@@ -2,7 +2,6 @@ import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import { styled } from '@stitches/react';
 import Button from '../../components/Button';
-import Table from '../../components/Table';
 import Loading from '../../components/Loading';
 import PageContainer from '../../components/PageContainer';
 import Toolbar from '../../components/Toolbar';

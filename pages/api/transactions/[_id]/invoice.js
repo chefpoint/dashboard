@@ -1,7 +1,13 @@
 import database from '../../../../services/database';
 import Transaction from '../../../../models/Transaction';
+import { requireAuth } from '@clerk/nextjs/api';
 
-export default async function transactions(req, res) {
+/* * */
+/* GET TRANSACTION INVOICE */
+/* Explanation needed. */
+/* * */
+
+export default requireAuth(async (req, res) => {
   //
 
   // 0. Refuse request if not GET
@@ -53,4 +59,4 @@ export default async function transactions(req, res) {
     await res.status(500).json({ message: err.message });
     return;
   }
-}
+});

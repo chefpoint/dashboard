@@ -1,7 +1,13 @@
 import database from '../../../services/database';
 import User from '../../../models/User';
+import { requireAuth } from '@clerk/nextjs/api';
 
-export default async function users(req, res) {
+/* * */
+/* GET ALL USERS */
+/* Explanation needed. */
+/* * */
+
+export default requireAuth(async (req, res) => {
   //
 
   // 0. Refuse request if not GET
@@ -30,4 +36,4 @@ export default async function users(req, res) {
     await res.status(500).json({ message: 'Cannot fetch users.' });
     return;
   }
-}
+});

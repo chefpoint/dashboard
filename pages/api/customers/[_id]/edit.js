@@ -1,7 +1,13 @@
 import database from '../../../../services/database';
 import Customer from '../../../../models/Customer';
+import { requireAuth } from '@clerk/nextjs/api';
 
-export default async function editCustomer(req, res) {
+/* * */
+/* EDIT CUSTOMER */
+/* Explanation needed. */
+/* * */
+
+export default requireAuth(async (req, res) => {
   //
 
   // 0. Refuse request if not PUT
@@ -30,4 +36,4 @@ export default async function editCustomer(req, res) {
     await res.status(500).json({ message: 'Cannot update this customer.' });
     return;
   }
-}
+});

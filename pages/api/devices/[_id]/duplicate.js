@@ -1,8 +1,14 @@
 import database from '../../../../services/database';
 import Device from '../../../../models/Device';
 import generator from '../../../../services/generator';
+import { requireAuth } from '@clerk/nextjs/api';
 
-export default async function duplicateDevice(req, res) {
+/* * */
+/* DUPLICATE DEVICE */
+/* Explanation needed. */
+/* * */
+
+export default requireAuth(async (req, res) => {
   //
 
   // 0. Refuse request if not GET
@@ -43,4 +49,4 @@ export default async function duplicateDevice(req, res) {
     await res.status(500).json({ message: 'Cannot fetch this Device.' });
     return;
   }
-}
+});

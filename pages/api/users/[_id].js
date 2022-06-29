@@ -1,7 +1,13 @@
 import database from '../../../services/database';
 import User from '../../../models/User';
+import { requireAuth } from '@clerk/nextjs/api';
 
-export default async function users(req, res) {
+/* * */
+/* GET SINGLE USER */
+/* Explanation needed. */
+/* * */
+
+export default requireAuth(async (req, res) => {
   //
   // Connect to the Database
   database.connect();
@@ -24,7 +30,7 @@ export default async function users(req, res) {
       res.status(405).end(`Method ${req.method} Not Allowed`);
       break;
   }
-}
+});
 
 /* * */
 /* REST: GET */

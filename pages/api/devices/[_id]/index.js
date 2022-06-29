@@ -6,8 +6,14 @@ import Layout from '../../../../models/Layout';
 import Product from '../../../../models/Product';
 import Discount from '../../../../models/Discount';
 import CheckingAccount from '../../../../models/CheckingAccount';
+import { requireAuth } from '@clerk/nextjs/api';
 
-export default async function devices(req, res) {
+/* * */
+/* GET SINGLE DEVICE */
+/* Explanation needed. */
+/* * */
+
+export default requireAuth(async (req, res) => {
   switch (req.method) {
     case 'GET':
       return await getDevice(req, res);
@@ -20,7 +26,7 @@ export default async function devices(req, res) {
       await res.status(405).end(`Method ${req.method} Not Allowed`);
       return;
   }
-}
+});
 
 /* * */
 /* REST: GET */

@@ -1,7 +1,13 @@
 import database from '../../../../services/database';
 import Device from '../../../../models/Device';
+import { requireAuth } from '@clerk/nextjs/api';
 
-export default async function deleteDevice(req, res) {
+/* * */
+/* DELETE DEVICE */
+/* Explanation needed. */
+/* * */
+
+export default requireAuth(async (req, res) => {
   //
 
   // 0. Refuse request if not DELETE
@@ -30,4 +36,4 @@ export default async function deleteDevice(req, res) {
     await res.status(500).json({ message: 'Cannot delete this Device.' });
     return;
   }
-}
+});

@@ -1,7 +1,13 @@
 import database from '../../../../services/database';
 import Customer from '../../../../models/Customer';
+import { requireAuth } from '@clerk/nextjs/api';
 
-export default async function getCustomer(req, res) {
+/* * */
+/* GET SINGLE CUSTOMER */
+/* Explanation needed. */
+/* * */
+
+export default requireAuth(async (req, res) => {
   //
 
   // 0. Refuse request if not GET
@@ -31,4 +37,4 @@ export default async function getCustomer(req, res) {
     await res.status(500).json({ message: 'Cannot fetch this customer.' });
     return;
   }
-}
+});

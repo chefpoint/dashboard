@@ -1,7 +1,13 @@
+import { requireAuth } from '@clerk/nextjs/api';
 import database from '../../../services/database';
 import Customer from '../../../models/Customer';
 
-export default async function createCustomer(req, res) {
+/* * */
+/* CREATE CUSTOMER */
+/* Explanation needed. */
+/* * */
+
+export default requireAuth(async (req, res) => {
   //
 
   // 0. Refuse request if not POST
@@ -57,4 +63,4 @@ export default async function createCustomer(req, res) {
     await res.status(500).json({ message: 'Customer creation error.' });
     return;
   }
-}
+});

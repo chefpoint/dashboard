@@ -6,8 +6,14 @@ import Layout from '../../../models/Layout';
 import Product from '../../../models/Product';
 import Discount from '../../../models/Discount';
 import CheckingAccount from '../../../models/CheckingAccount';
+import { requireAuth } from '@clerk/nextjs/api';
 
-export default async function devices(req, res) {
+/* * */
+/* GET ALL DEVICES */
+/* Explanation needed. */
+/* * */
+
+export default requireAuth(async (req, res) => {
   //
 
   // 0. Refuse request if not GET
@@ -41,4 +47,4 @@ export default async function devices(req, res) {
     await res.status(500).json({ message: 'Cannot fetch devices.' });
     return;
   }
-}
+});

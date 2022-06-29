@@ -1,9 +1,9 @@
-import database from '../../../../services/database';
-import CheckingAccount from '../../../../models/CheckingAccount';
 import { requireAuth } from '@clerk/nextjs/api';
+import database from '../../../../services/database';
+import Layout from '../../../../models/Layout';
 
 /* * */
-/* DELETE CHECKINGACCOUNT */
+/* DELETE LAYOUT */
 /* Explanation needed. */
 /* * */
 
@@ -26,14 +26,14 @@ export default requireAuth(async (req, res) => {
     return;
   }
 
-  // 2. Try to update the correct CheckingAccount
+  // 2. Try to update the correct Layout
   try {
-    const deletedCheckingAccount = await CheckingAccount.findOneAndDelete({ _id: req.query._id }); // Return the deleted document
-    if (!deletedCheckingAccount) return await res.status(404).json({ message: `CheckingAccount with _id: ${req.query._id} not found.` });
-    return await res.status(200).send(deletedCheckingAccount);
+    const deletedLayout = await Layout.findOneAndDelete({ _id: req.query._id }); // Return the deleted document
+    if (!deletedLayout) return await res.status(404).json({ message: `Layout with _id: ${req.query._id} not found.` });
+    return await res.status(200).send(deletedLayout);
   } catch (err) {
     console.log(err);
-    await res.status(500).json({ message: 'Cannot delete this CheckingAccount.' });
+    await res.status(500).json({ message: 'Cannot delete this Layout.' });
     return;
   }
 });

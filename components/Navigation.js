@@ -70,11 +70,11 @@ export default function Navigation({ children }) {
           <NavigationButton disabled icon={<IoCalendar />} label={'Planeamento'} destination={'/planning'} />
           <NavigationButton disabled icon={<IoBarChart />} label={'Relatórios'} destination={'/reports'} />
           <NavigationButton icon={<IoReceipt />} label={'Transações'} destination={'/transactions'} />
-          <NavigationButton disabled icon={<IoPricetags />} label={'Produtos'} destination={'/products'} />
+          <NavigationButton icon={<IoPricetags />} label={'Produtos'} destination={'/products'} />
           <NavigationButton icon={<IoPeople />} label={'Clientes'} destination={'/customers'} />
           <NavigationButton icon={<IoBookmarks />} label={'Contas Correntes'} destination={'/checking_accounts'} />
           <NavigationButton icon={<IoShieldCheckmark />} label={'Colaboradores'} destination={'/users'} />
-          <NavigationButton disabled icon={<IoLayers />} label={'Layouts'} destination={'/layouts'} />
+          <NavigationButton icon={<IoLayers />} label={'Layouts'} destination={'/layouts'} />
           <NavigationButton icon={<IoPrism />} label={'Equipamentos'} destination={'/devices'} />
           <NavigationButton disabled icon={<IoSettings />} label={'Definições'} destination={'/settings'} />
         </NavContainer>

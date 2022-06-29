@@ -37,9 +37,9 @@ const Container = styled('div', {
 });
 
 const Sidebar = styled('div', {
-  width: '20%',
+  width: '275px',
   minWidth: '275px',
-  maxWidth: '500px',
+  maxWidth: '275px',
   backgroundColor: '$gray1',
   padding: '$lg',
   boxShadow: '$md',

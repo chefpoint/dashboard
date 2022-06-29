@@ -1,11 +1,14 @@
 import { styled } from '../stitches.config';
+import { useContext } from 'react';
+import { Appstate } from '../context/Appstate';
 
-export default styled('button', {
+const Container = styled('button', {
   //
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
+  gap: '$sm',
   //
   // width: '100%',
   padding: '$sm $md',
@@ -106,3 +109,30 @@ export default styled('button', {
     color: 'secondary',
   },
 });
+
+const IconWrapper = styled('div', {
+  display: 'flex',
+  marginTop: '-2px',
+  fontSize: '17px',
+});
+
+const LabelWrapper = styled('div', {});
+
+export default function Button({ icon, label, children, onClick, alert, ...props }) {
+  //
+
+  const appstate = useContext(Appstate);
+
+  function handleClick() {
+    if (alert) appstate.setOverlay(alert);
+    else onClick();
+  }
+
+  return (
+    <Container onClick={handleClick} {...props}>
+      {icon && <IconWrapper>{icon}</IconWrapper>}
+      {label && <LabelWrapper>{label}</LabelWrapper>}
+      {children && <LabelWrapper>{children}</LabelWrapper>}
+    </Container>
+  );
+}

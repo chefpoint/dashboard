@@ -20,6 +20,7 @@ module.exports =
       },
       code: {
         type: String,
+        minlength: 6,
         maxlength: 6,
         required: true,
         unique: true,

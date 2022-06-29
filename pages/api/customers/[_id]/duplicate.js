@@ -1,7 +1,7 @@
 import database from '../../../../services/database';
 import Customer from '../../../../models/Customer';
 
-export default async function getCustomer(req, res) {
+export default async function duplicateCustomer(req, res) {
   //
 
   // 0. Refuse request if not GET
@@ -21,14 +21,21 @@ export default async function getCustomer(req, res) {
   }
 
   // 2. Try to fetch the correct Customer from the database
+  //    and create a new copy of it without the unique fields.
   try {
-    const foundCustomer = await Customer.findOne({ _id: req.query._id });
+    const foundCustomer = await Customer.findOne({ _id: req.query._id }).lean();
     if (!foundCustomer) return await res.status(404).json({ message: `Customer with _id: ${req.query._id} not found.` });
-    await res.status(200).json(foundCustomer);
+    // Delete properties that must be unique to each Customer
+    delete foundCustomer._id;
+    delete foundCustomer.reference;
+    // Save as a new document
+    const duplicatedCustomer = await new Customer(foundCustomer).save();
+    console.log(duplicatedCustomer);
+    await res.status(201).json(duplicatedCustomer);
     return;
   } catch (err) {
     console.log(err);
-    await res.status(500).json({ message: 'Cannot fetch this customer.' });
+    await res.status(500).json({ message: 'Cannot fetch this Customer.' });
     return;
   }
 }

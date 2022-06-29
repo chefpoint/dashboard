@@ -1,9 +1,9 @@
-import database from '../../../services/database';
-import User from '../../../models/User';
+import database from '../../../../services/database';
+import Transaction from '../../../../models/Transaction';
 import { requireAuth } from '@clerk/nextjs/api';
 
 /* * */
-/* GET SINGLE USER */
+/* OLD TRANSACTIONS API BY ID INDEX */
 /* Explanation needed. */
 /* * */
 
@@ -16,12 +16,12 @@ export default requireAuth(async (req, res) => {
     //
     case 'GET':
       let getResult;
-      if (req.query._id == '*') getResult = await getAllUsers();
-      else getResult = await getUserWith(req.query._id);
+      if (req.query._id == '*') getResult = await getAllTransactions();
+      else getResult = await getTransactionWith(req.query._id);
       await res.status(getResult.status).json(getResult.data);
       break;
     case 'PUT':
-      const putResult = await putUserWith(req.query._id, JSON.parse(req.body));
+      const putResult = await putTransactionWith(req.query._id, JSON.parse(req.body));
       res.status(putResult.status).json(putResult.data);
       break;
     //
@@ -34,39 +34,39 @@ export default requireAuth(async (req, res) => {
 
 /* * */
 /* REST: GET */
-async function getAllUsers() {
+async function getAllTransactions() {
   // Fetch all documents from the database
-  const allUsers = await User.find({});
-  return { status: 200, data: allUsers };
+  const allTransactions = await Transaction.find({});
+  return { status: 200, data: allTransactions };
 }
 
 /* * */
 /* REST: GET */
-async function getUserWith(_id) {
+async function getTransactionWith(_id) {
   // Fetch documents from the database that match the requested '_id'
-  const foundUsers = await User.find({ _id: _id });
+  const foundTransactions = await Transaction.find({ _id: _id });
 
-  if (foundUsers.length > 0) {
+  if (foundTransactions.length > 0) {
     // If document with _id exists
-    return { status: 200, data: foundUsers[0] };
+    return { status: 200, data: foundTransactions[0] };
   } else {
     // If document with _id does not exist
-    return { status: 404, data: { message: `User with _id: ${_id} not found.` } };
+    return { status: 404, data: { message: `Transaction with _id: ${_id} not found.` } };
   }
 }
 
 /* * */
 /* REST: PUT */
-async function putUserWith(_id, query) {
+async function putTransactionWith(_id, query) {
   // Update document that matches the requested '_id'
-  const updatedUser = await User.findOneAndUpdate({ _id: _id }, query, {
+  const updatedTransaction = await Transaction.findOneAndUpdate({ _id: _id }, query, {
     new: true, // Return the updated document
     upsert: true, // If no document is found, create it
   });
 
-  if (updatedUser) {
+  if (updatedTransaction) {
     // Document was updated or created
-    return { ok: true, status: 200, data: updatedUser };
+    return { ok: true, status: 200, data: updatedTransaction };
   } else {
     // An Error Occurred
     return { ok: false, status: 500, data: { message: 'An Error Occurred.' } };

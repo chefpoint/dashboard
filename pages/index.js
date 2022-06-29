@@ -1,5 +1,5 @@
-import Sidebar from '../components/sidebar/container/Sidebar';
+import PageContainer from '../components/PageContainer';
 
 export default function Dashboard() {
-  return <Sidebar>Home</Sidebar>;
+  return <PageContainer title={'Home'}></PageContainer>;
 }

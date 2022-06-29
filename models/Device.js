@@ -13,13 +13,22 @@ module.exports =
   mongoose.model(
     'Device',
     new mongoose.Schema({
-      name: {
+      title: {
         type: String,
         maxlength: 30,
         required: true,
       },
+      code: {
+        type: String,
+        minlength: 6,
+        maxlength: 6,
+        required: true,
+        unique: true,
+      },
       location: { type: mongoose.Schema.Types.ObjectId, ref: 'Location' },
-      layout: { type: mongoose.Schema.Types.ObjectId, ref: 'Layout' },
       users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+      layout: { type: mongoose.Schema.Types.ObjectId, ref: 'Layout' },
+      discounts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Discount' }],
+      checking_accounts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'CheckingAccount' }],
     })
   );

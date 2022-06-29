@@ -1,38 +1,45 @@
 import { SWRConfig } from 'swr';
-import fetch from '../services/fetch.js';
 import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/nextjs';
-import BrowserConfig from '../utils/BrowserConfig';
-import Refresh from '../utils/Refresh.js';
-import { NextUIProvider } from '@nextui-org/react';
-import { lightTheme, darkTheme } from '../styles/theme';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import AppstateProvider from '../context/Appstate';
+import BrowserConfig from '../components/BrowserConfig';
+import Refresh from '../components/Refresh';
+import Overlay from '../components/Overlay';
+import Navigation from '../components/Navigation';
 
 // Styles
-import '../styles/globals.css';
-import '../styles/icons.css';
-import '../styles/common/forms.css';
-import '../styles/variables.css';
+import '../styles/reset.css';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 export default function Dashboard({ Component, pageProps }) {
   //
-
   // const preferredColorScheme = useColorScheme();
 
   return (
     <ClerkProvider {...pageProps}>
-      <SWRConfig value={{ fetcher: fetch, refreshInterval: 1000 }}>
-        <NextUIProvider theme={lightTheme}>
-          <Refresh />
-          <BrowserConfig />
-          <SignedIn>
+      <SWRConfig
+        value={{
+          fetcher: async (...args) => {
+            const res = await fetch(...args);
+            return res.json();
+          },
+          refreshInterval: 5000,
+        }}
+      >
+        <Refresh />
+        <BrowserConfig />
+        <SignedIn>
+          <AppstateProvider>
             <ToastContainer autoClose={3000} />
-            <Component {...pageProps} />
-          </SignedIn>
-          <SignedOut>
-            <RedirectToSignIn />
-          </SignedOut>
-        </NextUIProvider>
+            <Navigation>
+              <Component {...pageProps} />
+            </Navigation>
+            <Overlay />
+          </AppstateProvider>
+        </SignedIn>
+        <SignedOut>
+          <RedirectToSignIn />
+        </SignedOut>
       </SWRConfig>
     </ClerkProvider>
   );

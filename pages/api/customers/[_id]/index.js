@@ -3,7 +3,7 @@ import Customer from '../../../../models/Customer';
 import { requireAuth } from '@clerk/nextjs/api';
 
 /* * */
-/* GET SINGLE CUSTOMER */
+/* GET CUSTOMER BY ID */
 /* Explanation needed. */
 /* * */
 

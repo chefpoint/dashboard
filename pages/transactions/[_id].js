@@ -92,7 +92,7 @@ export default function Users() {
   }
 
   function handleOpenProduct(product) {
-    console.log(product.product_id);
+    router.push('/products/' + product.product_id);
   }
 
   function formatTableData() {

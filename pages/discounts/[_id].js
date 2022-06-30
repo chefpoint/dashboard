@@ -50,26 +50,26 @@ const Value = styled('p', {
   color: '$gray12',
 });
 
-export default function Layout() {
+export default function Discount() {
   //
 
   const router = useRouter();
   const { _id } = router.query;
 
-  const { data: layout } = useSWR('/api/layouts/' + _id);
+  const { data: discount } = useSWR('/api/discounts/' + _id);
 
-  async function handleEditLayout() {}
+  async function handleEditDiscount() {}
 
-  async function handleDuplicateLayout() {
+  async function handleDuplicateDiscount() {
     try {
       // Send the request to the API
-      const response = await fetch(`/api/layouts/${_id}/duplicate`, { method: 'GET' });
+      const response = await fetch(`/api/discounts/${_id}/duplicate`, { method: 'GET' });
       // Parse the response to JSON
       const parsedResponse = await response.json();
       // Throw an error if the response is not OK
       if (!response.ok) throw new Error(parsedResponse.message);
       // Find the index of the updated customer in the original list...
-      router.push('/layouts/' + parsedResponse._id);
+      router.push('/discounts/' + parsedResponse._id);
       toast('Wow so easy!');
     } catch (err) {
       console.log(err);
@@ -77,27 +77,27 @@ export default function Layout() {
     }
   }
 
-  async function handleDeleteLayout() {
+  async function handleDeleteDiscount() {
     try {
       // Send the request to the API
-      const response = await fetch(`/api/layouts/${_id}/delete`, { method: 'DELETE' });
+      const response = await fetch(`/api/discounts/${_id}/delete`, { method: 'DELETE' });
       // Parse the response to JSON
       const parsedResponse = await response.json();
       // Throw an error if the response is not OK
       if (!response.ok) throw new Error(parsedResponse.message);
       // Find the index of the updated customer in the original list...
-      router.push('/layouts');
+      router.push('/discounts');
     } catch (err) {
       console.log(err);
       // setErrorMessage('Ocorreu um erro inesperado.');
     }
   }
 
-  return layout ? (
-    <PageContainer title={'Layouts › ' + layout.title}>
+  return discount ? (
+    <PageContainer title={'Descontos › ' + discount.title}>
       <Toolbar>
-        <Button icon={<IoPencil />} label={'Editar'} onClick={handleEditLayout} />
-        <Button icon={<IoDuplicate />} label={'Duplicar'} onClick={handleDuplicateLayout} />
+        <Button icon={<IoPencil />} label={'Editar'} onClick={handleEditDiscount} />
+        <Button icon={<IoDuplicate />} label={'Duplicar'} onClick={handleDuplicateDiscount} />
         <Button
           icon={<IoTrash />}
           label={'Apagar'}
@@ -110,7 +110,7 @@ export default function Layout() {
               message={
                 'Esta acção é irreversível. Perderá todas as configurações e o equipamento associado a este código deixará de funcionar imediatamente.'
               }
-              onConfirm={handleDeleteLayout}
+              onConfirm={handleDeleteDiscount}
             />
           }
         />
@@ -120,11 +120,11 @@ export default function Layout() {
         <Grid>
           <GridCell>
             <Label>Nome</Label>
-            <Value>{layout.title || '-'}</Value>
+            <Value>{discount.title || '-'}</Value>
           </GridCell>
           <GridCell>
             <Label>Código Único</Label>
-            <Value>{layout.code || '-'}</Value>
+            <Value>{discount.code || '-'}</Value>
           </GridCell>
         </Grid>
       </Group>

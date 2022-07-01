@@ -29,6 +29,10 @@ const Container = styled('button', {
         color: '$gray0',
         backgroundColor: '$primary5',
         borderColor: '$primary6',
+        '&:hover': {
+          backgroundColor: '$primary6',
+          borderColor: '$primary8',
+        },
         '&:active': {
           color: '$primary9',
           backgroundColor: '$primary6',
@@ -55,6 +59,10 @@ const Container = styled('button', {
         color: '$gray0',
         backgroundColor: '$success5',
         borderColor: '$success6',
+        '&:hover': {
+          backgroundColor: '$success6',
+          borderColor: '$success8',
+        },
         '&:active': {
           color: '$success9',
           backgroundColor: '$success6',
@@ -125,7 +133,7 @@ export default function Button({ icon, label, children, onClick, alert, ...props
 
   function handleClick() {
     if (alert) appstate.setOverlay(alert);
-    else onClick();
+    else if (onClick) onClick();
   }
 
   return (

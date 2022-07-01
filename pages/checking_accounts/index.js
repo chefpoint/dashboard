@@ -4,6 +4,8 @@ import { styled } from '@stitches/react';
 import Button from '../../components/Button';
 import Table from '../../components/Table';
 import PageContainer from '../../components/PageContainer';
+import Toolbar from '../../components/Toolbar';
+import { IoAdd, IoSave } from 'react-icons/io5';
 
 export default function CheckingAccounts() {
   //
@@ -34,8 +36,16 @@ export default function CheckingAccounts() {
     router.push('/checking_accounts/' + row._id);
   }
 
+  function handleCreateCheckingAccount() {
+    router.push('/checking_accounts/create');
+  }
+
   return (
     <PageContainer title={'Contas Correntes'}>
+      <Toolbar>
+        <Button icon={<IoAdd />} label={'Criar'} onClick={handleCreateCheckingAccount} />
+      </Toolbar>
+
       <Table
         columns={[
           { label: 'Título', key: 'title' },

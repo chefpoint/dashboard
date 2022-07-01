@@ -30,7 +30,7 @@ export default function Dashboard({ Component, pageProps }) {
         <BrowserConfig />
         <SignedIn>
           <AppstateProvider>
-            <ToastContainer autoClose={3000} />
+            <ToastContainer />
             <Navigation>
               <Component {...pageProps} />
             </Navigation>

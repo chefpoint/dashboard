@@ -69,8 +69,6 @@ export default function Users() {
 
   const { data: transaction } = useSWR('/api/transactions/' + _id);
 
-  console.log(transaction && transaction.items);
-
   function handleOpenInvoice() {
     window.open('/api/transactions/' + transaction._id + '/invoice', '_blank');
   }
@@ -84,11 +82,11 @@ export default function Users() {
   }
 
   function handleOpenDevice() {
-    console.log(transaction);
+    router.push('/devices/' + transaction.device.device_id);
   }
 
   function handleOpenLayout() {
-    console.log(transaction);
+    router.push('/layouts/' + transaction.layout.layout_id);
   }
 
   function handleOpenProduct(product) {
@@ -99,16 +97,13 @@ export default function Users() {
     // Transform data for table
     const arrayOfData = [];
     transaction.items.forEach((i) => {
-      //
-      const formated = {
+      arrayOfData.push({
         variation_id: i.variation_id,
         product_id: i.product_id,
         product_variation_title: i.product_title + ' - ' + i.variation_title,
         qty_price: i.qty + ' x ' + i.price + '€',
         line_total: i.qty * i.price + '€' + ' (' + i.vat_percentage * 100 + '% IVA)',
-      };
-      // console.log(formated);
-      arrayOfData.push(formated);
+      });
     });
     // Return array
     return arrayOfData;

@@ -2,7 +2,7 @@ import { styled } from '../stitches.config';
 import { useContext } from 'react';
 import { Appstate } from '../context/Appstate';
 
-const Container = styled('button', {
+const Container = styled('div', {
   //
   display: 'flex',
   flexDirection: 'row',
@@ -126,7 +126,7 @@ const IconWrapper = styled('div', {
 
 const LabelWrapper = styled('div', {});
 
-export default function Button({ icon, label, children, onClick, alert, ...props }) {
+export default function Button({ icon, label, children, onClick, type, alert, ...props }) {
   //
 
   const appstate = useContext(Appstate);
@@ -137,7 +137,7 @@ export default function Button({ icon, label, children, onClick, alert, ...props
   }
 
   return (
-    <Container onClick={handleClick} {...props}>
+    <Container as={type == 'submit' ? 'button' : 'div'} onClick={handleClick} {...props}>
       {icon && <IconWrapper>{icon}</IconWrapper>}
       {label && <LabelWrapper>{label}</LabelWrapper>}
       {children && <LabelWrapper>{children}</LabelWrapper>}

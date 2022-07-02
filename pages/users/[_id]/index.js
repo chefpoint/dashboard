@@ -2,12 +2,11 @@ import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import { styled } from '@stitches/react';
 import Button from '../../../components/Button';
-import Table from '../../../components/Table';
-import { toast } from 'react-toastify';
 import Loading from '../../../components/Loading';
 import PageContainer from '../../../components/PageContainer';
 import Toolbar from '../../../components/Toolbar';
 import Group from '../../../components/Group';
+import { toast } from 'react-toastify';
 import Alert from '../../../components/Alert';
 import { IoPencil, IoTrash, IoDuplicate } from 'react-icons/io5';
 
@@ -50,56 +49,42 @@ const Value = styled('p', {
   color: '$gray12',
 });
 
-export default function Device() {
+export default function Users() {
   //
 
   const router = useRouter();
   const { _id } = router.query;
 
-  const { data: device } = useSWR('/api/devices/' + _id);
+  const { data: user } = useSWR(`/api/users/${_id}`);
 
-  async function handleEditDevice() {
-    router.push(`/devices/${_id}/edit`);
+  function handleEditUser() {
+    router.push(`/users/${_id}/edit`);
   }
 
-  async function handleDuplicateDevice() {
+  async function handleDeleteUser() {
     try {
+      // Display notification to the user
+      toast.loading('Por favor aguarde...', { toastId: _id });
       // Send the request to the API
-      const response = await fetch(`/api/devices/${_id}/duplicate`, { method: 'GET' });
+      const response = await fetch(`/api/users/${_id}/delete`, { method: 'DELETE' });
       // Parse the response to JSON
       const parsedResponse = await response.json();
       // Throw an error if the response is not OK
       if (!response.ok) throw new Error(parsedResponse.message);
       // Find the index of the updated customer in the original list...
-      router.push('/devices/' + parsedResponse._id);
-      toast('Wow so easy!');
+      router.push('/users');
+      // Update notification
+      toast.update(_id, { render: 'Colaborador eliminado!', type: 'success', isLoading: false, autoClose: true });
     } catch (err) {
       console.log(err);
-      // setErrorMessage('Ocorreu um erro inesperado.');
+      toast.update(_id, { render: 'Ocorreu um erro inesperado.', type: 'error', isLoading: false });
     }
   }
 
-  async function handleDeleteDevice() {
-    try {
-      // Send the request to the API
-      const response = await fetch(`/api/devices/${_id}/delete`, { method: 'DELETE' });
-      // Parse the response to JSON
-      const parsedResponse = await response.json();
-      // Throw an error if the response is not OK
-      if (!response.ok) throw new Error(parsedResponse.message);
-      // Find the index of the updated customer in the original list...
-      router.push('/devices');
-    } catch (err) {
-      console.log(err);
-      // setErrorMessage('Ocorreu um erro inesperado.');
-    }
-  }
-
-  return device ? (
-    <PageContainer title={'Equipamentos › ' + device.title}>
+  return user ? (
+    <PageContainer title={'Colaboradores › ' + user.name}>
       <Toolbar>
-        <Button icon={<IoPencil />} label={'Editar'} onClick={handleEditDevice} />
-        <Button icon={<IoDuplicate />} label={'Duplicar'} onClick={handleDuplicateDevice} />
+        <Button icon={<IoPencil />} label={'Editar'} onClick={handleEditUser} />
         <Button
           icon={<IoTrash />}
           label={'Eliminar'}
@@ -107,12 +92,10 @@ export default function Device() {
           alert={
             <Alert
               color={'danger'}
-              title={'Eliminar Equipamento'}
-              subtitle={'Tem a certeza que pretende eliminar este equipamento?'}
-              message={
-                'Esta acção é irreversível. Perderá todas as configurações e o equipamento associado a este código deixará de funcionar imediatamente.'
-              }
-              onConfirm={handleDeleteDevice}
+              title={'Eliminar Colaborador'}
+              subtitle={'Tem a certeza que pretende eliminar este colaborador?'}
+              message={'Esta acção é irreversível. O colaborador deixará imediatamente de ter acesso ao equipamento com a sua password.'}
+              onConfirm={handleDeleteUser}
             />
           }
         />
@@ -122,11 +105,15 @@ export default function Device() {
         <Grid>
           <GridCell>
             <Label>Nome</Label>
-            <Value>{device.title || '-'}</Value>
+            <Value>{user.name || '-'}</Value>
           </GridCell>
           <GridCell>
-            <Label>Código Único</Label>
-            <Value>{device.code || '-'}</Value>
+            <Label>Posição</Label>
+            <Value>{user.role || '-'}</Value>
+          </GridCell>
+          <GridCell>
+            <Label>Password</Label>
+            <Value>{user.pwd || '-'}</Value>
           </GridCell>
         </Grid>
       </Group>

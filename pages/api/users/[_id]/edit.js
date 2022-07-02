@@ -1,3 +1,4 @@
+import { requireAuth } from '@clerk/nextjs/api';
 import database from '../../../../services/database';
 import User from '../../../../models/User';
 

@@ -8,6 +8,7 @@ import PageContainer from '../../../components/PageContainer';
 import Toolbar from '../../../components/Toolbar';
 import Group from '../../../components/Group';
 import { IoPencil, IoTrash } from 'react-icons/io5';
+import Alert from '../../../components/Alert';
 
 const Grid = styled('div', {
   display: 'grid',
@@ -84,7 +85,22 @@ export default function CheckingAccount() {
     <PageContainer title={'Contas Correntes › ' + checkingAccount.title}>
       <Toolbar>
         <Button icon={<IoPencil />} label={'Editar'} onClick={handleEditCheckingAccount} />
-        <Button icon={<IoTrash />} label={'Eliminar'} color={'danger'} onClick={handleDeleteCheckingAccount} />
+        <Button
+          icon={<IoTrash />}
+          label={'Eliminar'}
+          color={'danger'}
+          alert={
+            <Alert
+              color={'danger'}
+              title={'Eliminar Conta Corrente'}
+              subtitle={'Tem a certeza que pretende eliminar esta Conta Corrente?'}
+              message={
+                'Esta acção é irreversível. A conta ficará imediatamente indisponível para finalização de pagamentos. Os valores em dívida serão dados como pagos.'
+              }
+              onConfirm={handleDeleteCheckingAccount}
+            />
+          }
+        />
       </Toolbar>
 
       <Group title={'Informações Gerais'}>

@@ -4,6 +4,8 @@ import { styled } from '@stitches/react';
 import Button from '../../components/Button';
 import Table from '../../components/Table';
 import PageContainer from '../../components/PageContainer';
+import Toolbar from '../../components/Toolbar';
+import { IoAdd, IoSave } from 'react-icons/io5';
 
 export default function Products() {
   //
@@ -16,8 +18,15 @@ export default function Products() {
     router.push('/products/' + row._id);
   }
 
+  function handleCreateProduct() {
+    router.push('/products/create');
+  }
+
   return (
     <PageContainer title={'Produtos'}>
+      <Toolbar>
+        <Button icon={<IoAdd />} label={'Criar'} onClick={handleCreateProduct} />
+      </Toolbar>
       <Table
         columns={[
           { label: 'Title', key: 'title' },

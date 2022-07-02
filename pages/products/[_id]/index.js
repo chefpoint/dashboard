@@ -1,14 +1,14 @@
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import { styled } from '@stitches/react';
-import Button from '../../components/Button';
-import Table from '../../components/Table';
+import Button from '../../../components/Button';
+import Table from '../../../components/Table';
 import { toast } from 'react-toastify';
-import Loading from '../../components/Loading';
-import PageContainer from '../../components/PageContainer';
-import Toolbar from '../../components/Toolbar';
-import Group from '../../components/Group';
-import Alert from '../../components/Alert';
+import Loading from '../../../components/Loading';
+import PageContainer from '../../../components/PageContainer';
+import Toolbar from '../../../components/Toolbar';
+import Group from '../../../components/Group';
+import Alert from '../../../components/Alert';
 import { IoPencil, IoTrash, IoDuplicate } from 'react-icons/io5';
 
 const Grid = styled('div', {
@@ -50,26 +50,28 @@ const Value = styled('p', {
   color: '$gray12',
 });
 
-export default function Discount() {
+export default function Product() {
   //
 
   const router = useRouter();
   const { _id } = router.query;
 
-  const { data: discount } = useSWR('/api/discounts/' + _id);
+  const { data: product } = useSWR('/api/products/' + _id);
 
-  async function handleEditDiscount() {}
+  async function handleEditProduct() {
+    router.push(`/products/${_id}/edit`);
+  }
 
-  async function handleDuplicateDiscount() {
+  async function handleDuplicateProduct() {
     try {
       // Send the request to the API
-      const response = await fetch(`/api/discounts/${_id}/duplicate`, { method: 'GET' });
+      const response = await fetch(`/api/products/${_id}/duplicate`, { method: 'GET' });
       // Parse the response to JSON
       const parsedResponse = await response.json();
       // Throw an error if the response is not OK
       if (!response.ok) throw new Error(parsedResponse.message);
       // Find the index of the updated customer in the original list...
-      router.push('/discounts/' + parsedResponse._id);
+      router.push('/devices/' + parsedResponse._id);
       toast('Wow so easy!');
     } catch (err) {
       console.log(err);
@@ -77,27 +79,27 @@ export default function Discount() {
     }
   }
 
-  async function handleDeleteDiscount() {
+  async function handleDeleteProduct() {
     try {
       // Send the request to the API
-      const response = await fetch(`/api/discounts/${_id}/delete`, { method: 'DELETE' });
+      const response = await fetch(`/api/products/${_id}/delete`, { method: 'DELETE' });
       // Parse the response to JSON
       const parsedResponse = await response.json();
       // Throw an error if the response is not OK
       if (!response.ok) throw new Error(parsedResponse.message);
       // Find the index of the updated customer in the original list...
-      router.push('/discounts');
+      router.push('/products');
     } catch (err) {
       console.log(err);
       // setErrorMessage('Ocorreu um erro inesperado.');
     }
   }
 
-  return discount ? (
-    <PageContainer title={'Descontos › ' + discount.title}>
+  return product ? (
+    <PageContainer title={'Produtos › ' + product.title}>
       <Toolbar>
-        <Button icon={<IoPencil />} label={'Editar'} onClick={handleEditDiscount} />
-        <Button icon={<IoDuplicate />} label={'Duplicar'} onClick={handleDuplicateDiscount} />
+        <Button icon={<IoPencil />} label={'Editar'} onClick={handleEditProduct} />
+        <Button icon={<IoDuplicate />} label={'Duplicar'} onClick={handleDuplicateProduct} />
         <Button
           icon={<IoTrash />}
           label={'Apagar'}
@@ -105,12 +107,10 @@ export default function Discount() {
           alert={
             <Alert
               color={'danger'}
-              title={'Apagar Equipamento'}
-              subtitle={'Tem a certeza que pretende apagar este equipamento?'}
-              message={
-                'Esta acção é irreversível. Perderá todas as configurações e o equipamento associado a este código deixará de funcionar imediatamente.'
-              }
-              onConfirm={handleDeleteDiscount}
+              title={'Apagar Produto'}
+              subtitle={'Tem a certeza que pretende apagar este produto?'}
+              message={'Esta acção é irreversível.'}
+              onConfirm={handleDeleteProduct}
             />
           }
         />
@@ -119,15 +119,30 @@ export default function Discount() {
       <Group title={'Informações Gerais'}>
         <Grid>
           <GridCell>
-            <Label>Nome</Label>
-            <Value>{discount.title || '-'}</Value>
+            <Label>Título</Label>
+            <Value>{product.title || '-'}</Value>
           </GridCell>
           <GridCell>
             <Label>Código Único</Label>
-            <Value>{discount.code || '-'}</Value>
+            <Value>{product.code || '-'}</Value>
           </GridCell>
         </Grid>
       </Group>
+
+      {product.variations.map((variation, index) => (
+        <Group key={index} title={variation.title}>
+          <Grid>
+            <GridCell>
+              <Label>Título</Label>
+              <Value>{variation.title || '-'}</Value>
+            </GridCell>
+            <GridCell>
+              <Label>Preço</Label>
+              <Value>{variation.price || '-'}</Value>
+            </GridCell>
+          </Grid>
+        </Group>
+      ))}
     </PageContainer>
   ) : (
     <Loading />

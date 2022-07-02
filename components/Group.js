@@ -13,11 +13,9 @@ import { useContext } from 'react';
 const Container = styled('div', {
   backgroundColor: '$gray0',
   borderRadius: '$md',
-  overflow: 'hidden',
   borderWidth: '$md',
   borderStyle: 'solid',
   borderColor: '$gray5',
-  maxHeight: '100vh',
 });
 
 const Header = styled('div', {
@@ -38,7 +36,7 @@ const Header = styled('div', {
 const InnerWrapper = styled('div', {
   padding: '$sm',
   width: '100%',
-  height: '100%',
+  // height: '100%',
 });
 
 /* */

@@ -11,6 +11,7 @@
   "dependencies": {
     "@clerk/nextjs": "^3.6.8",
     "@mantine/form": "^4.2.11",
+    "@mantine/hooks": "^4.2.11",
     "@stitches/react": "^1.2.8",
     "classnames": "^2.3.1",
     "lodash": "^4.17.21",

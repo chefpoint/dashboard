@@ -3,7 +3,7 @@ import CheckingAccount from '../../../../models/CheckingAccount';
 import { requireAuth } from '@clerk/nextjs/api';
 
 /* * */
-/* EDIT CHECKING ACCOUNT */
+/* EDIT CHECKINGACCOUNT */
 /* Explanation needed. */
 /* * */
 

@@ -1,23 +1,22 @@
-import database from '../../../services/database';
-import User from '../../../models/User';
-import { requireAuth } from '@clerk/nextjs/api';
+import database from '../../../../services/database';
+import User from '../../../../models/User';
 
 /* * */
-/* CREATE NEW USER */
+/* EDIT User */
 /* Explanation needed. */
 /* * */
 
 export default requireAuth(async (req, res) => {
   //
 
-  // 0. Refuse request if not POST
-  if (req.method != 'POST') {
-    await res.setHeader('Allow', ['POST']);
+  // 0. Refuse request if not PUT
+  if (req.method != 'PUT') {
+    await res.setHeader('Allow', ['PUT']);
     await res.status(405).json({ message: `Method ${req.method} Not Allowed` });
     return;
   }
 
-  // 1. Try to save a new document with req.body
+  // 1. Try to parse req.body into JSON
   try {
     req.body = await JSON.parse(req.body);
   } catch (err) {
@@ -41,8 +40,8 @@ export default requireAuth(async (req, res) => {
     // Reasons: The User only needs to input the password when logging into the POS,
     // otherwise the system will choose one of the duplicates at random.
     if (req.body.pwd) {
-      const existsPwd = await User.exists({ pwd: req.body.pwd });
-      if (existsPwd) throw new Error('Já existe um colaborador com a mesma password.');
+      const foundPwd = await User.findOne({ pwd: req.body.pwd });
+      if (foundPwd._id != req.query._id) throw new Error('Já existe um colaborador com a mesma password.');
     }
   } catch (err) {
     console.log(err);
@@ -50,14 +49,16 @@ export default requireAuth(async (req, res) => {
     return;
   }
 
-  // 4. Try to save a new document with req.body
+  // 4. Try to update the document with req.body
   try {
-    const newUser = await User(req.body).save();
-    await res.status(201).json(newUser);
+    const editedUser = await User.findOneAndUpdate({ _id: req.query._id }, req.body, {
+      new: true, // Return the updated document
+    });
+    await res.status(200).json(editedUser);
     return;
   } catch (err) {
     console.log(err);
-    await res.status(500).json({ message: 'User creation error.' });
+    await res.status(500).json({ message: 'Could not edit User.' });
     return;
   }
 });

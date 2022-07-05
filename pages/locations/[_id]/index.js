@@ -1,14 +1,14 @@
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import { styled } from '@stitches/react';
-import Button from '../../components/Button';
-import Table from '../../components/Table';
+import Button from '../../../components/Button';
+import Table from '../../../components/Table';
 import { toast } from 'react-toastify';
-import Loading from '../../components/Loading';
-import PageContainer from '../../components/PageContainer';
-import Toolbar from '../../components/Toolbar';
-import Group from '../../components/Group';
-import Alert from '../../components/Alert';
+import Loading from '../../../components/Loading';
+import PageContainer from '../../../components/PageContainer';
+import Toolbar from '../../../components/Toolbar';
+import Group from '../../../components/Group';
+import Alert from '../../../components/Alert';
 import { IoPencil, IoTrash, IoDuplicate } from 'react-icons/io5';
 
 const Grid = styled('div', {

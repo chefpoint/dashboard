@@ -1,8 +1,12 @@
 import { styled } from '../stitches.config';
 
-export default styled('div', {
+const Container = styled('div', {
   display: 'flex',
   flexDirection: 'row',
-  marginBottom: '$md',
+  marginBottom: '$sm',
   gap: '$md',
 });
+
+export default function Toolbar({ children }) {
+  return <Container>{children}</Container>;
+}

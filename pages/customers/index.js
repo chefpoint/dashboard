@@ -4,6 +4,8 @@ import { styled } from '@stitches/react';
 import Button from '../../components/Button';
 import Table from '../../components/Table';
 import PageContainer from '../../components/PageContainer';
+import Toolbar from '../../components/Toolbar';
+import { IoAdd } from 'react-icons/io5';
 
 export default function Customers() {
   //
@@ -36,8 +38,15 @@ export default function Customers() {
     router.push('/customers/' + row._id);
   }
 
+  function handleCreateCustomer() {
+    router.push('/customers/create');
+  }
+
   return (
     <PageContainer title={'Clientes'}>
+      <Toolbar>
+        <Button icon={<IoAdd />} label={'Criar'} onClick={handleCreateCustomer} />
+      </Toolbar>
       <Table
         columns={[
           { label: 'Nome', key: 'name' },

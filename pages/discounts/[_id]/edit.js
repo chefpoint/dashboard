@@ -12,7 +12,7 @@ import { IoSave, IoClose, IoAdd, IoPulse } from 'react-icons/io5';
 import { useForm, formList } from '@mantine/form';
 import { randomId } from '@mantine/hooks';
 import { useEffect, useRef, useState } from 'react';
-import AsyncSelect from 'react-select/async';
+import Select from 'react-select';
 
 const Grid = styled('div', {
   display: 'grid',
@@ -62,6 +62,7 @@ export default function Editdiscount() {
   const { _id } = router.query;
 
   const { data: discount, mutate } = useSWR(`/api/discounts/${_id}`);
+  const { data: products } = useSWR(`/api/products`);
 
   const hasUpdatedFields = useRef(false);
 
@@ -107,32 +108,25 @@ export default function Editdiscount() {
     },
   });
 
-  const variationOptions = async (inputValue) => {
-    try {
-      const response = await fetch(`/api/products/`, { method: 'GET' });
-      const parsedResponse = await response.json();
-      if (!response.ok) throw new Error(parsedResponse.message);
+  useEffect(() => {
+    if (!hasUpdatedFields.current && discount && products) {
+      //
+
       let options = [];
-      for (const product of parsedResponse) {
+      for (const product of products) {
         for (const variation of product.variations) {
           options.push({ value: variation._id, label: product.title + ' - ' + variation.title });
         }
       }
-      return options.filter((i) => i.label?.toLowerCase().includes(inputValue.toLowerCase()));
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    if (!hasUpdatedFields.current && discount) {
+      setSelectOptions(options);
       //
 
       let formatedRules = [];
       for (const [index, ruleGroup] of discount.rules.entries()) {
         let formatedRuleGroup = [];
         for (const [index, productVariationId] of ruleGroup.entries()) {
-          formatedRuleGroup.push(productVariationId);
+          const thisOption = options.find((so) => so.value == productVariationId);
+          formatedRuleGroup.push(thisOption);
         }
         formatedRules.push(formatedRuleGroup);
       }
@@ -148,15 +142,18 @@ export default function Editdiscount() {
 
       hasUpdatedFields.current = true;
     }
-  }, [discount, form]);
+  }, [discount, form, products, selectOptions]);
 
-  const [rules, setRules] = useState([
-    ['A1', 'A2', 'A3'],
-    ['B1', 'B2', 'B3'],
-    ['C1', 'C2', 'C3'],
-  ]);
+  const [rules, setRules] = useState([]);
+  const [selectOptions, setSelectOptions] = useState();
 
-  return discount ? (
+  function handleSelectChange(option, index1, index2) {
+    const newRules = [...rules];
+    newRules[index1][index2] = option;
+    setRules(newRules);
+  }
+
+  return discount && products ? (
     <PageContainer title={'Descontos › ' + (form.values.title || 'Sem Nome')}>
       <form onSubmit={form.onSubmit(handleSave)}>
         <Toolbar>
@@ -173,27 +170,54 @@ export default function Editdiscount() {
 
         <Group title={'Regras'} css={{ marginTop: '$md', display: 'flex', gap: '$md' }}>
           {rules.map((orRules, index1) => (
-            <>
-              <Group title={'Group'} key={index1}>
+            <div key={randomId()}>
+              <Group title={'Group'}>
                 {orRules.map((andRule, index2) => (
-                  <>
-                    <Grid key={index1 + '-' + index2}>
-                      <AsyncSelect cacheOptions defaultOptions loadOptions={variationOptions} />
-                      <Button icon={<IoClose />} label={'Remover'} onClick={() => {}} />
+                  <div key={index1 + '-' + index2}>
+                    <Grid>
+                      <Select
+                        value={rules[index1][index2]}
+                        onChange={(option) => handleSelectChange(option, index1, index2)}
+                        cacheOptions
+                        defaultOptions
+                        options={selectOptions}
+                      />
+                      <Button
+                        icon={<IoClose />}
+                        label={'Remover'}
+                        onClick={() => {
+                          const newRules = [...rules];
+                          newRules[index1].splice(index2, 1);
+                          setRules(newRules);
+                        }}
+                      />
                     </Grid>
-                    <p key={index1 + '--' + index2}>OR</p>
-                  </>
+                    <p>OR</p>
+                  </div>
                 ))}
-                <Button icon={<IoAdd />} label={'Adicionar Variação'} onClick={() => {}} />
+                <Button
+                  icon={<IoAdd />}
+                  label={'Adicionar Variação'}
+                  onClick={() => {
+                    const newRules = [...rules];
+                    newRules[index1].push({});
+                    setRules(newRules);
+                  }}
+                />
               </Group>
               <p key={index1 + 'k'}>AND</p>
-            </>
+            </div>
           ))}
+          <Button
+            icon={<IoAdd />}
+            label={'Adicionar Grupo'}
+            onClick={() => {
+              const newRules = [...rules];
+              newRules.push([{}]);
+              setRules(newRules);
+            }}
+          />
         </Group>
-
-        <Button css={{ marginTop: '$md' }} onClick={() => form.addListItem('rules', formList([{ variation_id: '', key: randomId() }]))}>
-          Add OR Group
-        </Button>
       </form>
     </PageContainer>
   ) : (

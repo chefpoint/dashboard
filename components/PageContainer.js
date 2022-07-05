@@ -14,10 +14,7 @@ const Container = styled('div', {
 const Title = styled('p', {
   fontSize: '30px',
   fontWeight: '$bold',
-  borderBottomWidth: '$md',
-  borderBottomStyle: 'solid',
-  borderBottomColor: '$gray2',
-  paddingBottom: '$sm',
+  marginBottom: '$sm',
 });
 
 const Contents = styled('div', {

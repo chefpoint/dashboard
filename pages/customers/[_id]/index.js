@@ -3,14 +3,14 @@ import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import { styled } from '@stitches/react';
 import { DateTime } from 'luxon';
-import Button from '../../components/Button';
-import Toolbar from '../../components/Toolbar';
-import Group from '../../components/Group';
-import Table from '../../components/Table';
-import Alert from '../../components/Alert';
+import Button from '../../../components/Button';
+import Toolbar from '../../../components/Toolbar';
+import Group from '../../../components/Group';
+import Table from '../../../components/Table';
+import Alert from '../../../components/Alert';
 import { IoPencil, IoTrash, IoDuplicate } from 'react-icons/io5';
-import Loading from '../../components/Loading';
-import PageContainer from '../../components/PageContainer';
+import Loading from '../../../components/Loading';
+import PageContainer from '../../../components/PageContainer';
 
 const Grid = styled('div', {
   display: 'grid',

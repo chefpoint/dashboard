@@ -1,11 +1,18 @@
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
-import { styled } from '@stitches/react';
+import PageContainer from '../../components/PageContainer';
+import Toolbar from '../../components/Toolbar';
 import Button from '../../components/Button';
 import Table from '../../components/Table';
-import Toolbar from '../../components/Toolbar';
-import PageContainer from '../../components/PageContainer';
 import { IoAdd } from 'react-icons/io5';
+
+/* * */
+/* DISCOUNTS */
+/* Explanation needed. */
+/* * */
+
+/* */
+/* LOGIC */
 
 export default function Discounts() {
   //
@@ -15,11 +22,11 @@ export default function Discounts() {
   const { data: discounts } = useSWR('/api/discounts/');
 
   function handleRowClick(row) {
-    router.push('/discounts/' + row._id);
+    router.push(`/discounts/${row._id}`);
   }
 
   function handleCreateDiscount() {
-    console.log();
+    router.push('/discounts/create');
   }
 
   return (

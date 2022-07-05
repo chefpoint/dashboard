@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { styled } from '@stitches/react';
 import Button from '../../../components/Button';
 import Table from '../../../components/Table';
+import { Grid, GridCell, Label, Value } from '../../../components/Grid';
 import { toast } from 'react-toastify';
 import Loading from '../../../components/Loading';
 import PageContainer from '../../../components/PageContainer';
@@ -10,53 +11,65 @@ import Toolbar from '../../../components/Toolbar';
 import Group from '../../../components/Group';
 import Alert from '../../../components/Alert';
 import { IoPencil, IoTrash, IoDuplicate } from 'react-icons/io5';
+import { useEffect, useState } from 'react';
 
-const Grid = styled('div', {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-  borderRadius: '$md',
-  gap: '$md',
-});
+/* * */
+/* VIEW DISCOUNT */
+/* Explanation needed. */
+/* * */
 
-const GridCell = styled('div', {
-  display: 'flex',
-  flexDirection: 'column',
-  padding: '$md',
-  borderRadius: '$md',
-  backgroundColor: '$gray1',
-  gap: '$xs',
-  variants: {
-    clickable: {
-      true: {
-        cursor: 'pointer',
-        '&:hover': {
-          backgroundColor: '$gray4',
-        },
-      },
-    },
-  },
-});
+/* */
+/* STYLES */
 
-const Label = styled('p', {
-  fontSize: '12px',
-  fontWeight: '$medium',
+const AndOrLabel = styled('p', {
+  fontSize: '15px',
+  fontWeight: '$bold',
   textTransform: 'uppercase',
-  color: '$gray11',
+  color: '$gray10',
+  padding: '$sm',
 });
 
-const Value = styled('p', {
-  fontSize: '18px',
-  fontWeight: '$medium',
-  color: '$gray12',
-});
+/* */
+/* LOGIC */
 
-export default function Discount() {
+export default function ViewDiscount() {
   //
 
   const router = useRouter();
   const { _id } = router.query;
 
-  const { data: discount } = useSWR('/api/discounts/' + _id);
+  const { data: discount } = useSWR(`/api/discounts/${_id}`);
+  const { data: products } = useSWR(`/api/products`);
+
+  const [formatedDiscountRules, setFormatedDiscountRules] = useState([]);
+
+  useEffect(() => {
+    if (discount && products) {
+      // Format variations
+      const formatedVariations = [];
+      for (const product of products) {
+        for (const variation of product.variations) {
+          formatedVariations.push({
+            product_id: product._id,
+            variation_id: variation._id,
+            product_variation_title: `${product.title} - ${variation.title}`,
+            variation_price: variation.price,
+          });
+        }
+      }
+      // Format discount rules
+      const formatedRules = [];
+      for (const ruleGroup of discount.rules) {
+        const formatedRuleGroup = [];
+        for (const variationId of ruleGroup) {
+          const thisVariation = formatedVariations.find((so) => so.variation_id == variationId);
+          formatedRuleGroup.push(thisVariation);
+        }
+        formatedRules.push(formatedRuleGroup);
+      }
+      setFormatedDiscountRules(formatedRules);
+    }
+  }, [discount, products]);
 
   async function handleEditDiscount() {
     router.push(`/discounts/${_id}/edit`);
@@ -95,7 +108,7 @@ export default function Discount() {
     }
   }
 
-  return discount ? (
+  return discount && products ? (
     <PageContainer title={'Descontos › ' + discount.title}>
       <Toolbar>
         <Button icon={<IoPencil />} label={'Editar'} onClick={handleEditDiscount} />
@@ -125,10 +138,35 @@ export default function Discount() {
             <Value>{discount.title || '-'}</Value>
           </GridCell>
           <GridCell>
-            <Label>Código Único</Label>
-            <Value>{discount.code || '-'}</Value>
+            <Label>Valor do Desconto</Label>
+            <Value>{`${discount.amount.toFixed(2)}€` || '-'}</Value>
           </GridCell>
         </Grid>
+      </Group>
+
+      <Group title={'Aplicar desconto se na compra existir'}>
+        {formatedDiscountRules.map((variationGroups, variationGroupsIndex) => (
+          <div key={variationGroupsIndex}>
+            {variationGroupsIndex > 0 && <AndOrLabel>e também</AndOrLabel>}
+            <Group title={'Qualquer um destes produtos'}>
+              {variationGroups.map((variation, variationIndex) => (
+                <div key={variation?.variation_id}>
+                  {variationIndex > 0 && <AndOrLabel>Ou</AndOrLabel>}
+                  <Grid css={{ border: '2px solid $gray4' }} clickable onClick={() => router.push(`/products/${variation.product_id}`)}>
+                    <GridCell>
+                      <Label>Título</Label>
+                      <Value>{variation?.product_variation_title || '-'}</Value>
+                    </GridCell>
+                    <GridCell>
+                      <Label>Preço</Label>
+                      <Value>{`${variation?.variation_price?.toFixed(2)}€`}</Value>
+                    </GridCell>
+                  </Grid>
+                </div>
+              ))}
+            </Group>
+          </div>
+        ))}
       </Group>
     </PageContainer>
   ) : (

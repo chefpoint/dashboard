@@ -36,7 +36,6 @@ const Header = styled('div', {
 const InnerWrapper = styled('div', {
   padding: '$sm',
   width: '100%',
-  // height: '100%',
 });
 
 /* */

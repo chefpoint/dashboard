@@ -1,9 +1,9 @@
 import { requireAuth } from '@clerk/nextjs/api';
 import database from '../../../../services/database';
-import Layout from '../../../../models/Layout';
+import Product from '../../../../models/Product';
 
 /* * */
-/* DELETE LAYOUT */
+/* DELETE PRODUCT */
 /* Explanation needed. */
 /* * */
 
@@ -26,14 +26,14 @@ export default requireAuth(async (req, res) => {
     return;
   }
 
-  // 2. Try to update the correct Layout
+  // 2. Try to update the correct Product
   try {
-    const deletedLayout = await Layout.findOneAndDelete({ _id: req.query._id }); // Return the deleted document
-    if (!deletedLayout) return await res.status(404).json({ message: `Layout with _id: ${req.query._id} not found.` });
-    return await res.status(200).send(deletedLayout);
+    const deletedProduct = await Product.findOneAndDelete({ _id: req.query._id }); // Return the deleted document
+    if (!deletedProduct) return await res.status(404).json({ message: `Product with _id: ${req.query._id} not found.` });
+    return await res.status(200).send(deletedProduct);
   } catch (err) {
     console.log(err);
-    await res.status(500).json({ message: 'Cannot delete this Layout.' });
+    await res.status(500).json({ message: 'Cannot delete this Product.' });
     return;
   }
 });

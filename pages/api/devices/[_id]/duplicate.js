@@ -34,6 +34,8 @@ export default requireAuth(async (req, res) => {
     if (!foundDevice) return await res.status(404).json({ message: `Device with _id: ${req.query._id} not found.` });
     // Delete properties that must be unique to each Device
     delete foundDevice._id;
+    // Change the Device title to indicate this is a copy
+    foundDevice.title += ' (cópia)';
     // Generate a new unique code for the new Device
     let deviceCodeIsNotUnique = true;
     while (deviceCodeIsNotUnique) {

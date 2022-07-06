@@ -33,6 +33,8 @@ export default requireAuth(async (req, res) => {
     if (!foundDiscount) return await res.status(404).json({ message: `Discount with _id: ${req.query._id} not found.` });
     // Delete properties that must be unique to each Discount
     delete foundDiscount._id;
+    // Change the Discount title to indicate this is a copy
+    foundDiscount.title += ' (cópia)';
     // Save as a new document
     const duplicatedDiscount = await new Discount(foundDiscount).save();
     await res.status(201).json(duplicatedDiscount);

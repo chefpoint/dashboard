@@ -1,9 +1,9 @@
 import { requireAuth } from '@clerk/nextjs/api';
 import database from '../../../../services/database';
-import Layout from '../../../../models/Layout';
+import Product from '../../../../models/Product';
 
 /* * */
-/* DUPLICATE Layout */
+/* DUPLICATE PRODUCT */
 /* Explanation needed. */
 /* * */
 
@@ -26,20 +26,22 @@ export default requireAuth(async (req, res) => {
     return;
   }
 
-  // 2. Try to fetch the correct Layout from the database
+  // 2. Try to fetch the correct Product from the database
   //    and create a new copy of it without the unique fields.
   try {
-    const foundLayout = await Layout.findOne({ _id: req.query._id }).lean();
-    if (!foundLayout) return await res.status(404).json({ message: `Layout with _id: ${req.query._id} not found.` });
-    // Delete properties that must be unique to each Layout
-    delete foundLayout._id;
+    const foundProduct = await Product.findOne({ _id: req.query._id }).lean();
+    if (!foundProduct) return await res.status(404).json({ message: `Product with _id: ${req.query._id} not found.` });
+    // Delete properties that must be unique to each Product
+    delete foundProduct._id;
+    // Change the Product title to indicate this is a copy
+    foundProduct.title += ' (cópia)';
     // Save as a new document
-    const duplicatedLayout = await new Layout(foundLayout).save();
-    await res.status(201).json(duplicatedLayout);
+    const duplicatedProduct = await new Product(foundProduct).save();
+    await res.status(201).json(duplicatedProduct);
     return;
   } catch (err) {
     console.log(err);
-    await res.status(500).json({ message: 'Cannot duplicate this Layout.' });
+    await res.status(500).json({ message: 'Cannot duplicate this Product.' });
     return;
   }
 });

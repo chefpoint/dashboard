@@ -120,11 +120,11 @@ module.exports =
           price: {
             type: Number,
           },
-          vat_id: {
+          tax_id: {
             type: String,
             maxlength: 3, // NOR, INT, RED
           },
-          vat_percentage: {
+          tax_percentage: {
             type: Number,
           },
           qty: {

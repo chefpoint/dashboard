@@ -1,54 +1,15 @@
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
-import { styled } from '@stitches/react';
 import Button from '../../../components/Button';
-import Table from '../../../components/Table';
-import { toast } from 'react-toastify';
 import Loading from '../../../components/Loading';
 import PageContainer from '../../../components/PageContainer';
 import Toolbar from '../../../components/Toolbar';
 import Group from '../../../components/Group';
+import { Grid, GridCell, Label, Value } from '../../../components/Grid';
 import Alert from '../../../components/Alert';
 import { IoPencil, IoTrash, IoDuplicate } from 'react-icons/io5';
-
-const Grid = styled('div', {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-  borderRadius: '$md',
-  gap: '$md',
-});
-
-const GridCell = styled('div', {
-  display: 'flex',
-  flexDirection: 'column',
-  padding: '$md',
-  borderRadius: '$md',
-  backgroundColor: '$gray1',
-  gap: '$xs',
-  variants: {
-    clickable: {
-      true: {
-        cursor: 'pointer',
-        '&:hover': {
-          backgroundColor: '$gray4',
-        },
-      },
-    },
-  },
-});
-
-const Label = styled('p', {
-  fontSize: '12px',
-  fontWeight: '$medium',
-  textTransform: 'uppercase',
-  color: '$gray11',
-});
-
-const Value = styled('p', {
-  fontSize: '18px',
-  fontWeight: '$medium',
-  color: '$gray12',
-});
+import API from '../../../services/API';
+import notify from '../../../services/notify';
 
 export default function Device() {
   //
@@ -64,34 +25,25 @@ export default function Device() {
 
   async function handleDuplicateDevice() {
     try {
-      // Send the request to the API
-      const response = await fetch(`/api/devices/${_id}/duplicate`, { method: 'GET' });
-      // Parse the response to JSON
-      const parsedResponse = await response.json();
-      // Throw an error if the response is not OK
-      if (!response.ok) throw new Error(parsedResponse.message);
-      // Find the index of the updated customer in the original list...
-      router.push('/devices/' + parsedResponse._id);
-      toast('Wow so easy!');
+      notify(_id, 'loading', 'A duplicar equipamento...');
+      const response = await API({ service: 'devices', resourceId: _id, operation: 'duplicate', method: 'GET' });
+      router.push(`/devices/${response._id}`);
+      notify(_id, 'success', 'Equipamento duplicado!');
     } catch (err) {
       console.log(err);
-      // setErrorMessage('Ocorreu um erro inesperado.');
+      notify(_id, 'error', 'Ocorreu um erro.');
     }
   }
 
   async function handleDeleteDevice() {
     try {
-      // Send the request to the API
-      const response = await fetch(`/api/devices/${_id}/delete`, { method: 'DELETE' });
-      // Parse the response to JSON
-      const parsedResponse = await response.json();
-      // Throw an error if the response is not OK
-      if (!response.ok) throw new Error(parsedResponse.message);
-      // Find the index of the updated customer in the original list...
+      notify(_id, 'loading', 'A eliminar equipamento...');
+      await API({ service: 'devices', resourceId: _id, operation: 'delete', method: 'DELETE' });
       router.push('/devices');
+      notify(_id, 'success', 'Equipamento eliminado!');
     } catch (err) {
       console.log(err);
-      // setErrorMessage('Ocorreu um erro inesperado.');
+      notify(_id, 'error', 'Ocorreu um erro.');
     }
   }
 

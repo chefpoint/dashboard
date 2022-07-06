@@ -2,9 +2,9 @@ import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import { styled } from '@stitches/react';
 import Button from '../../../components/Button';
-import Table from '../../../components/Table';
 import { Grid, GridCell, Label, Value } from '../../../components/Grid';
-import { toast } from 'react-toastify';
+import API from '../../../services/API';
+import notify from '../../../services/notify';
 import Loading from '../../../components/Loading';
 import PageContainer from '../../../components/PageContainer';
 import Toolbar from '../../../components/Toolbar';
@@ -77,34 +77,32 @@ export default function ViewDiscount() {
 
   async function handleDuplicateDiscount() {
     try {
+      // Display notification to the user
+      notify(_id, 'loading', 'A duplicar desconto...');
       // Send the request to the API
-      const response = await fetch(`/api/discounts/${_id}/duplicate`, { method: 'GET' });
-      // Parse the response to JSON
-      const parsedResponse = await response.json();
-      // Throw an error if the response is not OK
-      if (!response.ok) throw new Error(parsedResponse.message);
+      const response = await API({ service: 'discounts', resourceId: _id, operation: 'duplicate', method: 'GET' });
       // Find the index of the updated customer in the original list...
-      router.push('/discounts/' + parsedResponse._id);
-      toast('Wow so easy!');
+      router.push('/discounts/' + response._id);
+      notify(_id, 'success', 'Desconto duplicado!');
     } catch (err) {
       console.log(err);
-      // setErrorMessage('Ocorreu um erro inesperado.');
+      notify(_id, 'error', 'Ocorreu um erro.');
     }
   }
 
   async function handleDeleteDiscount() {
     try {
+      // Display notification to the user
+      notify(_id, 'loading', 'A eliminar desconto...');
       // Send the request to the API
-      const response = await fetch(`/api/discounts/${_id}/delete`, { method: 'DELETE' });
-      // Parse the response to JSON
-      const parsedResponse = await response.json();
-      // Throw an error if the response is not OK
-      if (!response.ok) throw new Error(parsedResponse.message);
+      await API({ service: 'discounts', resourceId: _id, operation: 'delete', method: 'DELETE' });
       // Find the index of the updated customer in the original list...
       router.push('/discounts');
+      // Update notification
+      notify(_id, 'success', 'Desconto eliminado!');
     } catch (err) {
       console.log(err);
-      // setErrorMessage('Ocorreu um erro inesperado.');
+      notify(_id, 'error', 'Ocorreu um erro.');
     }
   }
 
@@ -120,11 +118,9 @@ export default function ViewDiscount() {
           alert={
             <Alert
               color={'danger'}
-              title={'Apagar Equipamento'}
-              subtitle={'Tem a certeza que pretende apagar este equipamento?'}
-              message={
-                'Esta acção é irreversível. Perderá todas as configurações e o equipamento associado a este código deixará de funcionar imediatamente.'
-              }
+              title={'Eliminar Desconto'}
+              subtitle={'Tem a certeza que pretende eliminar este desconto?'}
+              message={'Esta acção é irreversível e imediata.'}
               onConfirm={handleDeleteDiscount}
             />
           }

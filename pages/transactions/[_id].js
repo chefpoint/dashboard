@@ -1,65 +1,13 @@
 import useSWR from 'swr';
 import { DateTime } from 'luxon';
 import { useRouter } from 'next/router';
-import { styled } from '@stitches/react';
 import Button from '../../components/Button';
 import Toolbar from '../../components/Toolbar';
 import Table from '../../components/Table';
 import Loading from '../../components/Loading';
 import PageContainer from '../../components/PageContainer';
 import Group from '../../components/Group';
-
-export const Grid = styled('div', {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-  borderRadius: '$md',
-  gap: '$md',
-});
-
-const GridCell = styled('div', {
-  display: 'flex',
-  flexDirection: 'column',
-  padding: '$md',
-  borderRadius: '$md',
-  backgroundColor: '$gray1',
-  gap: '$xs',
-  variants: {
-    clickable: {
-      true: {
-        cursor: 'pointer',
-        '&:hover': {
-          backgroundColor: '$gray4',
-        },
-      },
-    },
-  },
-});
-
-const Label = styled('p', {
-  fontSize: '12px',
-  fontWeight: '$medium',
-  textTransform: 'uppercase',
-  color: '$gray11',
-});
-
-const Value = styled('p', {
-  fontSize: '18px',
-  fontWeight: '$medium',
-  color: '$gray12',
-});
-
-const ProductInfo = styled(GridCell, {
-  flexDirection: 'row',
-  gap: '$md',
-  alignItems: 'baseline',
-});
-
-const ProductTitle = styled(Value, {});
-
-const ProductPrice = styled(Value, {
-  fontSize: '15px',
-  color: '$primary5',
-});
+import { Grid, GridCell, Label, Value } from '../../components/Grid';
 
 export default function Users() {
   //
@@ -67,30 +15,30 @@ export default function Users() {
   const router = useRouter();
   const { _id } = router.query;
 
-  const { data: transaction } = useSWR('/api/transactions/' + _id);
+  const { data: transaction } = useSWR(`/api/transactions/${_id}`);
 
   function handleOpenInvoice() {
-    window.open('/api/transactions/' + transaction._id + '/invoice', '_blank');
+    window.open(`/api/transactions/${transaction._id}/invoice`, '_blank');
   }
 
   function handleOpenCustomer() {
-    router.push('/customers/' + transaction.customer.customer_id);
+    router.push(`/customers/${transaction.customer.customer_id}`);
   }
 
   function handleOpenUser() {
-    router.push('/users/' + transaction.user.user_id);
+    router.push(`/users/${transaction.user.user_id}`);
   }
 
   function handleOpenDevice() {
-    router.push('/devices/' + transaction.device.device_id);
+    router.push(`/devices/${transaction.device.device_id}`);
   }
 
   function handleOpenLayout() {
-    router.push('/layouts/' + transaction.layout.layout_id);
+    router.push(`/layouts/${transaction.layout.layout_id}`);
   }
 
   function handleOpenProduct(product) {
-    router.push('/products/' + product.product_id);
+    router.push(`/products/${product.product_id}`);
   }
 
   function formatTableData() {
@@ -166,10 +114,12 @@ export default function Users() {
             <Label>Método Utilizado</Label>
             <Value>{transaction.payment.method_label}</Value>
           </GridCell>
-          <GridCell clickable onClick={handleOpenInvoice}>
-            <Label>Documento</Label>
-            <Value>{transaction.invoice.number}</Value>
-          </GridCell>
+          {transaction.invoice && (
+            <GridCell clickable onClick={handleOpenInvoice}>
+              <Label>Documento</Label>
+              <Value>{transaction.invoice.number}</Value>
+            </GridCell>
+          )}
           <GridCell clickable onClick={handleOpenUser}>
             <Label>Atendido por</Label>
             <Value>{transaction.user.name}</Value>

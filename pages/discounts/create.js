@@ -12,8 +12,10 @@ import { Grid } from '../../components/Grid';
 import TextField from '../../components/TextField';
 import { IoSave, IoClose, IoPricetag, IoTrash, IoCopy } from 'react-icons/io5';
 import { randomId } from '@mantine/hooks';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Select from 'react-select';
+import API from '../../services/API';
+import notify from '../../services/notify';
 import FlexWrapper from '../../components/FlexWrapper';
 
 /* * */
@@ -76,21 +78,21 @@ export default function CreateDiscount() {
   }
 
   // Discount Style Fill
-  const [discountStyleFill, setDiscountStyleFill] = useState();
+  const [discountStyleFill, setDiscountStyleFill] = useState('#ffffff');
   function handleChangeDiscountStyleFill({ target }) {
     // validate(schema, target.value)
     setDiscountStyleFill(target.value);
   }
 
   // Discount Style Border
-  const [discountStyleBorder, setDiscountStyleBorder] = useState();
+  const [discountStyleBorder, setDiscountStyleBorder] = useState('#ffffff');
   function handleChangeDiscountStyleBorder({ target }) {
     // validate(schema, target.value)
     setDiscountStyleBorder(target.value);
   }
 
   // Discount Style Text
-  const [discountStyleText, setDiscountStyleText] = useState();
+  const [discountStyleText, setDiscountStyleText] = useState('#ffffff');
   function handleChangeDiscountStyleText({ target }) {
     // validate(schema, target.value)
     setDiscountStyleText(target.value);
@@ -177,23 +179,16 @@ export default function CreateDiscount() {
     // Try to save the object to the API
     try {
       // Display notification to the user
-      toast.loading('A guardar alterações...', { toastId: 'discount/create' });
+      notify('new', 'loading', 'A guardar alterações...');
       // Send the request to the API
-      const response = await fetch(`/api/discounts/create`, {
-        method: 'POST',
-        body: JSON.stringify(discountToSave),
-      });
-      // Parse the response to JSON
-      const parsedResponse = await response.json();
-      // Throw an error if the response is not OK
-      if (!response.ok) throw new Error(parsedResponse.message);
+      const response = await API({ service: 'discounts', operation: 'create', method: 'POST', body: discountToSave });
       // Get the _id of the newly created item
-      router.push(`/discounts/${parsedResponse._id}`);
+      router.push(`/discounts/${response._id}`);
       // Update notification
-      toast.update('discount/create', { render: 'Alterações guardadas!', type: 'success', isLoading: false, autoClose: true });
+      notify('new', 'success', 'Alterações guardadas!');
     } catch (err) {
       console.log(err);
-      toast.update('discount/create', { render: 'Error', type: 'error', isLoading: false, autoClose: true });
+      notify('new', 'error', 'Ocorreu um erro.');
     }
   }
 

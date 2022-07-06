@@ -1,9 +1,6 @@
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
-import { styled } from '@stitches/react';
-import Button from '../../components/Button';
 import Table from '../../components/Table';
-import { useEffect, useRef, useState } from 'react';
 import { DateTime } from 'luxon';
 import PageContainer from '../../components/PageContainer';
 
@@ -15,10 +12,8 @@ export default function Users() {
   const { data: transactions } = useSWR('/api/transactions/');
 
   function handleRowClick(row) {
-    router.push('/transactions/' + row._id);
+    router.push(`/transactions/${row._id}`);
   }
-
-  console.log(transactions && transactions[transactions.length - 1]);
 
   function formatTableData() {
     // Transform data for table
@@ -31,7 +26,7 @@ export default function Users() {
       //
       const formated = {
         _id: t._id,
-        date_and_time: DateTime.fromISO(t.timestamp).toFormat('yyyy-mm-dd HH:mm'),
+        date_and_time: DateTime.fromISO(t.timestamp).toLocaleString({ ...DateTime.DATE_SHORT, month: 'long', hour: 'numeric', minute: 'numeric' }),
         location: t.location?.title,
         total_amount: t.payment?.total_amount + '€',
       };

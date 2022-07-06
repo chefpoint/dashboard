@@ -1,11 +1,12 @@
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import { styled } from '@stitches/react';
-import { toast } from 'react-toastify';
 import Button from '../../../components/Button';
 import Loading from '../../../components/Loading';
 import PageContainer from '../../../components/PageContainer';
 import Toolbar from '../../../components/Toolbar';
+import API from '../../../services/API';
+import notify from '../../../services/notify';
 import Group from '../../../components/Group';
 import Alert from '../../../components/Alert';
 import { Grid } from '../../../components/Grid';
@@ -80,21 +81,21 @@ export default function EditDiscount() {
   }
 
   // Discount Style Fill
-  const [discountStyleFill, setDiscountStyleFill] = useState();
+  const [discountStyleFill, setDiscountStyleFill] = useState('#ffffff');
   function handleChangeDiscountStyleFill({ target }) {
     // validate(schema, target.value)
     setDiscountStyleFill(target.value);
   }
 
   // Discount Style Border
-  const [discountStyleBorder, setDiscountStyleBorder] = useState();
+  const [discountStyleBorder, setDiscountStyleBorder] = useState('#ffffff');
   function handleChangeDiscountStyleBorder({ target }) {
     // validate(schema, target.value)
     setDiscountStyleBorder(target.value);
   }
 
   // Discount Style Text
-  const [discountStyleText, setDiscountStyleText] = useState();
+  const [discountStyleText, setDiscountStyleText] = useState('#ffffff');
   function handleChangeDiscountStyleText({ target }) {
     // validate(schema, target.value)
     setDiscountStyleText(target.value);
@@ -211,25 +212,18 @@ export default function EditDiscount() {
     // Try to save the object to the API
     try {
       // Display notification to the user
-      toast.loading('A guardar alterações...', { toastId: _id });
+      notify(_id, 'loading', 'A guardar alterações...');
       // Send the request to the API
-      const response = await fetch(`/api/discounts/${_id}/edit`, {
-        method: 'PUT',
-        body: JSON.stringify(discountToSave),
-      });
-      // Parse the response to JSON
-      const parsedResponse = await response.json();
-      // Throw an error if the response is not OK
-      if (!response.ok) throw new Error(parsedResponse.message);
+      await API({ service: 'discounts', resourceId: _id, operation: 'edit', method: 'PUT', body: discountToSave });
       // Revalidate the discount
       mutate({ ...discount, ...discountToSave });
       // Find the index of the updated customer in the original list...
       router.push(`/discounts/${_id}`);
       // Update notification
-      toast.update(_id, { render: 'Alterações guardadas!', type: 'success', isLoading: false, autoClose: true });
+      notify(_id, 'success', 'Alterações guardadas!');
     } catch (err) {
       console.log(err);
-      toast.update(_id, { render: 'Error', type: 'error', isLoading: false, autoClose: true });
+      notify(_id, 'error', 'Ocorreu um erro.');
     }
   }
 

@@ -146,7 +146,8 @@ export const { styled, getCssText } = createStitches({
     shadows: {
       sm: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
       md: '0 0 5px 0 rgba(0, 0, 0, 0.1)',
-      lg: '0 0 30px 0 rgba(0, 0, 0, 0.1)',
+      lg: '0 0 10px 0 rgba(0, 0, 0, 0.2)',
+      xl: '0 0 30px 0 rgba(0, 0, 0, 0.2)',
     },
     aspectRatio: {
       square: '1/1',

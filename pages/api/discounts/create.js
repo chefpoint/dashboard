@@ -1,18 +1,18 @@
-import database from '../../../../services/database';
-import Discount from '../../../../models/Discount';
+import database from '../../../services/database';
+import Discount from '../../../models/Discount';
 import { requireAuth } from '@clerk/nextjs/api';
 
 /* * */
-/* EDIT DISCOUNT */
+/* CREATE DISCOUNT */
 /* Explanation needed. */
 /* * */
 
 export default requireAuth(async (req, res) => {
   //
 
-  // 0. Refuse request if not PUT
-  if (req.method != 'PUT') {
-    await res.setHeader('Allow', ['PUT']);
+  // 0. Refuse request if not POST
+  if (req.method != 'POST') {
+    await res.setHeader('Allow', ['POST']);
     await res.status(405).json({ message: `Method ${req.method} Not Allowed` });
     return;
   }
@@ -60,14 +60,13 @@ export default requireAuth(async (req, res) => {
     return;
   }
 
-  // 4. Try to update the correct Discount
+  // 4. Try to create a new Discount
   try {
-    const editedDiscount = await Discount.findOneAndUpdate({ _id: req.query._id }, formattedDiscount, { new: true }); // Return the edited document
-    if (!editedDiscount) return await res.status(404).json({ message: `Discount with _id: ${req.query._id} not found.` });
-    return await res.status(200).json(editedDiscount);
+    const createdDiscount = await Discount(formattedDiscount).save(); // Return the created document
+    return await res.status(201).json(createdDiscount);
   } catch (err) {
     console.log(err);
-    await res.status(500).json({ message: 'Cannot update this Discount.' });
+    await res.status(500).json({ message: 'Cannot create this Discount.' });
     return;
   }
 });

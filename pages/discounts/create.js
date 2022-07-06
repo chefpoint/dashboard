@@ -2,22 +2,22 @@ import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import { styled } from '@stitches/react';
 import { toast } from 'react-toastify';
-import Button from '../../../components/Button';
-import Loading from '../../../components/Loading';
-import PageContainer from '../../../components/PageContainer';
-import Toolbar from '../../../components/Toolbar';
-import Group from '../../../components/Group';
-import Alert from '../../../components/Alert';
-import { Grid } from '../../../components/Grid';
-import TextField from '../../../components/TextField';
+import Button from '../../components/Button';
+import Loading from '../../components/Loading';
+import PageContainer from '../../components/PageContainer';
+import Toolbar from '../../components/Toolbar';
+import Group from '../../components/Group';
+import Alert from '../../components/Alert';
+import { Grid } from '../../components/Grid';
+import TextField from '../../components/TextField';
 import { IoSave, IoClose, IoPricetag, IoTrash, IoCopy } from 'react-icons/io5';
 import { randomId } from '@mantine/hooks';
 import { useEffect, useRef, useState } from 'react';
 import Select from 'react-select';
-import FlexWrapper from '../../../components/FlexWrapper';
+import FlexWrapper from '../../components/FlexWrapper';
 
 /* * */
-/* EDIT DISCOUNT */
+/* CREATE DISCOUNT */
 /* Explanation needed. */
 /* * */
 
@@ -35,18 +35,14 @@ const AndOrLabel = styled('p', {
 /* */
 /* LOGIC */
 
-export default function EditDiscount() {
+export default function CreateDiscount() {
   //
 
   const router = useRouter();
-  const { _id } = router.query;
 
-  const { data: discount, mutate } = useSWR(`/api/discounts/${_id}`);
   const { data: products } = useSWR('/api/products');
 
   const [availableProducts, setAvailableProducts] = useState();
-
-  const hasAlreadyUpdatedOnce = useRef(false);
 
   /* */
   /* FORM */
@@ -148,41 +144,11 @@ export default function EditDiscount() {
     }
   }, [products]);
 
-  // Update fields with values from the API
-  useEffect(() => {
-    // Only run once, and if 'discount' and 'availableProducts' are set
-    if (!hasAlreadyUpdatedOnce.current && discount && availableProducts) {
-      if (discount.title) setDiscountTitle(discount.title);
-      if (discount.subtitle) setDiscountSubtitle(discount.subtitle);
-      if (discount.description) setDiscountDescription(discount.description);
-      if (discount.amount) setDiscountAmount(discount.amount);
-      if (discount.style) {
-        if (discount.style.fill) setDiscountStyleFill(discount.style.fill);
-        if (discount.style.border) setDiscountStyleBorder(discount.style.border);
-        if (discount.style.text) setDiscountStyleText(discount.style.text);
-      }
-      if (discount.rules) {
-        let formattedRules = [];
-        for (const ruleGroup of discount.rules) {
-          let formattedRuleGroup = [];
-          for (const variationId of ruleGroup) {
-            const thisOption = availableProducts.find((product) => product.value == variationId);
-            formattedRuleGroup.push(thisOption);
-          }
-          formattedRules.push(formattedRuleGroup);
-        }
-        setDiscountRules(formattedRules);
-      }
-      // Set to true after successful run
-      hasAlreadyUpdatedOnce.current = true;
-    }
-  }, [discount, products, availableProducts]);
-
   /* */
   /* HANDLERS */
 
   function handleCancel() {
-    router.push(`/discounts/${_id}`);
+    router.push('/discounts/');
   }
 
   async function handleSave() {
@@ -211,32 +177,30 @@ export default function EditDiscount() {
     // Try to save the object to the API
     try {
       // Display notification to the user
-      toast.loading('A guardar alterações...', { toastId: _id });
+      toast.loading('A guardar alterações...', { toastId: 'discount/create' });
       // Send the request to the API
-      const response = await fetch(`/api/discounts/${_id}/edit`, {
-        method: 'PUT',
+      const response = await fetch(`/api/discounts/create`, {
+        method: 'POST',
         body: JSON.stringify(discountToSave),
       });
       // Parse the response to JSON
       const parsedResponse = await response.json();
       // Throw an error if the response is not OK
       if (!response.ok) throw new Error(parsedResponse.message);
-      // Revalidate the discount
-      mutate({ ...discount, ...discountToSave });
-      // Find the index of the updated customer in the original list...
-      router.push(`/discounts/${_id}`);
+      // Get the _id of the newly created item
+      router.push(`/discounts/${parsedResponse._id}`);
       // Update notification
-      toast.update(_id, { render: 'Alterações guardadas!', type: 'success', isLoading: false, autoClose: true });
+      toast.update('discount/create', { render: 'Alterações guardadas!', type: 'success', isLoading: false, autoClose: true });
     } catch (err) {
       console.log(err);
-      toast.update(_id, { render: 'Error', type: 'error', isLoading: false, autoClose: true });
+      toast.update('discount/create', { render: 'Error', type: 'error', isLoading: false, autoClose: true });
     }
   }
 
   /* */
   /* RENDER */
 
-  return discount && products ? (
+  return products ? (
     <PageContainer title={'Descontos › ' + (discountTitle || 'Sem Nome')}>
       <Toolbar>
         <Button icon={<IoSave />} label={'Guardar'} color={'success'} onClick={handleSave} />

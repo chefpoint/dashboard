@@ -139,7 +139,7 @@ export default function ViewDiscount() {
           </GridCell>
           <GridCell>
             <Label>Valor do Desconto</Label>
-            <Value>{`${discount.amount.toFixed(2)}€` || '-'}</Value>
+            <Value>{`${discount.amount}€` || '-'}</Value>
           </GridCell>
         </Grid>
       </Group>
@@ -159,7 +159,7 @@ export default function ViewDiscount() {
                     </GridCell>
                     <GridCell>
                       <Label>Preço</Label>
-                      <Value>{`${variation?.variation_price?.toFixed(2)}€`}</Value>
+                      <Value>{`${variation?.variation_price}€`}</Value>
                     </GridCell>
                   </Grid>
                 </div>

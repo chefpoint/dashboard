@@ -31,7 +31,8 @@ module.exports =
         maxlength: 250,
       },
       variations: [
-        // Subdocument of Product: https://mongoosejs.com/docs/subdocs.html
+        // Subdocument of Product
+        // Read more: https://mongoosejs.com/docs/subdocs.html
         new mongoose.Schema({
           title: {
             type: String,
@@ -41,8 +42,9 @@ module.exports =
           price: {
             type: Number,
           },
-          vat: {
-            type: Number,
+          tax_id: {
+            type: String,
+            maxlength: 3, // NOR, INT, RED
           },
           apicbase: {
             recipe_id: {

@@ -42,7 +42,7 @@ const Sidebar = styled('div', {
   width: '275px',
   minWidth: '275px',
   maxWidth: '275px',
-  backgroundColor: '$gray1',
+  backgroundColor: '$gray0',
   padding: '$lg',
   boxShadow: '$md',
   zIndex: 999,
@@ -58,7 +58,7 @@ const NavContainer = styled('div', {
 const AppContainer = styled('div', {
   width: '100%',
   padding: '50px',
-  backgroundColor: '$gray0',
+  backgroundColor: '$gray1',
   overflowY: 'scroll',
 });
 

@@ -43,7 +43,7 @@ const Container = styled('a', {
         color: '$gray0',
         backgroundColor: '$primary5',
         borderColor: '$primary7',
-        boxShadow: '$md',
+        boxShadow: '$lg',
         '&:hover': {
           color: '$gray0',
           backgroundColor: '$primary6',

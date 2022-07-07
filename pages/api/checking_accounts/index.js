@@ -1,6 +1,6 @@
-import database from '../../../services/database';
-import CheckingAccount from '../../../models/CheckingAccount';
 import { requireAuth } from '@clerk/nextjs/api';
+import database from '../../../services/database';
+import Model from '../../../models/CheckingAccount';
 
 /* * */
 /* GET ALL CHECKING ACCOUNTS */
@@ -28,7 +28,7 @@ export default requireAuth(async (req, res) => {
 
   // 2. Try to fetch all Checking Accounts from the database
   try {
-    const allCheckingAccounts = await CheckingAccount.find({});
+    const allCheckingAccounts = await Model.find({});
     await res.status(200).send(allCheckingAccounts);
     return;
   } catch (err) {

@@ -7,21 +7,24 @@
 import mongoose from 'mongoose';
 
 /* * */
-/* Schema for MongoDB ["CheckingAccount"] Object */
-module.exports =
-  mongoose.models.CheckingAccount ||
+/* Model for MongoDB ["CheckingAccount"] Object */
+export default mongoose.models.CheckingAccount ||
   mongoose.model(
     'CheckingAccount',
     new mongoose.Schema({
       title: {
         type: String,
+        minlength: 2,
         maxlength: 30,
-        required: true,
+        default: 'Untitled Checking Account',
       },
       client_name: {
         type: String,
+        minlength: 2,
+        maxlength: 30,
+        required: true,
       },
-      tax_country: {
+      tax_region: {
         type: String,
         minlength: 2,
         maxlength: 2,

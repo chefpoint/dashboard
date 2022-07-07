@@ -56,7 +56,6 @@ export const Grid = styled('div', {
   display: 'grid',
   borderRadius: '$md',
   gap: '$md',
-  alignItems: 'center',
   variants: {
     clickable: {
       true: {
@@ -78,8 +77,20 @@ export const Grid = styled('div', {
         gridTemplateColumns: '1fr  minmax(100px, 5%)',
       },
     },
+    valign: {
+      top: {
+        alignItems: 'flex-start',
+      },
+      center: {
+        alignItems: 'center',
+      },
+      bottom: {
+        alignItems: 'flex-end',
+      },
+    },
   },
   defaultVariants: {
     layout: 'auto',
+    valign: 'top',
   },
 });

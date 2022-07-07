@@ -1,6 +1,6 @@
-import database from '../../../../services/database';
-import CheckingAccount from '../../../../models/CheckingAccount';
 import { requireAuth } from '@clerk/nextjs/api';
+import database from '../../../../services/database';
+import Model from '../../../../models/CheckingAccount';
 
 /* * */
 /* DELETE CHECKINGACCOUNT */
@@ -28,8 +28,9 @@ export default requireAuth(async (req, res) => {
 
   // 2. Try to update the correct CheckingAccount
   try {
-    const deletedCheckingAccount = await CheckingAccount.findOneAndDelete({ _id: req.query._id }); // Return the deleted document
-    if (!deletedCheckingAccount) return await res.status(404).json({ message: `CheckingAccount with _id: ${req.query._id} not found.` });
+    const deletedCheckingAccount = await Model.findOneAndDelete({ _id: req.query._id }); // Return the deleted document
+    if (!deletedCheckingAccount)
+      return await res.status(404).json({ message: `CheckingAccount with _id: ${req.query._id} not found.` });
     return await res.status(200).send(deletedCheckingAccount);
   } catch (err) {
     console.log(err);

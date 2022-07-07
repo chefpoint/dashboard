@@ -1,6 +1,5 @@
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
-import { styled } from '@stitches/react';
 import API from '../../../services/API';
 import notify from '../../../services/notify';
 import Button from '../../../components/Button';
@@ -26,13 +25,9 @@ export default function CheckingAccount() {
 
   async function handleDeleteCheckingAccount() {
     try {
-      // Display notification to the user
       notify(_id, 'loading', 'Por favor aguarde...');
-      // Send the request to the API
       await API({ service: 'checking_accounts', resourceId: _id, operation: 'delete', method: 'DELETE' });
-      // Find the index of the updated customer in the original list...
       router.push('/checking_accounts');
-      // Update notification
       notify(_id, 'success', 'Conta Corrente eliminada!');
     } catch (err) {
       console.log(err);
@@ -74,7 +69,7 @@ export default function CheckingAccount() {
           </GridCell>
           <GridCell>
             <Label>NIF</Label>
-            <Value>{checkingAccount.tax_country + checkingAccount.tax_number || '-'}</Value>
+            <Value>{checkingAccount.tax_region + checkingAccount.tax_number || '-'}</Value>
           </GridCell>
         </Grid>
       </Group>

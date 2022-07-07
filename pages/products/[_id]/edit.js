@@ -13,6 +13,7 @@ import { IoSave, IoClose } from 'react-icons/io5';
 import { useForm, formList } from '@mantine/form';
 import { randomId } from '@mantine/hooks';
 import { useEffect, useRef } from 'react';
+import Select from 'react-select';
 
 export default function EditProduct() {
   //
@@ -47,11 +48,10 @@ export default function EditProduct() {
       short_title: '',
       image: '',
       description: '',
-      variations: formList([{ title: '', price: 0, vat: '', key: randomId() }]),
+      variations: formList([{ title: '', price: 0, tax_id: '', key: randomId() }]),
     },
     validate: {
       title: (value) => (value ? null : 'Invalid Title'),
-      short_title: (value) => (value ? null : 'Invalid Title'),
     },
   });
 
@@ -62,7 +62,7 @@ export default function EditProduct() {
         formatedVariations.push({
           title: variation.title,
           price: variation.price,
-          vat: variation.vat,
+          tax_id: variation.tax_id,
           key: index,
         });
       }
@@ -101,14 +101,21 @@ export default function EditProduct() {
               <Grid css={{ marginBottom: '$md' }}>
                 <TextField label={'Título'} type={'text'} {...form.getListInputProps('variations', index, 'title')} />
                 <TextField label={'Preço'} type={'number'} {...form.getListInputProps('variations', index, 'price')} />
-                <TextField label={'VAT'} type={'number'} {...form.getListInputProps('variations', index, 'vat')} />
+                <Select
+                  {...form.getListInputProps('variations', index, 'tax_id')}
+                  options={[
+                    { label: 'Normal (23%)', value: 'NOR' },
+                    { label: 'Intermédia (13%)', value: 'INT' },
+                    { label: 'Reduzida (6%)', value: 'RED' },
+                  ]}
+                />
               </Grid>
               <Button icon={<IoClose />} label={'Remover Variação'} onClick={() => form.removeListItem('variations', index)} />
             </Group>
           ))}
         </Group>
 
-        <Button css={{ marginTop: '$md' }} onClick={() => form.addListItem('variations', { title: '', price: 0, vat: '', key: randomId() })}>
+        <Button css={{ marginTop: '$md' }} onClick={() => form.addListItem('variations', { title: '', price: 0, tax_id: '', key: randomId() })}>
           Add Variation
         </Button>
       </form>

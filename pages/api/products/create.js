@@ -1,10 +1,10 @@
 import { requireAuth } from '@clerk/nextjs/api';
 import database from '../../../services/database';
-import Model from '../../../models/CheckingAccount';
-import Schema from '../../../schemas/CheckingAccount';
+import Model from '../../../models/Product';
+import Schema from '../../../schemas/Product';
 
 /* * */
-/* CREATE CHECKINGACCOUNT */
+/* CREATE PRODUCT */
 /* Explanation needed. */
 /* * */
 
@@ -45,13 +45,13 @@ export default requireAuth(async (req, res) => {
     return;
   }
 
-  // 4. Try to create a new CheckingAccount
+  // 4. Try to create a new Product
   try {
-    const createdCheckingAccount = await Model(req.body).save();
-    return await res.status(200).json(createdCheckingAccount);
+    const createdProduct = await Model(req.body).save();
+    return await res.status(200).json(createdProduct);
   } catch (err) {
     console.log(err);
-    await res.status(500).json({ message: 'Cannot create this CheckingAccount.' });
+    await res.status(500).json({ message: 'Cannot create this Product.' });
     return;
   }
 });

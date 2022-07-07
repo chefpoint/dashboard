@@ -24,7 +24,7 @@ export default function CheckingAccounts() {
         _id: ca._id,
         title: ca.title,
         client_name: ca.client_name,
-        tax_id: ca.tax_country + ca.tax_number,
+        tax_id: ca.tax_region + ca.tax_number,
       };
       arrayOfData.push(formated);
     });
@@ -33,7 +33,7 @@ export default function CheckingAccounts() {
   }
 
   function handleRowClick(row) {
-    router.push('/checking_accounts/' + row._id);
+    router.push(`/checking_accounts/${row._id}`);
   }
 
   function handleCreateCheckingAccount() {

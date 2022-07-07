@@ -36,6 +36,9 @@ const Header = styled('div', {
 const InnerWrapper = styled('div', {
   padding: '$sm',
   width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '$md',
 });
 
 /* */

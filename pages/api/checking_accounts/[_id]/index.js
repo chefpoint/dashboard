@@ -1,6 +1,6 @@
-import database from '../../../../services/database';
-import CheckingAccount from '../../../../models/CheckingAccount';
 import { requireAuth } from '@clerk/nextjs/api';
+import database from '../../../../services/database';
+import Model from '../../../../models/CheckingAccount';
 
 /* * */
 /* GET CHECKINGACCOUNT BY ID */
@@ -28,8 +28,9 @@ export default requireAuth(async (req, res) => {
 
   // 2. Try to fetch the correct CheckingAccount from the database
   try {
-    const foundCheckingAccount = await CheckingAccount.findOne({ _id: req.query._id });
-    if (!foundCheckingAccount) return await res.status(404).json({ message: `CheckingAccount with _id: ${req.query._id} not found.` });
+    const foundCheckingAccount = await Model.findOne({ _id: req.query._id });
+    if (!foundCheckingAccount)
+      return await res.status(404).json({ message: `CheckingAccount with _id: ${req.query._id} not found.` });
     await res.status(200).json(foundCheckingAccount);
     return;
   } catch (err) {

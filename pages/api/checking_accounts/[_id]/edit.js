@@ -1,6 +1,7 @@
-import database from '../../../../services/database';
-import CheckingAccount from '../../../../models/CheckingAccount';
 import { requireAuth } from '@clerk/nextjs/api';
+import database from '../../../../services/database';
+import Model from '../../../../models/CheckingAccount';
+import Schema from '../../../../schemas/CheckingAccount';
 
 /* * */
 /* EDIT CHECKINGACCOUNT */
@@ -26,7 +27,16 @@ export default requireAuth(async (req, res) => {
     return;
   }
 
-  // 2. Try to connect to the database
+  // 2. Validate req.body against schema
+  try {
+    req.body = Schema.parse(req.body);
+  } catch (err) {
+    console.log(err);
+    await res.status(400).json({ message: JSON.parse(err.message)[0].message });
+    return;
+  }
+
+  // 3. Try to connect to the database
   try {
     await database.connect();
   } catch (err) {
@@ -35,10 +45,12 @@ export default requireAuth(async (req, res) => {
     return;
   }
 
-  // 3. Try to update the correct CheckingAccount
+  // 4. Try to update the correct CheckingAccount
   try {
-    const editedCheckingAccount = await CheckingAccount.findOneAndUpdate({ _id: req.query._id }, req.body, { new: true }); // Return the edited document
-    if (!editedCheckingAccount) return await res.status(404).json({ message: `CheckingAccount with _id: ${req.query._id} not found.` });
+    const editedCheckingAccount = await Model.findOneAndUpdate({ _id: req.query._id }, req.body, { new: true }); // Return the edited document
+    if (!editedCheckingAccount) {
+      return await res.status(404).json({ message: `CheckingAccount with _id: ${req.query._id} not found.` });
+    }
     return await res.status(200).json(editedCheckingAccount);
   } catch (err) {
     console.log(err);

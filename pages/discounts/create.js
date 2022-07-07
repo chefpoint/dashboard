@@ -1,7 +1,6 @@
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import { styled } from '@stitches/react';
-import { toast } from 'react-toastify';
 import Button from '../../components/Button';
 import Loading from '../../components/Loading';
 import PageContainer from '../../components/PageContainer';
@@ -178,13 +177,9 @@ export default function CreateDiscount() {
 
     // Try to save the object to the API
     try {
-      // Display notification to the user
       notify('new', 'loading', 'A guardar alterações...');
-      // Send the request to the API
       const response = await API({ service: 'discounts', operation: 'create', method: 'POST', body: discountToSave });
-      // Get the _id of the newly created item
       router.push(`/discounts/${response._id}`);
-      // Update notification
       notify('new', 'success', 'Alterações guardadas!');
     } catch (err) {
       console.log(err);
@@ -205,15 +200,41 @@ export default function CreateDiscount() {
       <Grid>
         <TextField label={'Title'} type={'text'} value={discountTitle} onChange={handleChangeDiscountTitle} />
         <TextField label={'Subtitle'} type={'text'} value={discountSubtitle} onChange={handleChangeDiscountSubtitle} />
-        <TextField label={'Descrição'} type={'text'} value={discountDescription} onChange={handleChangeDiscountDescription} />
-        <TextField label={'Amount'} type={'number'} min={0} value={discountAmount} onChange={handleChangeDiscountAmount} />
+        <TextField
+          label={'Descrição'}
+          type={'text'}
+          value={discountDescription}
+          onChange={handleChangeDiscountDescription}
+        />
+        <TextField
+          label={'Amount'}
+          type={'number'}
+          min={0}
+          value={discountAmount}
+          onChange={handleChangeDiscountAmount}
+        />
       </Grid>
 
       <Group title={'Estilos'}>
         <Grid>
-          <TextField label={'Cor do Fundo'} type={'color'} value={discountStyleFill} onChange={handleChangeDiscountStyleFill} />
-          <TextField label={'Cor das Bordas'} type={'color'} value={discountStyleBorder} onChange={handleChangeDiscountStyleBorder} />
-          <TextField label={'Cor do Texto'} type={'color'} value={discountStyleText} onChange={handleChangeDiscountStyleText} />
+          <TextField
+            label={'Cor do Fundo'}
+            type={'color'}
+            value={discountStyleFill}
+            onChange={handleChangeDiscountStyleFill}
+          />
+          <TextField
+            label={'Cor das Bordas'}
+            type={'color'}
+            value={discountStyleBorder}
+            onChange={handleChangeDiscountStyleBorder}
+          />
+          <TextField
+            label={'Cor do Texto'}
+            type={'color'}
+            value={discountStyleText}
+            onChange={handleChangeDiscountStyleText}
+          />
         </Grid>
       </Group>
 
@@ -232,7 +253,9 @@ export default function CreateDiscount() {
                           <Grid layout={'iconRight'}>
                             <Select
                               value={discountRules[variationGroupIndex][variationIndex]}
-                              onChange={(option) => handleChangeRuleGroupVariation(option, variationGroupIndex, variationIndex)}
+                              onChange={(option) =>
+                                handleChangeRuleGroupVariation(option, variationGroupIndex, variationIndex)
+                              }
                               cacheOptions
                               defaultOptions
                               options={availableProducts}

@@ -15,12 +15,13 @@ module.exports =
     new mongoose.Schema({
       title: {
         type: String,
+        minlength: 2,
         maxlength: 30,
-        required: true,
+        default: 'Untitled Product',
       },
       short_title: {
         type: String,
-        maxlength: 30,
+        maxlength: 10,
       },
       image: {
         type: String,
@@ -36,15 +37,18 @@ module.exports =
         new mongoose.Schema({
           title: {
             type: String,
-            maxlength: 50,
-            default: 'Normal',
+            minlength: 2,
+            maxlength: 30,
           },
           price: {
             type: Number,
+            default: 0,
           },
           tax_id: {
             type: String,
-            maxlength: 3, // NOR, INT, RED
+            minlength: 3,
+            maxlength: 3,
+            default: 'NOR', // NOR, INT, RED
           },
           apicbase: {
             recipe_id: {

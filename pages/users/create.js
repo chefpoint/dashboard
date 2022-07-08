@@ -1,62 +1,32 @@
-import useSWR from 'swr';
 import { useRouter } from 'next/router';
-import { styled } from '@stitches/react';
-import { toast } from 'react-toastify';
 import Button from '../../components/Button';
-import Loading from '../../components/Loading';
 import PageContainer from '../../components/PageContainer';
 import Toolbar from '../../components/Toolbar';
 import Group from '../../components/Group';
-import TextField from '../../components/TextField';
-import { IoSave, IoClose } from 'react-icons/io5';
-import { useForm } from '@mantine/form';
-import { useEffect, useRef } from 'react';
-
-const Grid = styled('div', {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-  alignItems: 'start',
-  justifyContent: 'start',
-  borderRadius: '$md',
-  gap: '$md',
-});
-
-const GridCell = styled('div', {
-  display: 'flex',
-  flexDirection: 'column',
-  padding: '$md',
-  borderRadius: '$md',
-  backgroundColor: '$gray1',
-  gap: '$xs',
-  variants: {
-    clickable: {
-      true: {
-        cursor: 'pointer',
-        '&:hover': {
-          backgroundColor: '$gray4',
-        },
-      },
-    },
-  },
-});
-
-const Label = styled('p', {
-  fontSize: '12px',
-  fontWeight: '$medium',
-  textTransform: 'uppercase',
-  color: '$gray11',
-});
-
-const Value = styled('p', {
-  fontSize: '18px',
-  fontWeight: '$medium',
-  color: '$gray12',
-});
+import { Grid } from '../../components/Grid';
+import { IoSave, IoClose, IoKeypad } from 'react-icons/io5';
+import { useForm, zodResolver } from '@mantine/form';
+import { TextInput, LoadingOverlay, NumberInput } from '@mantine/core';
+import Schema from '../../schemas/User';
+import { useState } from 'react';
+import API from '../../services/API';
+import notify from '../../services/notify';
 
 export default function CreateUser() {
   //
 
   const router = useRouter();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const form = useForm({
+    schema: zodResolver(Schema),
+    initialValues: {
+      name: '',
+      role: '',
+      pwd: '',
+    },
+  });
 
   function handleCancel() {
     router.push('/users/');
@@ -64,53 +34,44 @@ export default function CreateUser() {
 
   async function handleSave(values) {
     try {
-      toast.loading('A guardar alterações...', { toastId: 'new' });
-      // Send the request to the API
-      const response = await fetch(`/api/users/create`, {
-        method: 'POST',
-        body: JSON.stringify(values),
-      });
-      // Parse the response to JSON
-      const parsedResponse = await response.json();
-      // Throw an error if the response is not OK
-      if (!response.ok) throw new Error(parsedResponse.message);
-      // Find the index of the updated customer in the original list...
-      router.push('/users/' + parsedResponse._id);
-      // Display notification to the user
-      toast.update('new', { render: 'Alterações guardadas!', type: 'success', isLoading: false, autoClose: true });
+      setIsLoading(true);
+      notify('new', 'loading', 'Saving changes...');
+      const response = await API({ service: 'users', operation: 'create', method: 'POST', body: values });
+      router.push(`/users/${response._id}`);
+      notify('new', 'success', 'Changes saved!');
+      setIsLoading(false);
     } catch (err) {
       console.log(err);
-      toast.update('new', { render: 'Error', type: 'error', isLoading: false });
+      notify('new', 'error', 'An error occurred.');
+      setIsLoading(false);
     }
   }
 
-  const form = useForm({
-    initialValues: {
-      name: '',
-      role: '',
-      pwd: '',
-    },
-    validate: {
-      name: (value) => (value ? null : 'Invalid Title'),
-      role: (value) => (value ? null : 'Invalid Title'),
-      pwd: (value) => (value ? null : 'Invalid Title'),
-    },
-  });
-
   return (
-    <PageContainer title={'Colaboradores › ' + (form.values.name || 'Novo Colaborador')}>
-      <form onSubmit={form.onSubmit(handleSave)}>
+    <form onSubmit={form.onSubmit(handleSave)}>
+      <PageContainer title={'Users › ' + (form.values.name || 'New User')}>
+        <LoadingOverlay visible={isLoading} />
         <Toolbar>
-          <Button type={'submit'} icon={<IoSave />} label={'Guardar'} color={'success'} />
-          <Button icon={<IoClose />} label={'Cancelar'} onClick={handleCancel} />
+          <Button type={'submit'} icon={<IoSave />} label={'Save'} color={'primary'} />
+          <Button icon={<IoClose />} label={'Cancel'} onClick={handleCancel} />
         </Toolbar>
 
-        <Grid>
-          <TextField label={'Nome'} type={'text'} {...form.getInputProps('name')} />
-          <TextField label={'Posição'} type={'text'} {...form.getInputProps('role')} />
-          <TextField label={'Password'} type={'text'} {...form.getInputProps('pwd')} />
-        </Grid>
-      </form>
-    </PageContainer>
+        <Group title={'About this User'}>
+          <Grid>
+            <TextInput label={'Name'} placeholder={'Alberta Soares'} {...form.getInputProps('name')} />
+            <TextInput label={'Role'} placeholder={'Gerente de Cafetaria'} {...form.getInputProps('role')} />
+            <NumberInput
+              icon={<IoKeypad />}
+              label={'Password'}
+              placeholder={1234}
+              precision={0}
+              maxLength={4}
+              hideControls
+              {...form.getInputProps('pwd')}
+            />
+          </Grid>
+        </Group>
+      </PageContainer>
+    </form>
   );
 }

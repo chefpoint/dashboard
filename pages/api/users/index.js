@@ -1,6 +1,6 @@
-import database from '../../../services/database';
-import User from '../../../models/User';
 import { requireAuth } from '@clerk/nextjs/api';
+import database from '../../../services/database';
+import Model from '../../../models/User';
 
 /* * */
 /* GET ALL USERS */
@@ -28,7 +28,7 @@ export default requireAuth(async (req, res) => {
 
   // 2. Try to fetch all users from the database
   try {
-    const allUsers = await User.find({});
+    const allUsers = await Model.find({});
     await res.status(200).send(allUsers);
     return;
   } catch (err) {

@@ -1,6 +1,7 @@
 import { requireAuth } from '@clerk/nextjs/api';
 import database from '../../../../services/database';
-import User from '../../../../models/User';
+import Model from '../../../../models/User';
+import Schema from '../../../../schemas/User';
 
 /* * */
 /* EDIT User */
@@ -26,7 +27,16 @@ export default requireAuth(async (req, res) => {
     return;
   }
 
-  // 2. Try to connect to the database
+  // 2. Validate req.body against schema
+  try {
+    req.body = Schema.parse(req.body);
+  } catch (err) {
+    console.log(err);
+    await res.status(400).json({ message: JSON.parse(err.message)[0].message });
+    return;
+  }
+
+  // 3. Try to connect to the database
   try {
     await database.connect();
   } catch (err) {
@@ -35,14 +45,15 @@ export default requireAuth(async (req, res) => {
     return;
   }
 
-  // 3. Check for uniqueness
+  // 4. Check for uniqueness
   try {
     // The values that need to be unique are ['pwd'].
     // Reasons: The User only needs to input the password when logging into the POS,
     // otherwise the system will choose one of the duplicates at random.
     if (req.body.pwd) {
-      const foundPwd = await User.findOne({ pwd: req.body.pwd });
-      if (foundPwd._id != req.query._id) throw new Error('Já existe um colaborador com a mesma password.');
+      const foundPwd = await Model.findOne({ pwd: req.body.pwd });
+      if (foundPwd && foundPwd._id != req.query._id)
+        throw new Error('This password is already in use. Please choose another one.');
     }
   } catch (err) {
     console.log(err);
@@ -50,16 +61,16 @@ export default requireAuth(async (req, res) => {
     return;
   }
 
-  // 4. Try to update the document with req.body
+  // 5. Try to update the document with req.body
   try {
-    const editedUser = await User.findOneAndUpdate({ _id: req.query._id }, req.body, {
+    const editedUser = await Model.findOneAndUpdate({ _id: req.query._id }, req.body, {
       new: true, // Return the updated document
     });
     await res.status(200).json(editedUser);
     return;
   } catch (err) {
     console.log(err);
-    await res.status(500).json({ message: 'Could not edit User.' });
+    await res.status(500).json({ message: 'Could not edit this User.' });
     return;
   }
 });

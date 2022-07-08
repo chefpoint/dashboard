@@ -1,6 +1,6 @@
 import { requireAuth } from '@clerk/nextjs/api';
 import database from '../../../../services/database';
-import User from '../../../../models/User';
+import Model from '../../../../models/User';
 
 /* * */
 /* DELETE USER */
@@ -28,7 +28,7 @@ export default requireAuth(async (req, res) => {
 
   // 2. Try to update the correct User
   try {
-    const deletedUser = await User.findOneAndDelete({ _id: req.query._id }); // Return the deleted document
+    const deletedUser = await Model.findOneAndDelete({ _id: req.query._id }); // Return the deleted document
     if (!deletedUser) return await res.status(404).json({ message: `User with _id: ${req.query._id} not found.` });
     return await res.status(200).send(deletedUser);
   } catch (err) {

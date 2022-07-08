@@ -1,6 +1,7 @@
-import database from '../../../services/database';
-import User from '../../../models/User';
 import { requireAuth } from '@clerk/nextjs/api';
+import database from '../../../services/database';
+import Model from '../../../models/User';
+import Schema from '../../../schemas/User';
 
 /* * */
 /* CREATE NEW USER */
@@ -26,7 +27,16 @@ export default requireAuth(async (req, res) => {
     return;
   }
 
-  // 2. Try to connect to the database
+  // 2. Validate req.body against schema
+  try {
+    req.body = Schema.parse(req.body);
+  } catch (err) {
+    console.log(err);
+    await res.status(400).json({ message: JSON.parse(err.message)[0].message });
+    return;
+  }
+
+  // 3. Try to connect to the database
   try {
     await database.connect();
   } catch (err) {
@@ -35,14 +45,13 @@ export default requireAuth(async (req, res) => {
     return;
   }
 
-  // 3. Check for uniqueness
+  // 4. Check for uniqueness
   try {
     // The values that need to be unique are ['pwd'].
-    // Reasons: The User only needs to input the password when logging into the POS,
-    // otherwise the system will choose one of the duplicates at random.
+    // Reason: The User only needs to input the password when logging into the POS.
     if (req.body.pwd) {
-      const existsPwd = await User.exists({ pwd: req.body.pwd });
-      if (existsPwd) throw new Error('Já existe um colaborador com a mesma password.');
+      const existsPwd = await Model.exists({ pwd: req.body.pwd });
+      if (existsPwd) throw new Error('This password is already in use. Please choose another one.');
     }
   } catch (err) {
     console.log(err);
@@ -50,14 +59,14 @@ export default requireAuth(async (req, res) => {
     return;
   }
 
-  // 4. Try to save a new document with req.body
+  // 5. Try to save a new document with req.body
   try {
-    const newUser = await User(req.body).save();
+    const newUser = await Model(req.body).save();
     await res.status(201).json(newUser);
     return;
   } catch (err) {
     console.log(err);
-    await res.status(500).json({ message: 'User creation error.' });
+    await res.status(500).json({ message: 'Cannot create this User.' });
     return;
   }
 });

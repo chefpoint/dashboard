@@ -1,6 +1,6 @@
-import database from '../../../../services/database';
-import User from '../../../../models/User';
 import { requireAuth } from '@clerk/nextjs/api';
+import database from '../../../../services/database';
+import Model from '../../../../models/User';
 
 /* * */
 /* GET USER BY ID */
@@ -28,7 +28,7 @@ export default requireAuth(async (req, res) => {
 
   // 2. Try to fetch the correct User from the database
   try {
-    const foundUser = await User.findOne({ _id: req.query._id });
+    const foundUser = await Model.findOne({ _id: req.query._id });
     if (!foundUser) return await res.status(404).json({ message: `User with _id: ${req.query._id} not found.` });
     await res.status(200).json(foundUser);
     return;

@@ -82,19 +82,21 @@ export default function Users() {
   }
 
   return user ? (
-    <PageContainer title={'Colaboradores › ' + user.name}>
+    <PageContainer title={'Users › ' + user.name}>
       <Toolbar>
-        <Button icon={<IoPencil />} label={'Editar'} onClick={handleEditUser} />
+        <Button icon={<IoPencil />} label={'Edit'} onClick={handleEditUser} />
         <Button
           icon={<IoTrash />}
-          label={'Eliminar'}
+          label={'Delete'}
           color={'danger'}
           alert={
             <Alert
               color={'danger'}
               title={'Eliminar Colaborador'}
               subtitle={'Tem a certeza que pretende eliminar este colaborador?'}
-              message={'Esta acção é irreversível. O colaborador deixará imediatamente de ter acesso ao equipamento com a sua password.'}
+              message={
+                'Esta acção é irreversível. O colaborador deixará imediatamente de ter acesso ao equipamento com a sua password.'
+              }
               onConfirm={handleDeleteUser}
             />
           }

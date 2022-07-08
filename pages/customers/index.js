@@ -24,7 +24,7 @@ export default function Customers() {
       const formated = {
         _id: c._id,
         name: c.first_name + c.last_name,
-        tax_id: c.tax_country + c.tax_number,
+        tax_id: c.tax_region + c.tax_number,
         contact_email: c.contact_email,
       };
       // console.log(formated);
@@ -43,15 +43,15 @@ export default function Customers() {
   }
 
   return (
-    <PageContainer title={'Clientes'}>
+    <PageContainer title={'Customers'}>
       <Toolbar>
-        <Button icon={<IoAdd />} label={'Criar'} onClick={handleCreateCustomer} />
+        <Button icon={<IoAdd />} label={'Create'} onClick={handleCreateCustomer} />
       </Toolbar>
       <Table
         columns={[
-          { label: 'Nome', key: 'name' },
-          { label: 'NIF', key: 'tax_id' },
-          { label: 'Email', key: 'contact_email' },
+          { label: 'Name', key: 'name' },
+          { label: 'Tax ID', key: 'tax_id' },
+          { label: 'Contact Email', key: 'contact_email' },
         ]}
         data={formatTableData()}
         onRowClick={handleRowClick}

@@ -21,10 +21,9 @@ export default mongoose.models.User ||
         type: String,
         minlength: 2,
         maxlength: 30,
-        required: true,
       },
       pwd: {
-        type: Number,
+        type: String,
         minlength: 4,
         maxlength: 4,
       },

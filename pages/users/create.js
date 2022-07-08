@@ -5,8 +5,8 @@ import Toolbar from '../../components/Toolbar';
 import Group from '../../components/Group';
 import { Grid } from '../../components/Grid';
 import { IoSave, IoClose, IoKeypad } from 'react-icons/io5';
-import { useForm, zodResolver } from '@mantine/form';
-import { TextInput, LoadingOverlay, NumberInput } from '@mantine/core';
+import { useForm, yupResolver } from '@mantine/form';
+import { TextInput, LoadingOverlay } from '@mantine/core';
 import Schema from '../../schemas/User';
 import { useState } from 'react';
 import API from '../../services/API';
@@ -20,7 +20,7 @@ export default function CreateUser() {
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
-    schema: zodResolver(Schema),
+    schema: yupResolver(Schema),
     initialValues: {
       name: '',
       role: '',
@@ -59,13 +59,11 @@ export default function CreateUser() {
           <Grid>
             <TextInput label={'Name'} placeholder={'Alberta Soares'} {...form.getInputProps('name')} />
             <TextInput label={'Role'} placeholder={'Gerente de Cafetaria'} {...form.getInputProps('role')} />
-            <NumberInput
+            <TextInput
               icon={<IoKeypad />}
               label={'Password'}
               placeholder={1234}
-              precision={0}
               maxLength={4}
-              hideControls
               {...form.getInputProps('pwd')}
             />
           </Grid>

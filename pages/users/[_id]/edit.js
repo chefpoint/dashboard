@@ -8,7 +8,7 @@ import Group from '../../../components/Group';
 import { Grid } from '../../../components/Grid';
 import { TextInput, LoadingOverlay, NumberInput } from '@mantine/core';
 import { IoSave, IoClose, IoKeypad } from 'react-icons/io5';
-import { useForm, zodResolver } from '@mantine/form';
+import { useForm, yupResolver } from '@mantine/form';
 import { useEffect, useRef } from 'react';
 import Schema from '../../../schemas/User';
 import API from '../../../services/API';
@@ -27,7 +27,7 @@ export default function EditUser() {
   const hasUpdatedFields = useRef(false);
 
   const form = useForm({
-    schema: zodResolver(Schema),
+    schema: yupResolver(Schema),
     initialValues: {
       name: '',
       role: '',

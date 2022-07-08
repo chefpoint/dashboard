@@ -119,7 +119,12 @@ export default function Customer() {
           </GridCell>
           <GridCell>
             <Label>Birthday</Label>
-            <Value>{customer.birthday || '-'}</Value>
+            <Value>
+              {DateTime.fromISO(customer.birthday).toLocaleString({
+                ...DateTime.DATE_SHORT,
+                month: 'long',
+              })}
+            </Value>
           </GridCell>
         </Grid>
         <Grid>
@@ -133,14 +138,14 @@ export default function Customer() {
       <Group title={'Invoicing'}>
         <Grid>
           <GridCell>
-            <Label>Tax ID</Label>
-            <Value>
-              {customer.tax_region || customer.tax_number ? `${customer.tax_region}${customer.tax_number}` : '-'}
-            </Value>
-          </GridCell>
-          <GridCell>
             <Label>Send Invoices to Email</Label>
             <Value>{customer.send_invoices ? 'Yes' : 'No'}</Value>
+          </GridCell>
+          <GridCell>
+            <Label>Tax ID</Label>
+            <Value>
+              {customer.tax_region && customer.tax_number ? `${customer.tax_region}${customer.tax_number}` : '-'}
+            </Value>
           </GridCell>
         </Grid>
         <Grid>

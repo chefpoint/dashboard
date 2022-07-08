@@ -27,7 +27,7 @@ module.exports =
         maxlength: 2,
       },
       tax_number: {
-        type: Number,
+        type: String,
         maxlength: 9,
       },
       contact_email: {

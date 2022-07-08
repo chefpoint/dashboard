@@ -28,7 +28,8 @@ export default requireAuth(async (req, res) => {
 
   // 2. Validate req.body against schema
   try {
-    req.body = Schema.parse(req.body);
+    req.body = Schema.cast(req.body);
+    console.log(req.body);
   } catch (err) {
     console.log(err);
     return await res.status(400).json({ message: JSON.parse(err.message)[0].message });
@@ -62,7 +63,7 @@ export default requireAuth(async (req, res) => {
 
   // 2. Try to update the correct customer
   try {
-    const editedCustomer = await Model.findOneAndUpdate({ _id: req.query._id }, req.body, { new: true }); // Return the edited document
+    const editedCustomer = await Model.findOneAndReplace({ _id: req.query._id }, req.body, { new: true }); // Return the edited document
     if (!editedCustomer)
       return await res.status(404).json({ message: `Customer with _id: ${req.query._id} not found.` });
     return await res.status(200).json(editedCustomer);

@@ -26,7 +26,12 @@ export default function Users() {
       //
       const formated = {
         _id: t._id,
-        date_and_time: DateTime.fromISO(t.timestamp).toLocaleString({ ...DateTime.DATE_SHORT, month: 'long', hour: 'numeric', minute: 'numeric' }),
+        date_and_time: DateTime.fromISO(t.timestamp).toLocaleString({
+          ...DateTime.DATE_SHORT,
+          month: 'long',
+          hour: 'numeric',
+          minute: 'numeric',
+        }),
         location: t.location?.title,
         total_amount: t.payment?.total_amount + '€',
       };

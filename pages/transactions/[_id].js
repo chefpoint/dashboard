@@ -68,7 +68,14 @@ export default function Users() {
         <Grid>
           <GridCell>
             <Label>Data e Hora</Label>
-            <Value>{DateTime.fromISO(transaction.timestamp).toFormat('yyyy-mm-dd HH:mm')}</Value>
+            <Value>
+              {DateTime.fromISO(transaction.timestamp).toLocaleString({
+                ...DateTime.DATE_SHORT,
+                month: 'long',
+                hour: 'numeric',
+                minute: 'numeric',
+              })}
+            </Value>
           </GridCell>
           <GridCell>
             <Label>Local</Label>

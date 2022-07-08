@@ -3,9 +3,9 @@ import Button from '../../../components/Button';
 import PageContainer from '../../../components/PageContainer';
 import Toolbar from '../../../components/Toolbar';
 import Group from '../../../components/Group';
-import { Grid } from '../../../components/Grid';
+import { Grid, GridCell } from '../../../components/Grid';
 import { IoSave, IoClose, IoKeypad } from 'react-icons/io5';
-import { formList, useForm, zodResolver } from '@mantine/form';
+import { formList, useForm, yupResolver } from '@mantine/form';
 import { TextInput, LoadingOverlay, NumberInput, Switch } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import Schema from '../../../schemas/Customer';
@@ -26,7 +26,7 @@ export default function CreateCustomer() {
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
-    schema: zodResolver(Schema),
+    schema: yupResolver(Schema),
     initialValues: {
       first_name: '',
       last_name: '',
@@ -41,13 +41,11 @@ export default function CreateCustomer() {
 
   useEffect(() => {
     if (!hasUpdatedFields.current && customer) {
-      console.log(customer);
-      // form.setValues(Schema.parse(customer));
       form.setValues({
         first_name: customer.first_name || '',
         last_name: customer.last_name || '',
         tax_region: customer.tax_region || '',
-        tax_number: Number(customer.tax_number) || '',
+        tax_number: customer.tax_number || '',
         contact_email: customer.contact_email || '',
         send_invoices: customer.send_invoices,
         reference: customer.reference || '',
@@ -103,13 +101,20 @@ export default function CreateCustomer() {
 
         <Group title={'Invoicing'}>
           <Grid>
+            <GridCell>
+              <Switch
+                label='Send Invoices'
+                checked={form.values.send_invoices}
+                onChange={({ currentTarget }) => form.setFieldValue('send_invoices', currentTarget.checked)}
+              />
+            </GridCell>
+          </Grid>
+          <Grid>
             <TextInput label={'Tax Region'} placeholder={'PT'} maxLength={2} {...form.getInputProps('tax_region')} />
-            <NumberInput
+            <TextInput
               label={'Tax Number'}
-              placeholder={500100200}
-              precision={0}
-              maxLength={9}
-              hideControls
+              placeholder={'500 100 200'}
+              maxLength={11}
               {...form.getInputProps('tax_number')}
             />
           </Grid>
@@ -118,11 +123,6 @@ export default function CreateCustomer() {
               label={'Contact Email'}
               placeholder={'email@icloud.com'}
               {...form.getInputProps('contact_email')}
-            />
-            <Switch
-              label='Send Invoices'
-              checked={form.values.send_invoices}
-              onChange={({ currentTarget }) => form.setFieldValue('send_invoices', currentTarget.checked)}
             />
           </Grid>
         </Group>

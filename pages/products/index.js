@@ -24,12 +24,12 @@ export default function Products() {
   return (
     <PageContainer title={'Produtos'}>
       <Toolbar>
-        <Button icon={<IoAdd />} label={'Criar'} onClick={handleCreateProduct} />
+        <Button icon={<IoAdd />} label={'Create'} onClick={handleCreateProduct} />
       </Toolbar>
       <Table
         columns={[
           { label: 'Title', key: 'title' },
-          { label: 'Última modificação', key: 'last_modified' },
+          { label: 'Last Modified', key: 'last_modified' },
         ]}
         data={products}
         onRowClick={handleRowClick}

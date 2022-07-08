@@ -10,11 +10,11 @@ import notify from '../../../services/notify';
 import Group from '../../../components/Group';
 import Alert from '../../../components/Alert';
 import { Grid } from '../../../components/Grid';
-import TextField from '../../../components/TextField';
+import { TextInput, Textarea, Select, ColorInput, LoadingOverlay, NumberInput } from '@mantine/core';
 import { IoSave, IoClose, IoPricetag, IoTrash, IoCopy } from 'react-icons/io5';
 import { randomId } from '@mantine/hooks';
 import { useEffect, useRef, useState } from 'react';
-import Select from 'react-select';
+import { TbCurrencyEuro } from 'react-icons/tb';
 import FlexWrapper from '../../../components/FlexWrapper';
 
 /* * */
@@ -45,8 +45,7 @@ export default function EditDiscount() {
   const { data: discount, mutate } = useSWR(`/api/discounts/${_id}`);
   const { data: products } = useSWR('/api/products');
 
-  const [availableProducts, setAvailableProducts] = useState();
-
+  const [isLoading, setIsLoading] = useState(false);
   const hasAlreadyUpdatedOnce = useRef(false);
 
   /* */
@@ -54,53 +53,16 @@ export default function EditDiscount() {
 
   // Discount Title
   const [discountTitle, setDiscountTitle] = useState('');
-  function handleChangeDiscountTitle({ target }) {
-    // validate(schema, target.value)
-    setDiscountTitle(target.value);
-  }
-
   // Discount Subtitle
   const [discountSubtitle, setDiscountSubtitle] = useState('');
-  function handleChangeDiscountSubtitle({ target }) {
-    // validate(schema, target.value)
-    setDiscountSubtitle(target.value);
-  }
-
   // Discount Description
   const [discountDescription, setDiscountDescription] = useState('');
-  function handleChangeDiscountDescription({ target }) {
-    // validate(schema, target.value)
-    setDiscountDescription(target.value);
-  }
-
   // Discount Amount
   const [discountAmount, setDiscountAmount] = useState(0);
-  function handleChangeDiscountAmount({ target }) {
-    // validate(schema, target.value)
-    setDiscountAmount(target.value);
-  }
-
-  // Discount Style Fill
-  const [discountStyleFill, setDiscountStyleFill] = useState('#ffffff');
-  function handleChangeDiscountStyleFill({ target }) {
-    // validate(schema, target.value)
-    setDiscountStyleFill(target.value);
-  }
-
-  // Discount Style Border
-  const [discountStyleBorder, setDiscountStyleBorder] = useState('#ffffff');
-  function handleChangeDiscountStyleBorder({ target }) {
-    // validate(schema, target.value)
-    setDiscountStyleBorder(target.value);
-  }
-
-  // Discount Style Text
-  const [discountStyleText, setDiscountStyleText] = useState('#ffffff');
-  function handleChangeDiscountStyleText({ target }) {
-    // validate(schema, target.value)
-    setDiscountStyleText(target.value);
-  }
-
+  // Styles
+  const [discountStyleFill, setDiscountStyleFill] = useState('');
+  const [discountStyleBorder, setDiscountStyleBorder] = useState('');
+  const [discountStyleText, setDiscountStyleText] = useState('');
   // Discount Rules
   const [discountRules, setDiscountRules] = useState([]);
 
@@ -133,26 +95,24 @@ export default function EditDiscount() {
   /* RUN ON UPDATE STATE */
 
   // Format product list to conform to React-Select {value: label:}
-  useEffect(() => {
-    // Run on every state update
-    if (products) {
-      let productsListOptions = [];
-      for (const product of products) {
-        for (const variation of product.variations) {
-          productsListOptions.push({
-            value: variation._id,
-            label: `${product.title} - ${variation.title}`,
-          });
-        }
+  function formatAvailableProducts(data = []) {
+    const formatted = [];
+    if (!data) return formatted;
+    for (const product of data) {
+      for (const variation of product.variations) {
+        formatted.push({
+          value: variation._id,
+          label: `${product.title} - ${variation.title} (${variation.price.toFixed(2)}€)`,
+        });
       }
-      setAvailableProducts(productsListOptions);
     }
-  }, [products]);
+    return formatted;
+  }
 
   // Update fields with values from the API
   useEffect(() => {
     // Only run once, and if 'discount' and 'availableProducts' are set
-    if (!hasAlreadyUpdatedOnce.current && discount && availableProducts) {
+    if (!hasAlreadyUpdatedOnce.current && discount && products) {
       if (discount.title) setDiscountTitle(discount.title);
       if (discount.subtitle) setDiscountSubtitle(discount.subtitle);
       if (discount.description) setDiscountDescription(discount.description);
@@ -167,8 +127,7 @@ export default function EditDiscount() {
         for (const ruleGroup of discount.rules) {
           let formattedRuleGroup = [];
           for (const variationId of ruleGroup) {
-            const thisOption = availableProducts.find((product) => product.value == variationId);
-            formattedRuleGroup.push(thisOption);
+            formattedRuleGroup.push(variationId);
           }
           formattedRules.push(formattedRuleGroup);
         }
@@ -177,7 +136,7 @@ export default function EditDiscount() {
       // Set to true after successful run
       hasAlreadyUpdatedOnce.current = true;
     }
-  }, [discount, products, availableProducts]);
+  }, [discount, products]);
 
   /* */
   /* HANDLERS */
@@ -198,31 +157,20 @@ export default function EditDiscount() {
         border: discountStyleBorder,
         text: discountStyleText,
       },
-      rules: [],
+      rules: discountRules,
     };
-    // Simplify the rules to be an array of arrays of strings: [['_id', '_id'], ['_id', '_id']]
-    for (const ruleGroup of discountRules) {
-      let simplifiedRuleGroup = [];
-      for (const variation of ruleGroup) {
-        simplifiedRuleGroup.push(variation.value);
-      }
-      discountToSave.rules.push(simplifiedRuleGroup);
-    }
 
     // Try to save the object to the API
     try {
-      // Display notification to the user
+      setIsLoading(true);
       notify(_id, 'loading', 'A guardar alterações...');
-      // Send the request to the API
       await API({ service: 'discounts', resourceId: _id, operation: 'edit', method: 'PUT', body: discountToSave });
-      // Revalidate the discount
       mutate({ ...discount, ...discountToSave });
-      // Find the index of the updated customer in the original list...
       router.push(`/discounts/${_id}`);
-      // Update notification
       notify(_id, 'success', 'Alterações guardadas!');
     } catch (err) {
       console.log(err);
+      setIsLoading(false);
       notify(_id, 'error', 'Ocorreu um erro.');
     }
   }
@@ -232,23 +180,53 @@ export default function EditDiscount() {
 
   return discount && products ? (
     <PageContainer title={'Descontos › ' + (discountTitle || 'Sem Nome')}>
+      <LoadingOverlay visible={isLoading} />
       <Toolbar>
-        <Button icon={<IoSave />} label={'Guardar'} color={'success'} onClick={handleSave} />
-        <Button icon={<IoClose />} label={'Cancelar'} onClick={handleCancel} />
+        <Button icon={<IoSave />} label={'Save'} color={'primary'} onClick={handleSave} />
+        <Button icon={<IoClose />} label={'Cancel'} onClick={handleCancel} />
       </Toolbar>
 
-      <Grid>
-        <TextField label={'Title'} type={'text'} value={discountTitle} onChange={handleChangeDiscountTitle} />
-        <TextField label={'Subtitle'} type={'text'} value={discountSubtitle} onChange={handleChangeDiscountSubtitle} />
-        <TextField label={'Descrição'} type={'text'} value={discountDescription} onChange={handleChangeDiscountDescription} />
-        <TextField label={'Amount'} type={'number'} min={0} value={discountAmount} onChange={handleChangeDiscountAmount} />
-      </Grid>
-
-      <Group title={'Estilos'}>
+      <Group title={'General Details'}>
         <Grid>
-          <TextField label={'Cor do Fundo'} type={'color'} value={discountStyleFill} onChange={handleChangeDiscountStyleFill} />
-          <TextField label={'Cor das Bordas'} type={'color'} value={discountStyleBorder} onChange={handleChangeDiscountStyleBorder} />
-          <TextField label={'Cor do Texto'} type={'color'} value={discountStyleText} onChange={handleChangeDiscountStyleText} />
+          <TextInput
+            label={'Title'}
+            placeholder={'Menu Bom Dia'}
+            value={discountTitle}
+            onChange={({ target }) => setDiscountTitle(target.value)}
+          />
+          <TextInput
+            label={'Subtitle'}
+            placeholder={'Para começar bem, todos os dias!'}
+            value={discountSubtitle}
+            onChange={({ target }) => setDiscountSubtitle(target.value)}
+          />
+          <NumberInput
+            icon={<TbCurrencyEuro />}
+            label={'Discount Amount'}
+            placeholder={'0.25'}
+            hideControls
+            min={0}
+            step={0.05}
+            precision={2}
+            value={discountAmount}
+            onChange={setDiscountAmount}
+          />
+        </Grid>
+        <Grid>
+          <Textarea
+            label='Description'
+            placeholder={'What is included in this discount?'}
+            value={discountDescription}
+            onChange={({ target }) => setDiscountDescription(target.value)}
+          />
+        </Grid>
+      </Group>
+
+      <Group title={'Styles'}>
+        <Grid>
+          <ColorInput label={'Background Color'} value={discountStyleFill} onChange={setDiscountStyleFill} />
+          <ColorInput label={'Border Color'} value={discountStyleBorder} onChange={setDiscountStyleBorder} />
+          <ColorInput label={'Text Color'} value={discountStyleText} onChange={setDiscountStyleText} />
         </Grid>
       </Group>
 
@@ -266,11 +244,12 @@ export default function EditDiscount() {
                           {variationIndex > 0 && <AndOrLabel>Ou</AndOrLabel>}
                           <Grid layout={'iconRight'}>
                             <Select
+                              searchable
                               value={discountRules[variationGroupIndex][variationIndex]}
-                              onChange={(option) => handleChangeRuleGroupVariation(option, variationGroupIndex, variationIndex)}
-                              cacheOptions
-                              defaultOptions
-                              options={availableProducts}
+                              onChange={(option) =>
+                                handleChangeRuleGroupVariation(option, variationGroupIndex, variationIndex)
+                              }
+                              data={formatAvailableProducts(products)}
                             />
                             <Button
                               icon={<IoTrash />}

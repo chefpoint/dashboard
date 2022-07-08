@@ -27,7 +27,7 @@ export default requireAuth(async (req, res) => {
 
   // 2. Validate req.body against schema
   try {
-    req.body = Schema.parse(req.body);
+    req.body = Schema.cast(req.body);
   } catch (err) {
     console.log(err);
     return await res.status(400).json({ message: JSON.parse(err.message)[0].message });

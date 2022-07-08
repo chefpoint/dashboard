@@ -4,30 +4,27 @@
 
 /* * */
 /* IMPORTS */
-import { z } from 'zod';
+import * as yup from 'yup';
 
 /* * */
-/* Schema for ZOD ["CheckingAccount"] Object */
-export default z.object({
-  title: z
-    .string({ message: 'Title must be a string' })
-    .min(2, { message: 'Title must be 2 or more characters long' })
-    .max(30, { message: 'Title must be no longer than 30 characters' }),
-  client_name: z
-    .string({ message: 'Client Name must be a string' })
-    .min(2, { message: 'Client Name must be 2 or more characters long' })
-    .max(30, { message: 'Client Name must be no longer than 30 characters' }),
-  tax_region: z
-    .string({ message: 'Tax Region must be a string' })
-    .length(2, { message: 'Tax Region must be exactly 2 characters long' })
-    .regex(/^[A-Z]+$/i, { message: 'Tax Region must be only letters' })
-    .transform((value) => value.toUpperCase()),
-  tax_number: z.preprocess(
-    (value) => String(value),
-    z
-      .string()
-      .length(9, { message: 'Tax Number must be exactly 9 characters long' })
-      .regex(/^[0-9]*$/, { message: 'Tax Number must be only numbers' })
-      .transform((value) => Number(value))
-  ),
+/* Schema for Yup ["CheckingAccount"] Object */
+export default yup.object({
+  title: yup
+    .string()
+    .min(2, 'Title must have at least ${min} characters')
+    .max(30, 'Title must be no longer than ${max} characters')
+    .required('Title is a required field'),
+  client_name: yup
+    .string()
+    .min(2, 'Client Name must have at least ${min} characters')
+    .max(30, 'Client Name must be no longer than ${max} characters')
+    .required('Client Name is a required field'),
+  tax_region: yup
+    .string()
+    .matches(/^$|^[a-zA-Z]{2}$/, 'Tax Region must be exactly 2 letters (ex: PT, NL)')
+    .uppercase(),
+  tax_number: yup
+    .string()
+    .matches(/^$|^[0-9]{9}$/, 'Tax Number must be exactly 9 numbers (ex: 125 321 978)')
+    .transform((value) => value.replace(/\s+/g, '')),
 });

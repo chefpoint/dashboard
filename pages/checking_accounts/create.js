@@ -7,8 +7,8 @@ import Toolbar from '../../components/Toolbar';
 import { Grid } from '../../components/Grid';
 import Group from '../../components/Group';
 import { IoSave, IoClose } from 'react-icons/io5';
-import { TextInput, LoadingOverlay, NumberInput } from '@mantine/core';
-import { useForm, zodResolver } from '@mantine/form';
+import { TextInput, LoadingOverlay } from '@mantine/core';
+import { useForm, yupResolver } from '@mantine/form';
 import Schema from '../../schemas/CheckingAccount';
 import { useState } from 'react';
 
@@ -20,7 +20,7 @@ export default function CheckingAccount() {
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
-    schema: zodResolver(Schema),
+    schema: yupResolver(Schema),
     initialValues: {
       title: '',
       client_name: '',
@@ -61,12 +61,10 @@ export default function CheckingAccount() {
             <TextInput label={'Title'} placeholder={'Board of Directors'} {...form.getInputProps('title')} />
             <TextInput label={'Client Name'} placeholder={'Fidelidade'} {...form.getInputProps('client_name')} />
             <TextInput label={'Tax Region'} placeholder={'PT'} maxLength={2} {...form.getInputProps('tax_region')} />
-            <NumberInput
+            <TextInput
               label={'Tax Number'}
-              placeholder={500100200}
-              precision={0}
-              maxLength={9}
-              hideControls
+              placeholder={'500 100 200'}
+              maxLength={11}
               {...form.getInputProps('tax_number')}
             />
           </Grid>

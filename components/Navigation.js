@@ -69,18 +69,18 @@ export default function Navigation({ children }) {
         <UserButton showName />
         <NavContainer>
           <NavigationButton icon={<IoStorefront />} label={'Home'} destination={'/'} />
-          <NavigationButton disabled icon={<IoCalendar />} label={'Planeamento'} destination={'/planning'} />
-          <NavigationButton disabled icon={<IoBarChart />} label={'Relatórios'} destination={'/reports'} />
-          <NavigationButton icon={<IoReceipt />} label={'Transações'} destination={'/transactions'} />
-          <NavigationButton icon={<IoPricetags />} label={'Produtos'} destination={'/products'} />
-          <NavigationButton icon={<IoPeople />} label={'Clientes'} destination={'/customers'} />
-          <NavigationButton icon={<IoBookmarks />} label={'Contas Correntes'} destination={'/checking_accounts'} />
-          <NavigationButton icon={<IoLocation />} label={'Locais'} destination={'/locations'} />
-          <NavigationButton icon={<IoBalloon />} label={'Descontos'} destination={'/discounts'} />
-          <NavigationButton icon={<IoShieldCheckmark />} label={'Colaboradores'} destination={'/users'} />
+          <NavigationButton disabled icon={<IoCalendar />} label={'Planning'} destination={'/planning'} />
+          <NavigationButton disabled icon={<IoBarChart />} label={'Reports'} destination={'/reports'} />
+          <NavigationButton icon={<IoReceipt />} label={'Transactions'} destination={'/transactions'} />
+          <NavigationButton icon={<IoPricetags />} label={'Products'} destination={'/products'} />
+          <NavigationButton icon={<IoPeople />} label={'Clients'} destination={'/customers'} />
+          <NavigationButton icon={<IoBookmarks />} label={'Checking Accounts'} destination={'/checking_accounts'} />
+          <NavigationButton icon={<IoLocation />} label={'Locations'} destination={'/locations'} />
+          <NavigationButton icon={<IoBalloon />} label={'Discounts'} destination={'/discounts'} />
+          <NavigationButton icon={<IoShieldCheckmark />} label={'Users'} destination={'/users'} />
           <NavigationButton icon={<IoLayers />} label={'Layouts'} destination={'/layouts'} />
-          <NavigationButton icon={<IoPrism />} label={'Equipamentos'} destination={'/devices'} />
-          <NavigationButton disabled icon={<IoSettings />} label={'Definições'} destination={'/settings'} />
+          <NavigationButton icon={<IoPrism />} label={'Devices'} destination={'/devices'} />
+          <NavigationButton disabled icon={<IoSettings />} label={'Settings'} destination={'/settings'} />
         </NavContainer>
       </Sidebar>
       <AppContainer>{children}</AppContainer>

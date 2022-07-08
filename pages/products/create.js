@@ -60,7 +60,7 @@ export default function CreateProduct() {
           <Button icon={<IoClose />} label={'Cancel'} onClick={handleCancel} />
         </Toolbar>
 
-        <Group title={'About this product'}>
+        <Group title={'About this Product'}>
           <Grid>
             <TextInput label={'Title'} placeholder={'Chocolate Bar'} {...form.getInputProps('title')} />
             <TextInput label={'Short Title'} placeholder={'Choco Bar'} {...form.getInputProps('short_title')} />

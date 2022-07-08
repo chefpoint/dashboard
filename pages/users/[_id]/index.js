@@ -1,53 +1,15 @@
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
-import { styled } from '@stitches/react';
+import { Grid, GridCell, Label, Value } from '../../../components/Grid';
 import Button from '../../../components/Button';
 import Loading from '../../../components/Loading';
 import PageContainer from '../../../components/PageContainer';
 import Toolbar from '../../../components/Toolbar';
 import Group from '../../../components/Group';
-import { toast } from 'react-toastify';
 import Alert from '../../../components/Alert';
-import { IoPencil, IoTrash, IoDuplicate } from 'react-icons/io5';
-
-const Grid = styled('div', {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-  borderRadius: '$md',
-  gap: '$md',
-});
-
-const GridCell = styled('div', {
-  display: 'flex',
-  flexDirection: 'column',
-  padding: '$md',
-  borderRadius: '$md',
-  backgroundColor: '$gray1',
-  gap: '$xs',
-  variants: {
-    clickable: {
-      true: {
-        cursor: 'pointer',
-        '&:hover': {
-          backgroundColor: '$gray4',
-        },
-      },
-    },
-  },
-});
-
-const Label = styled('p', {
-  fontSize: '12px',
-  fontWeight: '$medium',
-  textTransform: 'uppercase',
-  color: '$gray11',
-});
-
-const Value = styled('p', {
-  fontSize: '18px',
-  fontWeight: '$medium',
-  color: '$gray12',
-});
+import API from '../../../services/API';
+import notify from '../../../services/notify';
+import { IoPencil, IoTrash } from 'react-icons/io5';
 
 export default function Users() {
   //
@@ -63,21 +25,13 @@ export default function Users() {
 
   async function handleDeleteUser() {
     try {
-      // Display notification to the user
-      toast.loading('Por favor aguarde...', { toastId: _id });
-      // Send the request to the API
-      const response = await fetch(`/api/users/${_id}/delete`, { method: 'DELETE' });
-      // Parse the response to JSON
-      const parsedResponse = await response.json();
-      // Throw an error if the response is not OK
-      if (!response.ok) throw new Error(parsedResponse.message);
-      // Find the index of the updated customer in the original list...
+      notify(_id, 'loading', 'A eliminar User...');
+      await API({ service: 'users', resourceId: _id, operation: 'delete', method: 'DELETE' });
       router.push('/users');
-      // Update notification
-      toast.update(_id, { render: 'Colaborador eliminado!', type: 'success', isLoading: false, autoClose: true });
+      notify(_id, 'success', 'User eliminado!');
     } catch (err) {
       console.log(err);
-      toast.update(_id, { render: 'Ocorreu um erro inesperado.', type: 'error', isLoading: false });
+      notify(_id, 'error', 'Ocorreu um erro.');
     }
   }
 

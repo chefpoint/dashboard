@@ -1,7 +1,6 @@
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import Button from '../../../components/Button';
-import { toast } from 'react-toastify';
 import Loading from '../../../components/Loading';
 import PageContainer from '../../../components/PageContainer';
 import Toolbar from '../../../components/Toolbar';

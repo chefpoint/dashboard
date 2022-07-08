@@ -92,10 +92,17 @@ export default function CreateCustomer() {
           <Button icon={<IoClose />} label={'Cancel'} onClick={handleCancel} />
         </Toolbar>
 
-        <Group title={'About this Customer'}>
+        <Group title={'Customer Details'}>
           <Grid>
             <TextInput label={'First Name'} placeholder={'Alberta'} {...form.getInputProps('first_name')} />
             <TextInput label={'Last Name'} placeholder={'Soares'} {...form.getInputProps('last_name')} />
+            <DatePicker label={'Birthday'} placeholder={'Pick a date'} {...form.getInputProps('birthday')} />
+            <TextInput label={'Reference'} placeholder={'PT'} {...form.getInputProps('reference')} />
+          </Grid>
+        </Group>
+
+        <Group title={'Invoicing'}>
+          <Grid>
             <TextInput label={'Tax Region'} placeholder={'PT'} maxLength={2} {...form.getInputProps('tax_region')} />
             <NumberInput
               label={'Tax Number'}
@@ -105,6 +112,8 @@ export default function CreateCustomer() {
               hideControls
               {...form.getInputProps('tax_number')}
             />
+          </Grid>
+          <Grid>
             <TextInput
               label={'Contact Email'}
               placeholder={'email@icloud.com'}
@@ -115,8 +124,6 @@ export default function CreateCustomer() {
               checked={form.values.send_invoices}
               onChange={({ currentTarget }) => form.setFieldValue('send_invoices', currentTarget.checked)}
             />
-            <TextInput label={'Reference'} placeholder={'PT'} {...form.getInputProps('reference')} />
-            <DatePicker placeholder={'Pick a date'} label={'Birthday'} {...form.getInputProps('birthday')} />
           </Grid>
         </Group>
       </PageContainer>

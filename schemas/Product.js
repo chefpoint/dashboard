@@ -31,8 +31,7 @@ export default z.object({
         title: z
           .string({ message: 'Variation Title must be a string' })
           .min(2, { message: 'Variation Title must be 2 or more characters long' })
-          .max(30, { message: 'Variation Title must be no longer than 30 characters' })
-          .default('Normal'),
+          .max(30, { message: 'Variation Title must be no longer than 30 characters' }),
         price: z
           .union([z.string(), z.number()])
           .refine((value) => Number(value) >= 0, { message: 'Price cannot be negative' })

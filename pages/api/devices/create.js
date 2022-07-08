@@ -1,10 +1,11 @@
 import { requireAuth } from '@clerk/nextjs/api';
 import database from '../../../services/database';
-import Model from '../../../models/CheckingAccount';
-import Schema from '../../../schemas/CheckingAccount';
+import Model from '../../../models/Device';
+import Schema from '../../../schemas/Device';
+import generator from '../../../services/generator';
 
 /* * */
-/* CREATE CHECKINGACCOUNT */
+/* CREATE DEVICE */
 /* Explanation needed. */
 /* * */
 
@@ -41,12 +42,28 @@ export default requireAuth(async (req, res) => {
     return await res.status(500).json({ message: 'Database connection error.' });
   }
 
-  // 4. Try to create a new CheckingAccount
+  // 4. Check for uniqueness
   try {
-    const createdCheckingAccount = await Model(req.body).save();
-    return await res.status(200).json(createdCheckingAccount);
+    // The values that need to be unique are ['code'].
+    // Reason: The Device Code is the device identifier.
+    let deviceCodeIsNotUnique = true;
+    while (deviceCodeIsNotUnique) {
+      req.body.code = generator(6); // Generate a new code with 6 characters
+      deviceCodeIsNotUnique = await Model.exists({ code: req.body.code });
+    }
   } catch (err) {
     console.log(err);
-    return await res.status(500).json({ message: 'Cannot create this CheckingAccount.' });
+    await res.status(409).json({ message: err.message });
+    return;
+  }
+
+  // 5. Try to create the Device
+  try {
+    const newUser = await Model(req.body).save();
+    return await res.status(201).json(newUser);
+  } catch (err) {
+    console.log(err);
+    await res.status(500).json({ message: 'Cannot update this Device.' });
+    return;
   }
 });

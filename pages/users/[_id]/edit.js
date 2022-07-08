@@ -58,7 +58,6 @@ export default function EditUser() {
       mutate({ ...user, ...values });
       router.push(`/users/${_id}`);
       notify(_id, 'success', 'Changes saved!');
-      setIsLoading(false);
     } catch (err) {
       console.log(err);
       notify(_id, 'error', 'An error occurred.');

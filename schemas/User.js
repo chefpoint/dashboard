@@ -12,8 +12,7 @@ export default z.object({
   name: z
     .string({ message: 'Name must be a string' })
     .min(2, { message: 'Name must be 2 or more characters long' })
-    .max(30, { message: 'Name must be no longer than 30 characters' })
-    .default('Untitled User'),
+    .max(30, { message: 'Name must be no longer than 30 characters' }),
   role: z
     .string({ message: 'Role must be a string' })
     .min(2, { message: 'Role must be 2 or more characters long' })

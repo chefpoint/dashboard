@@ -4,7 +4,7 @@ import Model from '../../../models/User';
 import Schema from '../../../schemas/User';
 
 /* * */
-/* CREATE NEW USER */
+/* CREATE USER */
 /* Explanation needed. */
 /* * */
 
@@ -14,8 +14,7 @@ export default requireAuth(async (req, res) => {
   // 0. Refuse request if not POST
   if (req.method != 'POST') {
     await res.setHeader('Allow', ['POST']);
-    await res.status(405).json({ message: `Method ${req.method} Not Allowed` });
-    return;
+    return await res.status(405).json({ message: `Method ${req.method} Not Allowed` });
   }
 
   // 1. Try to save a new document with req.body
@@ -23,8 +22,7 @@ export default requireAuth(async (req, res) => {
     req.body = await JSON.parse(req.body);
   } catch (err) {
     console.log(err);
-    await res.status(500).json({ message: 'JSON parse error.' });
-    return;
+    return await res.status(500).json({ message: 'JSON parse error.' });
   }
 
   // 2. Validate req.body against schema
@@ -32,8 +30,7 @@ export default requireAuth(async (req, res) => {
     req.body = Schema.parse(req.body);
   } catch (err) {
     console.log(err);
-    await res.status(400).json({ message: JSON.parse(err.message)[0].message });
-    return;
+    return await res.status(400).json({ message: JSON.parse(err.message)[0].message });
   }
 
   // 3. Try to connect to the database
@@ -41,8 +38,7 @@ export default requireAuth(async (req, res) => {
     await database.connect();
   } catch (err) {
     console.log(err);
-    await res.status(500).json({ message: 'Database connection error.' });
-    return;
+    return await res.status(500).json({ message: 'Database connection error.' });
   }
 
   // 4. Check for uniqueness
@@ -55,18 +51,15 @@ export default requireAuth(async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    await res.status(409).json({ message: err.message });
-    return;
+    return await res.status(409).json({ message: err.message });
   }
 
   // 5. Try to save a new document with req.body
   try {
     const newUser = await Model(req.body).save();
-    await res.status(201).json(newUser);
-    return;
+    return await res.status(201).json(newUser);
   } catch (err) {
     console.log(err);
-    await res.status(500).json({ message: 'Cannot create this User.' });
-    return;
+    return await res.status(500).json({ message: 'Cannot create this User.' });
   }
 });

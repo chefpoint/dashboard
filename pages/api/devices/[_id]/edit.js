@@ -1,9 +1,10 @@
-import database from '../../../../services/database';
-import Device from '../../../../models/Device';
 import { requireAuth } from '@clerk/nextjs/api';
+import database from '../../../../services/database';
+import Model from '../../../../models/Device';
+import Schema from '../../../../schemas/Device';
 
 /* * */
-/* EDIT CHECKING ACCOUNT */
+/* EDIT DEVICE */
 /* Explanation needed. */
 /* * */
 
@@ -13,8 +14,7 @@ export default requireAuth(async (req, res) => {
   // 0. Refuse request if not PUT
   if (req.method != 'PUT') {
     await res.setHeader('Allow', ['PUT']);
-    await res.status(405).json({ message: `Method ${req.method} Not Allowed` });
-    return;
+    return await res.status(405).json({ message: `Method ${req.method} Not Allowed` });
   }
 
   // 1. Parse request body into JSON
@@ -22,52 +22,32 @@ export default requireAuth(async (req, res) => {
     req.body = JSON.parse(req.body);
   } catch (err) {
     console.log(err);
-    await res.status(500).json({ message: 'JSON parse error.' });
-    return;
+    return await res.status(500).json({ message: 'JSON parse error.' });
   }
 
-  // 2. Try to connect to the database
+  // 2. Validate req.body against schema
+  try {
+    req.body = Schema.parse(req.body);
+  } catch (err) {
+    console.log(err);
+    return await res.status(400).json({ message: JSON.parse(err.message)[0].message });
+  }
+
+  // 3. Try to connect to the database
   try {
     await database.connect();
   } catch (err) {
     console.log(err);
-    await res.status(500).json({ message: 'Database connection error.' });
-    return;
-  }
-
-  // 3. Configure the device
-  let formattedDevice = {};
-  try {
-    // Title
-    formattedDevice.title = req.body.title || 'untitled';
-    // Location
-    formattedDevice.location = req.body.location?.value || null;
-    // Layout
-    formattedDevice.layout = req.body.layout?.value || null;
-    // Users
-    formattedDevice.users = [];
-    for (const item of req.body.users) formattedDevice.users.push(item.value);
-    // Discounts
-    formattedDevice.discounts = [];
-    for (const item of req.body.discounts) formattedDevice.discounts.push(item.value);
-    // Checking Accounts
-    formattedDevice.checking_accounts = [];
-    for (const item of req.body.checking_accounts) formattedDevice.checking_accounts.push(item.value);
-    //
-  } catch (err) {
-    console.log(err);
-    await res.status(500).json({ message: 'Failed to format req.body.' });
-    return;
+    return await res.status(500).json({ message: 'Database connection error.' });
   }
 
   // 4. Try to update the correct Device
   try {
-    const editedDevice = await Device.findOneAndUpdate({ _id: req.query._id }, formattedDevice, { new: true }); // Return the edited document
+    const editedDevice = await Model.findOneAndUpdate({ _id: req.query._id }, req.body, { new: true }); // Return the edited document
     if (!editedDevice) return await res.status(404).json({ message: `Device with _id: ${req.query._id} not found.` });
     return await res.status(200).json(editedDevice);
   } catch (err) {
     console.log(err);
-    await res.status(500).json({ message: 'Cannot update this Device.' });
-    return;
+    return await res.status(500).json({ message: 'Cannot update this Device.' });
   }
 });

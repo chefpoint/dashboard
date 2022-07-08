@@ -15,8 +15,8 @@ module.exports =
     new mongoose.Schema({
       title: {
         type: String,
+        minlength: 2,
         maxlength: 30,
-        required: true,
       },
       code: {
         type: String,

@@ -14,7 +14,7 @@ export default function Devices() {
   const { data: devices } = useSWR('/api/devices/');
 
   function handleRowClick(row) {
-    router.push('/devices/' + row._id);
+    router.push(`/devices/${row._id}`);
   }
 
   function handleCreateDevice() {

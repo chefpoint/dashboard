@@ -1,34 +1,29 @@
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
-import Button from '../../../components/Button';
-import Loading from '../../../components/Loading';
-import PageContainer from '../../../components/PageContainer';
-import Toolbar from '../../../components/Toolbar';
-import { Grid, GridCell, Label, Value } from '../../../components/Grid';
-import Group from '../../../components/Group';
-import { IoSave, IoClose } from 'react-icons/io5';
+import Button from '../../components/Button';
+import PageContainer from '../../components/PageContainer';
+import Toolbar from '../../components/Toolbar';
+import Group from '../../components/Group';
+import { Grid, GridCell, Label, Value } from '../../components/Grid';
+import { IoSave, IoClose, IoKeypad } from 'react-icons/io5';
 import { useForm, zodResolver } from '@mantine/form';
 import { TextInput, LoadingOverlay, Select, MultiSelect } from '@mantine/core';
-import Schema from '../../../schemas/Device';
-import { useEffect, useRef } from 'react';
+import Schema from '../../schemas/Device';
 import { useState } from 'react';
-import API from '../../../services/API';
-import notify from '../../../services/notify';
+import API from '../../services/API';
+import notify from '../../services/notify';
 
-export default function EditDevice() {
+export default function CreateDevice() {
   //
 
   const router = useRouter();
-  const { _id } = router.query;
 
-  const { data: device, mutate } = useSWR(`/api/devices/${_id}`);
   const { data: locations } = useSWR('/api/locations');
   const { data: users } = useSWR('/api/users');
   const { data: discounts } = useSWR('/api/discounts');
   const { data: layouts } = useSWR('/api/layouts');
   const { data: checkingAccounts } = useSWR('/api/checking_accounts');
 
-  const hasUpdatedFields = useRef(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
@@ -43,31 +38,6 @@ export default function EditDevice() {
     },
   });
 
-  useEffect(() => {
-    if (!hasUpdatedFields.current && device) {
-      //
-      const formattedDeviceUsers = [];
-      for (const item of device.users) formattedDeviceUsers.push(item._id);
-
-      const formattedDeviceDiscounts = [];
-      for (const item of device.discounts) formattedDeviceDiscounts.push(item._id);
-
-      const formattedDeviceCheckingAccounts = [];
-      for (const item of device.checking_accounts) formattedDeviceCheckingAccounts.push(item._id);
-
-      form.setValues({
-        title: device.title || '',
-        location: device.location._id,
-        layout: device.layout._id,
-        users: formattedDeviceUsers,
-        discounts: formattedDeviceDiscounts,
-        checking_accounts: formattedDeviceCheckingAccounts,
-      });
-
-      hasUpdatedFields.current = true;
-    }
-  }, [device, form]);
-
   function formatSelectData(data = [], labelKey = 'title', valueKey = '_id') {
     const formatted = [];
     for (const item of data) formatted.push({ value: item[valueKey], label: item[labelKey] });
@@ -75,16 +45,15 @@ export default function EditDevice() {
   }
 
   function handleCancel() {
-    router.push('/devices/' + _id);
+    router.push('/devices/');
   }
 
   async function handleSave(values) {
     try {
       setIsLoading(true);
       notify('new', 'loading', 'Saving changes...');
-      await API({ service: 'devices', resourceId: _id, operation: 'edit', method: 'PUT', body: values });
-      mutate({ ...device, ...values });
-      router.push(`/devices/${_id}`);
+      const response = await API({ service: 'devices', operation: 'create', method: 'POST', body: values });
+      router.push(`/devices/${response._id}`);
       notify('new', 'success', 'Changes saved!');
     } catch (err) {
       console.log(err);
@@ -93,7 +62,7 @@ export default function EditDevice() {
     }
   }
 
-  return device ? (
+  return (
     <form onSubmit={form.onSubmit(handleSave)}>
       <PageContainer title={'Devices › ' + (form.values.title || 'New Device')}>
         <LoadingOverlay visible={isLoading} />
@@ -105,7 +74,7 @@ export default function EditDevice() {
         <Group>
           <GridCell>
             <Label>Unique Device Code</Label>
-            <Value>{device.code || '-'}</Value>
+            <Value>-</Value>
           </GridCell>
         </Group>
 
@@ -154,7 +123,5 @@ export default function EditDevice() {
         </Group>
       </PageContainer>
     </form>
-  ) : (
-    <Loading />
   );
 }

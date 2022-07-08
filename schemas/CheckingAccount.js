@@ -12,8 +12,7 @@ export default z.object({
   title: z
     .string({ message: 'Title must be a string' })
     .min(2, { message: 'Title must be 2 or more characters long' })
-    .max(30, { message: 'Title must be no longer than 30 characters' })
-    .default('Untitled Checking Account'),
+    .max(30, { message: 'Title must be no longer than 30 characters' }),
   client_name: z
     .string({ message: 'Client Name must be a string' })
     .min(2, { message: 'Client Name must be 2 or more characters long' })

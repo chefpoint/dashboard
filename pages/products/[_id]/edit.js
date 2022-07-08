@@ -8,12 +8,14 @@ import Group from '../../../components/Group';
 import API from '../../../services/API';
 import notify from '../../../services/notify';
 import { Grid } from '../../../components/Grid';
-import TextField from '../../../components/TextField';
+import { useState } from 'react';
 import { IoSave, IoClose } from 'react-icons/io5';
-import { useForm, formList } from '@mantine/form';
+import { useForm, formList, zodResolver } from '@mantine/form';
 import { randomId } from '@mantine/hooks';
+import Schema from '../../../schemas/Product';
 import { useEffect, useRef } from 'react';
-import Select from 'react-select';
+import { TextInput, Textarea, Select, LoadingOverlay, NumberInput } from '@mantine/core';
+import { TbCurrencyEuro } from 'react-icons/tb';
 
 export default function EditProduct() {
   //
@@ -23,7 +25,19 @@ export default function EditProduct() {
 
   const { data: product, mutate } = useSWR(`/api/products/${_id}`);
 
+  const [isLoading, setIsLoading] = useState(false);
   const hasUpdatedFields = useRef(false);
+
+  const form = useForm({
+    schema: zodResolver(Schema),
+    initialValues: {
+      title: '',
+      short_title: '',
+      image: '',
+      description: '',
+      variations: formList([{ title: '', price: 0, tax_id: null, key: randomId() }]),
+    },
+  });
 
   function handleCancel() {
     router.push(`/products/${_id}`);
@@ -42,19 +56,6 @@ export default function EditProduct() {
     }
   }
 
-  const form = useForm({
-    initialValues: {
-      title: '',
-      short_title: '',
-      image: '',
-      description: '',
-      variations: formList([{ title: '', price: 0, tax_id: '', key: randomId() }]),
-    },
-    validate: {
-      title: (value) => (value ? null : 'Invalid Title'),
-    },
-  });
-
   useEffect(() => {
     if (!hasUpdatedFields.current && product) {
       let formatedVariations = [];
@@ -66,7 +67,6 @@ export default function EditProduct() {
           key: index,
         });
       }
-      console.log(formatedVariations);
 
       form.setValues({
         title: product.title || '',
@@ -81,45 +81,72 @@ export default function EditProduct() {
   }, [product, form]);
 
   return product ? (
-    <PageContainer title={'Produtos › ' + (form.values.title || 'Sem Nome')}>
-      <form onSubmit={form.onSubmit(handleSave)}>
+    <form onSubmit={form.onSubmit(handleSave)}>
+      <PageContainer title={'Products › ' + (form.values.title || 'Sem Nome')}>
+        <LoadingOverlay visible={isLoading} />
         <Toolbar>
-          <Button type={'submit'} icon={<IoSave />} label={'Guardar'} color={'success'} />
-          <Button icon={<IoClose />} label={'Cancelar'} onClick={handleCancel} />
+          <Button type={'submit'} icon={<IoSave />} label={'Save'} color={'primary'} />
+          <Button icon={<IoClose />} label={'Cancel'} onClick={handleCancel} />
         </Toolbar>
 
-        <Grid css={{ marginBottom: '$md' }}>
-          <TextField label={'Title'} type={'text'} {...form.getInputProps('title')} />
-          <TextField label={'Título Curto'} type={'text'} {...form.getInputProps('short_title')} />
-          <TextField label={'Imagem'} type={'text'} {...form.getInputProps('image')} />
-          <TextField label={'Descrição'} type={'text'} {...form.getInputProps('description')} />
-        </Grid>
+        <Group title={'About this product'}>
+          <Grid>
+            <TextInput label={'Title'} placeholder={'Chocolate Bar'} {...form.getInputProps('title')} />
+            <TextInput label={'Short Title'} placeholder={'Choco Bar'} {...form.getInputProps('short_title')} />
+            <TextInput label={'Image Key'} placeholder={'filename.jpg'} {...form.getInputProps('image')} />
+          </Grid>
+          <Textarea
+            label='Description'
+            placeholder={'How should this product be presented'}
+            {...form.getInputProps('description')}
+          />
+        </Group>
 
-        <Group title={'Variações'} css={{ marginTop: '$md', display: 'flex', gap: '$md' }}>
+        <Group title={'Variations'}>
           {form.values.variations.map((item, index) => (
             <Group key={item.key}>
-              <Grid css={{ marginBottom: '$md' }}>
-                <TextField label={'Título'} type={'text'} {...form.getListInputProps('variations', index, 'title')} />
-                <TextField label={'Preço'} type={'number'} {...form.getListInputProps('variations', index, 'price')} />
+              <Grid>
+                <TextInput
+                  label={'Variation Title'}
+                  placeholder={'Normal'}
+                  {...form.getListInputProps('variations', index, 'title')}
+                />
+                <NumberInput
+                  icon={<TbCurrencyEuro />}
+                  label={'Price'}
+                  placeholder={'2.99'}
+                  precision={2}
+                  hideControls
+                  {...form.getListInputProps('variations', index, 'price')}
+                />
                 <Select
-                  {...form.getListInputProps('variations', index, 'tax_id')}
-                  options={[
-                    { label: 'Normal (23%)', value: 'NOR' },
-                    { label: 'Intermédia (13%)', value: 'INT' },
-                    { label: 'Reduzida (6%)', value: 'RED' },
+                  label='Tax Class'
+                  placeholder='Pick one'
+                  data={[
+                    { value: 'NOR', label: 'Normal (23%)' },
+                    { value: 'INT', label: 'Intermédia (13%)' },
+                    { value: 'RED', label: 'Reduzida (6%)' },
                   ]}
+                  {...form.getListInputProps('variations', index, 'tax_id')}
                 />
               </Grid>
-              <Button icon={<IoClose />} label={'Remover Variação'} onClick={() => form.removeListItem('variations', index)} />
+              <Button
+                icon={<IoClose />}
+                label={'Remove Variation'}
+                onClick={() => form.removeListItem('variations', index)}
+              />
             </Group>
           ))}
         </Group>
 
-        <Button css={{ marginTop: '$md' }} onClick={() => form.addListItem('variations', { title: '', price: 0, tax_id: '', key: randomId() })}>
+        <Button
+          css={{ marginTop: '$md' }}
+          onClick={() => form.addListItem('variations', { title: '', price: 0, tax_id: '', key: randomId() })}
+        >
           Add Variation
         </Button>
-      </form>
-    </PageContainer>
+      </PageContainer>
+    </form>
   ) : (
     <Loading />
   );

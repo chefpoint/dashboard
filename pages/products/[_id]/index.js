@@ -49,53 +49,69 @@ export default function ViewProduct() {
   }
 
   return product ? (
-    <PageContainer title={'Produtos › ' + product.title}>
+    <PageContainer title={'Products › ' + product.title}>
       <Toolbar>
-        <Button icon={<IoPencil />} label={'Editar'} onClick={handleEditProduct} />
-        <Button icon={<IoDuplicate />} label={'Duplicar'} onClick={handleDuplicateProduct} />
+        <Button icon={<IoPencil />} label={'Edit'} onClick={handleEditProduct} />
+        <Button icon={<IoDuplicate />} label={'Duplicate'} onClick={handleDuplicateProduct} />
         <Button
           icon={<IoTrash />}
-          label={'Apagar'}
+          label={'Delete'}
           color={'danger'}
           alert={
             <Alert
               color={'danger'}
-              title={'Eliminar Produto'}
-              subtitle={'Tem a certeza que pretende eliminar este produto?'}
-              message={'Esta acção é irreversível e imediata.'}
+              title={'Delete Product'}
+              subtitle={'Are you sure you want to delete this product?'}
+              message={'This action is irreversible and immediate.'}
               onConfirm={handleDeleteProduct}
             />
           }
         />
       </Toolbar>
 
-      <Group title={'Informações Gerais'}>
+      <Group title={'About this Product'}>
         <Grid>
           <GridCell>
-            <Label>Título</Label>
+            <Label>Title</Label>
             <Value>{product.title || '-'}</Value>
           </GridCell>
           <GridCell>
-            <Label>Código Único</Label>
-            <Value>{product.code || '-'}</Value>
+            <Label>Short Title</Label>
+            <Value>{product.short_title || '-'}</Value>
+          </GridCell>
+          <GridCell>
+            <Label>Image Key</Label>
+            <Value>{product.image || '-'}</Value>
+          </GridCell>
+        </Grid>
+        <Grid>
+          <GridCell>
+            <Label>Description</Label>
+            <Value>{product.description || '-'}</Value>
           </GridCell>
         </Grid>
       </Group>
 
-      {product.variations.map((variation, index) => (
-        <Group key={index} title={variation.title}>
-          <Grid>
-            <GridCell>
-              <Label>Título</Label>
-              <Value>{variation.title || '-'}</Value>
-            </GridCell>
-            <GridCell>
-              <Label>Preço</Label>
-              <Value>{variation.price || '-'}</Value>
-            </GridCell>
-          </Grid>
-        </Group>
-      ))}
+      <Group title={'Product Variations'}>
+        {product.variations.map((variation, index) => (
+          <Group key={index}>
+            <Grid>
+              <GridCell>
+                <Label>Variation Title</Label>
+                <Value>{variation.title || '-'}</Value>
+              </GridCell>
+              <GridCell>
+                <Label>Variation Price</Label>
+                <Value>{variation.price || 'Free'}</Value>
+              </GridCell>
+              <GridCell>
+                <Label>Tax ID</Label>
+                <Value>{variation.tax_id || '-'}</Value>
+              </GridCell>
+            </Grid>
+          </Group>
+        ))}
+      </Group>
     </PageContainer>
   ) : (
     <Loading />

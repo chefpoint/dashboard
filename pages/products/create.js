@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
 import Button from '../../components/Button';
 import PageContainer from '../../components/PageContainer';
 import Toolbar from '../../components/Toolbar';
@@ -40,25 +39,25 @@ export default function CreateProduct() {
   async function handleSave(values) {
     try {
       setIsLoading(true);
-      notify('new', 'loading', 'A guardar alterações...');
+      notify('new', 'loading', 'Saving changes...');
       const response = await API({ service: 'products', operation: 'create', method: 'POST', body: values });
       router.push(`/products/${response._id}`);
-      notify('new', 'success', 'Alterações guardadas!');
+      notify('new', 'success', 'Changes saved!');
       setIsLoading(false);
     } catch (err) {
       console.log(err);
-      notify('new', 'error', 'Ocorreu um erro.');
+      notify('new', 'error', 'An error occurred.');
       setIsLoading(false);
     }
   }
 
   return (
     <form onSubmit={form.onSubmit(handleSave)}>
-      <PageContainer title={'Produtos › ' + (form.values.title || 'Novo Produto')}>
+      <PageContainer title={'Products › ' + (form.values.title || 'New Product')}>
         <LoadingOverlay visible={isLoading} />
         <Toolbar>
-          <Button type={'submit'} icon={<IoSave />} label={'Guardar'} color={'success'} />
-          <Button icon={<IoClose />} label={'Cancelar'} onClick={handleCancel} />
+          <Button type={'submit'} icon={<IoSave />} label={'Save'} color={'success'} />
+          <Button icon={<IoClose />} label={'Cancel'} onClick={handleCancel} />
         </Toolbar>
 
         <Group title={'About this product'}>

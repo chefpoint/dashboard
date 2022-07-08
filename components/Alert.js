@@ -110,8 +110,8 @@ export default function Alert({ title, subtitle, message, color, onConfirm, onCa
         {message && <Message>{message}</Message>}
       </MessagesWrapper>
       <ButtonsWrapper>
-        <Button color={color} label={'Confirmar'} onClick={handleConfirm} />
-        <Button label={'Cancelar'} onClick={handleCancel} />
+        <Button color={color} label={'Confirm'} onClick={handleConfirm} />
+        <Button label={'Cancel'} onClick={handleCancel} />
       </ButtonsWrapper>
     </Container>
   );

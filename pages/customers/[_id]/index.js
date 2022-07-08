@@ -1,7 +1,6 @@
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import Button from '../../../components/Button';
-import { toast } from 'react-toastify';
 import Loading from '../../../components/Loading';
 import PageContainer from '../../../components/PageContainer';
 import Toolbar from '../../../components/Toolbar';
@@ -49,10 +48,6 @@ export default function Customer() {
       console.log(err);
       notify(_id, 'error', 'Ocorreu um erro.');
     }
-  }
-
-  function handleEmailCustomer() {
-    console.log();
   }
 
   function handleTransactionRowClick(row) {
@@ -120,10 +115,12 @@ export default function Customer() {
           <GridCell>
             <Label>Birthday</Label>
             <Value>
-              {DateTime.fromISO(customer.birthday).toLocaleString({
-                ...DateTime.DATE_SHORT,
-                month: 'long',
-              })}
+              {customer.birthday
+                ? DateTime.fromISO(customer.birthday).toLocaleString({
+                    ...DateTime.DATE_SHORT,
+                    month: 'long',
+                  })
+                : '-'}
             </Value>
           </GridCell>
         </Grid>

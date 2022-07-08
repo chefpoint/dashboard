@@ -5,7 +5,7 @@ import Toolbar from '../../../components/Toolbar';
 import Group from '../../../components/Group';
 import { Grid, GridCell } from '../../../components/Grid';
 import { IoSave, IoClose } from 'react-icons/io5';
-import { formList, useForm, yupResolver } from '@mantine/form';
+import { useForm, yupResolver } from '@mantine/form';
 import { TextInput, LoadingOverlay, Switch } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import Schema from '../../../schemas/Customer';
@@ -41,6 +41,7 @@ export default function CreateCustomer() {
 
   useEffect(() => {
     if (!hasUpdatedFields.current && customer) {
+      console.log(customer);
       form.setValues({
         first_name: customer.first_name || '',
         last_name: customer.last_name || '',
@@ -49,7 +50,7 @@ export default function CreateCustomer() {
         contact_email: customer.contact_email || '',
         send_invoices: customer.send_invoices,
         reference: customer.reference || '',
-        birthday: customer.birthday || '',
+        birthday: customer.birthday ? new Date(customer.birthday) : '',
       });
       hasUpdatedFields.current = true;
     }

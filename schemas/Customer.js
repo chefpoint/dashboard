@@ -26,5 +26,5 @@ export default yup.object({
   contact_email: yup.string().email(),
   send_invoices: yup.boolean().default(false),
   reference: yup.string('Reference must be a string').max(30, 'Reference must be no longer than 30 characters'),
-  birthday: yup.string(),
+  birthday: yup.string().ensure(),
 });

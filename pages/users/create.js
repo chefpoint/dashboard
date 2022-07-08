@@ -39,11 +39,10 @@ export default function CreateUser() {
       const response = await API({ service: 'users', operation: 'create', method: 'POST', body: values });
       router.push(`/users/${response._id}`);
       notify('new', 'success', 'Changes saved!');
-      setIsLoading(false);
     } catch (err) {
       console.log(err);
-      notify('new', 'error', 'An error occurred.');
       setIsLoading(false);
+      notify('new', 'error', 'An error occurred.');
     }
   }
 

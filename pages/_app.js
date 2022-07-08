@@ -1,6 +1,6 @@
 import { SWRConfig } from 'swr';
 import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/nextjs';
-import { ToastContainer } from 'react-toastify';
+import { NotificationsProvider } from '@mantine/notifications';
 import AppstateProvider from '../context/Appstate';
 import BrowserConfig from '../components/BrowserConfig';
 import Refresh from '../components/Refresh';
@@ -9,7 +9,6 @@ import Navigation from '../components/Navigation';
 
 // Styles
 import '../styles/reset.css';
-import 'react-toastify/dist/ReactToastify.min.css';
 
 export default function Dashboard({ Component, pageProps }) {
   //
@@ -29,13 +28,14 @@ export default function Dashboard({ Component, pageProps }) {
         <Refresh />
         <BrowserConfig />
         <SignedIn>
-          <AppstateProvider>
-            <ToastContainer />
-            <Navigation>
-              <Component {...pageProps} />
-            </Navigation>
-            <Overlay />
-          </AppstateProvider>
+          <NotificationsProvider position='top-right'>
+            <AppstateProvider>
+              <Navigation>
+                <Component {...pageProps} />
+              </Navigation>
+              <Overlay />
+            </AppstateProvider>
+          </NotificationsProvider>
         </SignedIn>
         <SignedOut>
           <RedirectToSignIn />

@@ -1,27 +1,38 @@
-import { toast } from 'react-toastify';
+import { showNotification, updateNotification } from '@mantine/notifications';
+import { TbCheck } from 'react-icons/tb';
 
 /* * * * * */
 /* UI NOTIFICATIONS (TOASTS) */
 /* * */
 
-export default async function notify(identifier, type, title) {
+export default async function notify(identifier, type, title, message) {
   //
 
   const defaultOptions = {
+    id: identifier,
+    title: title,
     autoClose: 5000,
+    title: title,
+    message: message,
   };
 
   switch (type) {
     case 'loading':
-      toast.loading(title, { toastId: identifier });
+      defaultOptions.loading = true;
+      defaultOptions.autoClose = false;
+      defaultOptions.disallowClose = true;
+      showNotification(defaultOptions);
       break;
 
     case 'success':
-      toast.update(identifier, { ...defaultOptions, render: title, type: 'success', isLoading: false });
+      defaultOptions.autoClose = 3000;
+      defaultOptions.icon = <TbCheck />;
+      updateNotification(defaultOptions);
       break;
 
     case 'error':
-      toast.update(identifier, { ...defaultOptions, render: title, type: 'error', isLoading: false });
+      defaultOptions.autoClose = 7000;
+      updateNotification(defaultOptions);
       break;
 
     default:

@@ -4,12 +4,14 @@ import { Grid, GridCell, Label, Value } from '../../../components/Grid';
 import Button from '../../../components/Button';
 import Loading from '../../../components/Loading';
 import PageContainer from '../../../components/PageContainer';
+import { LoadingOverlay } from '@mantine/core';
 import Toolbar from '../../../components/Toolbar';
 import Group from '../../../components/Group';
 import Alert from '../../../components/Alert';
 import API from '../../../services/API';
 import notify from '../../../services/notify';
 import { IoPencil, IoTrash } from 'react-icons/io5';
+import { useState } from 'react';
 
 export default function Users() {
   //
@@ -19,24 +21,29 @@ export default function Users() {
 
   const { data: user } = useSWR(`/api/users/${_id}`);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   function handleEditUser() {
     router.push(`/users/${_id}/edit`);
   }
 
   async function handleDeleteUser() {
     try {
-      notify(_id, 'loading', 'A eliminar User...');
+      setIsLoading(true);
+      notify(_id, 'loading', 'Deleting User...');
       await API({ service: 'users', resourceId: _id, operation: 'delete', method: 'DELETE' });
       router.push('/users');
-      notify(_id, 'success', 'User eliminado!');
+      notify(_id, 'success', 'User deleted!');
     } catch (err) {
       console.log(err);
-      notify(_id, 'error', 'Ocorreu um erro.');
+      setIsLoading(false);
+      notify(_id, 'error', 'An error occurred.');
     }
   }
 
   return user ? (
     <PageContainer title={'Users › ' + user.name}>
+      <LoadingOverlay visible={isLoading} />
       <Toolbar>
         <Button icon={<IoPencil />} label={'Edit'} onClick={handleEditUser} />
         <Button
@@ -46,10 +53,10 @@ export default function Users() {
           alert={
             <Alert
               color={'danger'}
-              title={'Eliminar Colaborador'}
-              subtitle={'Tem a certeza que pretende eliminar este colaborador?'}
+              title={'Delete User'}
+              subtitle={'Are you sure you want to delete this User?'}
               message={
-                'Esta acção é irreversível. O colaborador deixará imediatamente de ter acesso ao equipamento com a sua password.'
+                'This action is irreversible and immediate. The User will be immediately blocked from accessing devices with this password.'
               }
               onConfirm={handleDeleteUser}
             />
@@ -57,7 +64,7 @@ export default function Users() {
         />
       </Toolbar>
 
-      <Group title={'Informações Gerais'}>
+      <Group title={'General Details'}>
         <Grid>
           <GridCell>
             <Label>Nome</Label>

@@ -1,11 +1,10 @@
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
-import { styled } from '@stitches/react';
 import Button from '../../components/Button';
 import Table from '../../components/Table';
 import PageContainer from '../../components/PageContainer';
 import Toolbar from '../../components/Toolbar';
-import { IoAdd, IoSave } from 'react-icons/io5';
+import { IoAdd } from 'react-icons/io5';
 
 export default function Users() {
   //
@@ -15,7 +14,7 @@ export default function Users() {
   const { data: users } = useSWR('/api/users/');
 
   function handleRowClick(row) {
-    router.push('/users/' + row._id);
+    router.push(`/users/${row._id}`);
   }
 
   function handleCreateUser() {
@@ -23,9 +22,9 @@ export default function Users() {
   }
 
   return (
-    <PageContainer title={'Colaboradores'}>
+    <PageContainer title={'Users'}>
       <Toolbar>
-        <Button icon={<IoAdd />} label={'Criar'} onClick={handleCreateUser} />
+        <Button icon={<IoAdd />} label={'Create'} onClick={handleCreateUser} />
       </Toolbar>
 
       <Table

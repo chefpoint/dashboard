@@ -29,5 +29,6 @@ export default z.object({
       .string()
       .length(9, { message: 'Tax Number must be exactly 9 characters long' })
       .regex(/^[0-9]*$/, { message: 'Tax Number must be only numbers' })
+      .transform((value) => Number(value))
   ),
 });

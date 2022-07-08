@@ -1,11 +1,10 @@
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
-import { styled } from '@stitches/react';
 import Button from '../../components/Button';
 import Table from '../../components/Table';
 import PageContainer from '../../components/PageContainer';
 import Toolbar from '../../components/Toolbar';
-import { IoAdd, IoSave } from 'react-icons/io5';
+import { IoAdd } from 'react-icons/io5';
 
 export default function CheckingAccounts() {
   //
@@ -41,16 +40,16 @@ export default function CheckingAccounts() {
   }
 
   return (
-    <PageContainer title={'Contas Correntes'}>
+    <PageContainer title={'Checking Accounts'}>
       <Toolbar>
-        <Button icon={<IoAdd />} label={'Criar'} onClick={handleCreateCheckingAccount} />
+        <Button icon={<IoAdd />} label={'Create'} onClick={handleCreateCheckingAccount} />
       </Toolbar>
 
       <Table
         columns={[
-          { label: 'Título', key: 'title' },
-          { label: 'Cliente', key: 'client_name' },
-          { label: 'NIF', key: 'tax_id' },
+          { label: 'Title', key: 'title' },
+          { label: 'Client', key: 'client_name' },
+          { label: 'Tax ID', key: 'tax_id' },
         ]}
         data={formatTableData()}
         onRowClick={handleRowClick}

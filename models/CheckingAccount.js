@@ -31,7 +31,7 @@ export default mongoose.models.CheckingAccount ||
         default: 'PT',
       },
       tax_number: {
-        type: String,
+        type: Number,
         minlength: 9,
         maxlength: 9,
       },

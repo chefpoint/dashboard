@@ -36,20 +36,20 @@ export default function CheckingAccount() {
   }
 
   return checkingAccount ? (
-    <PageContainer title={'Contas Correntes › ' + checkingAccount.title}>
+    <PageContainer title={'Checking Accounts › ' + checkingAccount.title}>
       <Toolbar>
-        <Button icon={<IoPencil />} label={'Editar'} onClick={handleEditCheckingAccount} />
+        <Button icon={<IoPencil />} label={'Edit'} onClick={handleEditCheckingAccount} />
         <Button
           icon={<IoTrash />}
-          label={'Eliminar'}
+          label={'Delete'}
           color={'danger'}
           alert={
             <Alert
               color={'danger'}
-              title={'Eliminar Conta Corrente'}
-              subtitle={'Tem a certeza que pretende eliminar esta Conta Corrente?'}
+              title={'Delete Checking Account'}
+              subtitle={'Are you sure you want to delete this Checking Account?'}
               message={
-                'Esta acção é irreversível. A conta ficará imediatamente indisponível para finalização de pagamentos. Os valores em dívida serão dados como pagos.'
+                'This action is irreversible and immediate. This account will be unavailable to accept new transactions. The unpaid amount will be considered fully paid.'
               }
               onConfirm={handleDeleteCheckingAccount}
             />
@@ -57,18 +57,18 @@ export default function CheckingAccount() {
         />
       </Toolbar>
 
-      <Group title={'Informações Gerais'}>
+      <Group title={'General Info'}>
         <Grid>
           <GridCell>
-            <Label>Título</Label>
+            <Label>Title</Label>
             <Value>{checkingAccount.title || '-'}</Value>
           </GridCell>
           <GridCell>
-            <Label>Cliente</Label>
+            <Label>Client</Label>
             <Value>{checkingAccount.client_name || '-'}</Value>
           </GridCell>
           <GridCell>
-            <Label>NIF</Label>
+            <Label>Tax ID</Label>
             <Value>{checkingAccount.tax_region + checkingAccount.tax_number || '-'}</Value>
           </GridCell>
         </Grid>

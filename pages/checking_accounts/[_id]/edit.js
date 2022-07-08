@@ -6,12 +6,14 @@ import Loading from '../../../components/Loading';
 import PageContainer from '../../../components/PageContainer';
 import Toolbar from '../../../components/Toolbar';
 import { Grid } from '../../../components/Grid';
-import TextField from '../../../components/TextField';
+import Group from '../../../components/Group';
 import { IoSave, IoClose } from 'react-icons/io5';
 import API from '../../../services/API';
+import { TextInput, LoadingOverlay, NumberInput } from '@mantine/core';
 import Schema from '../../../schemas/CheckingAccount';
 import { useForm, zodResolver } from '@mantine/form';
 import { useEffect, useRef } from 'react';
+import { useState } from 'react';
 
 export default function CheckingAccount() {
   //
@@ -22,6 +24,7 @@ export default function CheckingAccount() {
   const { data: checkingAccount, mutate } = useSWR(`/api/checking_accounts/${_id}`);
 
   const hasUpdatedFields = useRef(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
     schema: zodResolver(Schema),
@@ -39,6 +42,7 @@ export default function CheckingAccount() {
 
   async function handleSave(values) {
     try {
+      setIsLoading(true);
       notify(_id, 'loading', 'A guardar alterações...');
       await API({ service: 'checking_accounts', resourceId: _id, operation: 'edit', method: 'PUT', body: values });
       mutate({ ...checkingAccount, ...values });
@@ -46,6 +50,7 @@ export default function CheckingAccount() {
       notify(_id, 'success', 'Alterações guardadas!');
     } catch (err) {
       console.log(err);
+      setIsLoading(false);
       notify(_id, 'error', 'Ocorreu um erro.');
     }
   }
@@ -63,21 +68,31 @@ export default function CheckingAccount() {
   }, [checkingAccount, form]);
 
   return checkingAccount ? (
-    <PageContainer title={'Contas Correntes › ' + (form.values.title || 'Sem Título')}>
-      <form onSubmit={form.onSubmit(handleSave)}>
+    <form onSubmit={form.onSubmit(handleSave)}>
+      <PageContainer title={'Checking Accounts › ' + (form.values.title || 'Untitled Checking Account')}>
+        <LoadingOverlay visible={isLoading} />
         <Toolbar>
-          <Button type={'submit'} icon={<IoSave />} label={'Guardar'} color={'success'} />
-          <Button icon={<IoClose />} label={'Cancelar'} onClick={handleCancel} />
+          <Button type={'submit'} icon={<IoSave />} label={'Save'} color={'primary'} />
+          <Button icon={<IoClose />} label={'Cancel'} onClick={handleCancel} />
         </Toolbar>
 
-        <Grid>
-          <TextField label={'Título'} type={'text'} {...form.getInputProps('title')} />
-          <TextField label={'Cliente'} type={'text'} {...form.getInputProps('client_name')} />
-          <TextField label={'Tax Region'} type={'text'} {...form.getInputProps('tax_region')} />
-          <TextField label={'Tax Number'} type={'number'} {...form.getInputProps('tax_number')} />
-        </Grid>
-      </form>
-    </PageContainer>
+        <Group title={'General Details'}>
+          <Grid>
+            <TextInput label={'Title'} placeholder={'Board of Directors'} {...form.getInputProps('title')} />
+            <TextInput label={'Client Name'} placeholder={'Fidelidade'} {...form.getInputProps('client_name')} />
+            <TextInput label={'Tax Region'} placeholder={'PT'} maxLength={2} {...form.getInputProps('tax_region')} />
+            <NumberInput
+              label={'Tax Number'}
+              placeholder={500100200}
+              precision={0}
+              maxLength={9}
+              hideControls
+              {...form.getInputProps('tax_number')}
+            />
+          </Grid>
+        </Group>
+      </PageContainer>
+    </form>
   ) : (
     <Loading />
   );

@@ -8,8 +8,7 @@ import mongoose from 'mongoose';
 
 /* * */
 /* Schema for MongoDB ["Product"] Object */
-module.exports =
-  mongoose.models.Product ||
+export default mongoose.models.Product ||
   mongoose.model(
     'Product',
     new mongoose.Schema({

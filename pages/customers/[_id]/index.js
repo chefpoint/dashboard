@@ -1,55 +1,18 @@
 import useSWR from 'swr';
-import { useContext } from 'react';
 import { useRouter } from 'next/router';
-import { styled } from '@stitches/react';
-import { DateTime } from 'luxon';
 import Button from '../../../components/Button';
-import Toolbar from '../../../components/Toolbar';
-import Group from '../../../components/Group';
-import Table from '../../../components/Table';
-import Alert from '../../../components/Alert';
-import { IoPencil, IoTrash, IoDuplicate } from 'react-icons/io5';
+import { toast } from 'react-toastify';
 import Loading from '../../../components/Loading';
 import PageContainer from '../../../components/PageContainer';
-
-const Grid = styled('div', {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-  borderRadius: '$md',
-  gap: '$md',
-});
-
-const GridCell = styled('div', {
-  display: 'flex',
-  flexDirection: 'column',
-  padding: '$md',
-  borderRadius: '$md',
-  backgroundColor: '$gray1',
-  gap: '$xs',
-  variants: {
-    clickable: {
-      true: {
-        cursor: 'pointer',
-        '&:hover': {
-          backgroundColor: '$gray4',
-        },
-      },
-    },
-  },
-});
-
-const Label = styled('p', {
-  fontSize: '12px',
-  fontWeight: '$medium',
-  textTransform: 'uppercase',
-  color: '$gray11',
-});
-
-const Value = styled('p', {
-  fontSize: '18px',
-  fontWeight: '$medium',
-  color: '$gray12',
-});
+import Toolbar from '../../../components/Toolbar';
+import Group from '../../../components/Group';
+import { DateTime } from 'luxon';
+import { Grid, GridCell, Label, Value } from '../../../components/Grid';
+import Alert from '../../../components/Alert';
+import Table from '../../../components/Table';
+import API from '../../../services/API';
+import notify from '../../../services/notify';
+import { IoPencil, IoTrash, IoDuplicate } from 'react-icons/io5';
 
 export default function Customer() {
   //
@@ -57,44 +20,34 @@ export default function Customer() {
   const router = useRouter();
   const { _id } = router.query;
 
-  const { data: customer } = useSWR('/api/customers/' + _id);
-  const { data: transactions } = useSWR('/api/transactions/filter/customer/' + _id);
+  const { data: customer } = useSWR(`/api/customers/${_id}`);
+  const { data: transactions } = useSWR(`/api/transactions/filter/customer/${_id}`);
 
-  function handleEditCustomer() {
-    console.log();
+  async function handleEditCustomer() {
+    router.push(`/customers/${_id}/edit`);
   }
 
   async function handleDuplicateCustomer() {
-    // Try to update the current customer
     try {
-      // Send the request to the API
-      const response = await fetch(`/api/customers/${_id}/duplicate`, { method: 'GET' });
-      // Parse the response to JSON
-      const parsedResponse = await response.json();
-      // Throw an error if the response is not OK
-      if (!response.ok) throw new Error(parsedResponse.message);
-      // Find the index of the updated customer in the original list...
-      router.push('/customers/' + parsedResponse._id);
+      notify(_id, 'loading', 'Duplicating customer...');
+      const response = await API({ service: 'customers', resourceId: _id, operation: 'duplicate', method: 'GET' });
+      router.push(`/customers/${response._id}`);
+      notify(_id, 'success', 'Customer duplicated!');
     } catch (err) {
       console.log(err);
-      // setErrorMessage('Ocorreu um erro inesperado.');
+      notify(_id, 'error', 'Ocorreu um erro.');
     }
   }
 
   async function handleDeleteCustomer() {
-    // Try to update the current customer
     try {
-      // Send the request to the API
-      const response = await fetch(`/api/customers/${_id}/delete`, { method: 'DELETE' });
-      // Parse the response to JSON
-      const parsedResponse = await response.json();
-      // Throw an error if the response is not OK
-      if (!response.ok) throw new Error(parsedResponse.message);
-      // Find the index of the updated customer in the original list...
+      notify(_id, 'loading', 'A eliminar produto...');
+      await API({ service: 'customers', resourceId: _id, operation: 'delete', method: 'DELETE' });
       router.push('/customers');
+      notify(_id, 'success', 'Produto eliminado!');
     } catch (err) {
       console.log(err);
-      // setErrorMessage('Ocorreu um erro inesperado.');
+      notify(_id, 'error', 'Ocorreu um erro.');
     }
   }
 
@@ -129,7 +82,12 @@ export default function Customer() {
   }
 
   return customer ? (
-    <PageContainer title={'Clientes › Detalhe'}>
+    <PageContainer
+      title={
+        'Customers › ' +
+        (customer.first_name || customer.last_name ? `${customer.first_name} ${customer.last_name}` : 'New Customer')
+      }
+    >
       <Toolbar>
         <Button icon={<IoPencil />} label={'Editar'} onClick={handleEditCustomer} />
         <Button icon={<IoDuplicate />} label={'Duplicar'} onClick={handleDuplicateCustomer} />
@@ -151,23 +109,44 @@ export default function Customer() {
         />
       </Toolbar>
 
-      <Group title={'Informações Gerais'}>
+      <Group title={'Customer Details'}>
         <Grid>
           <GridCell>
             <Label>Nome</Label>
-            <Value>{customer.first_name + ' ' + customer.last_name}</Value>
+            <Value>
+              {customer.first_name || customer.last_name ? `${customer.first_name} ${customer.last_name}` : '-'}
+            </Value>
           </GridCell>
           <GridCell>
-            <Label>NIF</Label>
-            <Value>{customer.tax_country + customer.tax_number || '-'}</Value>
+            <Label>Birthday</Label>
+            <Value>{customer.birthday || '-'}</Value>
           </GridCell>
+        </Grid>
+        <Grid>
           <GridCell>
-            <Label>Email de Contacto</Label>
-            <Value>{customer.contact_email || '-'}</Value>
-          </GridCell>
-          <GridCell>
-            <Label>Nr. Cartão TP</Label>
+            <Label>Reference</Label>
             <Value>{customer.reference || '-'}</Value>
+          </GridCell>
+        </Grid>
+      </Group>
+
+      <Group title={'Invoicing'}>
+        <Grid>
+          <GridCell>
+            <Label>Tax ID</Label>
+            <Value>
+              {customer.tax_region || customer.tax_number ? `${customer.tax_region}${customer.tax_number}` : '-'}
+            </Value>
+          </GridCell>
+          <GridCell>
+            <Label>Send Invoices to Email</Label>
+            <Value>{customer.send_invoices ? 'Yes' : 'No'}</Value>
+          </GridCell>
+        </Grid>
+        <Grid>
+          <GridCell>
+            <Label>Contact Email</Label>
+            <Value>{customer.contact_email || '-'}</Value>
           </GridCell>
         </Grid>
       </Group>

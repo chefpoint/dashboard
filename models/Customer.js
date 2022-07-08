@@ -15,20 +15,19 @@ module.exports =
     new mongoose.Schema({
       first_name: {
         type: String,
+        minlength: 2,
         maxlength: 30,
       },
       last_name: {
         type: String,
         maxlength: 30,
       },
-      tax_country: {
+      tax_region: {
         type: String,
-        minlength: 2,
         maxlength: 2,
       },
       tax_number: {
-        type: String,
-        minlength: 9,
+        type: Number,
         maxlength: 9,
       },
       contact_email: {

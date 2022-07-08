@@ -60,7 +60,7 @@ export default function CheckingAccount() {
           <Grid>
             <TextInput label={'Title'} placeholder={'Board of Directors'} {...form.getInputProps('title')} />
             <TextInput label={'Client Name'} placeholder={'Fidelidade'} {...form.getInputProps('client_name')} />
-            <TextInput label={'Tax Region'} placeholder={'PT'} {...form.getInputProps('tax_region')} />
+            <TextInput label={'Tax Region'} placeholder={'PT'} maxLength={2} {...form.getInputProps('tax_region')} />
             <NumberInput
               label={'Tax Number'}
               placeholder={500100200}

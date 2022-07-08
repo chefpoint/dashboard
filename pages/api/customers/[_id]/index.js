@@ -1,6 +1,6 @@
-import database from '../../../../services/database';
-import Customer from '../../../../models/Customer';
 import { requireAuth } from '@clerk/nextjs/api';
+import database from '../../../../services/database';
+import Model from '../../../../models/Customer';
 
 /* * */
 /* GET CUSTOMER BY ID */
@@ -28,13 +28,12 @@ export default requireAuth(async (req, res) => {
 
   // 2. Try to fetch the correct Customer from the database
   try {
-    const foundCustomer = await Customer.findOne({ _id: req.query._id });
-    if (!foundCustomer) return await res.status(404).json({ message: `Customer with _id: ${req.query._id} not found.` });
-    await res.status(200).json(foundCustomer);
-    return;
+    const foundCustomer = await Model.findOne({ _id: req.query._id });
+    if (!foundCustomer)
+      return await res.status(404).json({ message: `Customer with _id: ${req.query._id} not found.` });
+    return await res.status(200).json(foundCustomer);
   } catch (err) {
     console.log(err);
-    await res.status(500).json({ message: 'Cannot fetch this customer.' });
-    return;
+    return await res.status(500).json({ message: 'Cannot fetch this Customer.' });
   }
 });

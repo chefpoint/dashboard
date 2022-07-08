@@ -17,7 +17,7 @@ export default function CheckingAccount() {
   const router = useRouter();
   const { _id } = router.query;
 
-  const { data: checkingAccount } = useSWR('/api/checking_accounts/' + _id);
+  const { data: checkingAccount } = useSWR(`/api/checking_accounts/${_id}`);
 
   function handleEditCheckingAccount() {
     router.push(router.asPath + '/edit');

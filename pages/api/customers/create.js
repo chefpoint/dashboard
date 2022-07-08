@@ -1,6 +1,7 @@
 import { requireAuth } from '@clerk/nextjs/api';
 import database from '../../../services/database';
-import Customer from '../../../models/Customer';
+import Model from '../../../models/Customer';
+import Schema from '../../../schemas/Customer';
 
 /* * */
 /* CREATE CUSTOMER */
@@ -13,29 +14,34 @@ export default requireAuth(async (req, res) => {
   // 0. Refuse request if not POST
   if (req.method != 'POST') {
     await res.setHeader('Allow', ['POST']);
-    await res.status(405).json({ message: `Method ${req.method} Not Allowed` });
-    return;
+    return await res.status(405).json({ message: `Method ${req.method} Not Allowed` });
   }
 
-  // 1. Try to connect to the database
-  try {
-    await database.connect();
-  } catch (err) {
-    console.log(err);
-    await res.status(500).json({ message: 'Database connection error.' });
-    return;
-  }
-
-  // 2. Try to save a new document with req.body
+  // 1. Try to save a new document with req.body
   try {
     req.body = await JSON.parse(req.body);
   } catch (err) {
     console.log(err);
-    await res.status(500).json({ message: 'JSON parse error.' });
-    return;
+    return await res.status(500).json({ message: 'JSON parse error.' });
   }
 
-  // 3. Check for uniqueness
+  // 2. Validate req.body against schema
+  try {
+    req.body = Schema.parse(req.body);
+  } catch (err) {
+    console.log(err);
+    return await res.status(400).json({ message: JSON.parse(err.message)[0].message });
+  }
+
+  // 3. Try to connect to the database
+  try {
+    await database.connect();
+  } catch (err) {
+    console.log(err);
+    return await res.status(500).json({ message: 'Database connection error.' });
+  }
+
+  // 4. Check for uniqueness
   try {
     // The only value that needs to, and can be, unique is 'reference'.
     // Reasons: For 'contact_email', there can be two customers with different name but same email,
@@ -44,23 +50,20 @@ export default requireAuth(async (req, res) => {
     // that want to share the same NIF, but receive invoices in different emails.
     // This might be expanded in the future, if emails are necessary for account creation.
     if (req.body.reference) {
-      const existsReference = await Customer.exists({ reference: req.body.reference });
-      if (existsReference) throw new Error('Já existe um cliente com a mesma referência');
+      const existsReference = await Model.exists({ reference: req.body.reference });
+      if (existsReference) throw new Error('A customer with the same reference already exists');
     }
   } catch (err) {
     console.log(err);
-    await res.status(409).json({ message: err.message });
-    return;
+    return await res.status(409).json({ message: err.message });
   }
 
-  // 4. Try to save a new document with req.body
+  // 5. Try to save a new document with req.body
   try {
-    const newCustomer = await Customer(req.body).save();
-    await res.status(201).json(newCustomer);
-    return;
+    const newCustomer = await Model(req.body).save();
+    return await res.status(201).json(newCustomer);
   } catch (err) {
     console.log(err);
-    await res.status(500).json({ message: 'Customer creation error.' });
-    return;
+    return await res.status(500).json({ message: 'Cannot create this Customer.' });
   }
 });

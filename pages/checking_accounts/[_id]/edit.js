@@ -36,6 +36,18 @@ export default function CheckingAccount() {
     },
   });
 
+  useEffect(() => {
+    if (!hasUpdatedFields.current && checkingAccount) {
+      form.setValues({
+        title: checkingAccount.title || '',
+        client_name: checkingAccount.client_name || '',
+        tax_region: checkingAccount.tax_region || '',
+        tax_number: checkingAccount.tax_number || '',
+      });
+      hasUpdatedFields.current = true;
+    }
+  }, [checkingAccount, form]);
+
   function handleCancel() {
     router.push(`/checking_accounts/${_id}`);
   }
@@ -54,18 +66,6 @@ export default function CheckingAccount() {
       notify(_id, 'error', 'Ocorreu um erro.');
     }
   }
-
-  useEffect(() => {
-    if (!hasUpdatedFields.current && checkingAccount) {
-      form.setValues({
-        title: checkingAccount.title || '',
-        client_name: checkingAccount.client_name || '',
-        tax_region: checkingAccount.tax_region || '',
-        tax_number: checkingAccount.tax_number || '',
-      });
-      hasUpdatedFields.current = true;
-    }
-  }, [checkingAccount, form]);
 
   return checkingAccount ? (
     <form onSubmit={form.onSubmit(handleSave)}>

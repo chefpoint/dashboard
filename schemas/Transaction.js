@@ -80,7 +80,7 @@ export default yup.object({
       _id: yup.string().max(30, 'Discount ID must not be longer than ${max} characters.'),
       title: yup.string().max(30, 'Discount Title must not be longer than ${max} characters.'),
       subtitle: yup.string().max(30, 'Discount Subtitle must not be longer than ${max} characters.'),
-      description: yup.string().max(30, 'Discount Description must not be longer than ${max} characters.'),
+      description: yup.string().max(250, 'Discount Description must not be longer than ${max} characters.'),
       amount: yup.number().min(0, 'Discount Amount must be greater than or equal to ${min}.'),
     })
   ),

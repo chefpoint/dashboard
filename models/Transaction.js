@@ -13,14 +13,17 @@ module.exports =
   mongoose.model(
     'Transaction',
     new mongoose.Schema({
+      //
+      // GENERAL
       timestamp: {
         type: String,
         maxlength: 30,
       },
 
-      // Device
+      // DEVICE
+      // In which device was this transaction closed.
       device: {
-        device_id: {
+        _id: {
           type: String,
           maxlength: 30,
         },
@@ -30,9 +33,10 @@ module.exports =
         },
       },
 
-      // Location
+      // LOCATION
+      // Which location is this transaction associated with.
       location: {
-        location_id: {
+        _id: {
           type: String,
           maxlength: 30,
         },
@@ -40,17 +44,25 @@ module.exports =
           type: String,
           maxlength: 30,
         },
-        apicbase: {
-          outlet_id: {
-            type: String,
-            maxlength: 30,
-          },
+      },
+
+      // USER
+      // Which user closed this transaction.
+      user: {
+        user_id: {
+          type: String,
+          maxlength: 30,
+        },
+        name: {
+          type: String,
+          maxlength: 30,
         },
       },
 
-      // Layout
+      // LAYOUT
+      // What was the layout used at the moment.
       layout: {
-        layout_id: {
+        _id: {
           type: String,
           maxlength: 30,
         },
@@ -60,41 +72,8 @@ module.exports =
         },
       },
 
-      // Customer
-      customer: {
-        customer_id: {
-          type: String,
-          maxlength: 30,
-        },
-        first_name: {
-          type: String,
-          maxlength: 30,
-        },
-        last_name: {
-          type: String,
-          maxlength: 30,
-        },
-        email: {
-          type: String,
-          maxlength: 30,
-        },
-        reference: {
-          type: String,
-          maxlength: 30,
-        },
-        tax_country: {
-          type: String,
-          minlength: 2,
-          maxlength: 2,
-        },
-        tax_number: {
-          type: String,
-          minlength: 9,
-          maxlength: 9,
-        },
-      },
-
-      // Items
+      // ITEMS
+      // The list of products transacted.
       items: [
         {
           product_id: {
@@ -138,6 +117,40 @@ module.exports =
           },
         },
       ],
+
+      // Customer
+      customer: {
+        customer_id: {
+          type: String,
+          maxlength: 30,
+        },
+        first_name: {
+          type: String,
+          maxlength: 30,
+        },
+        last_name: {
+          type: String,
+          maxlength: 30,
+        },
+        contact_email: {
+          type: String,
+          maxlength: 30,
+        },
+        reference: {
+          type: String,
+          maxlength: 30,
+        },
+        tax_country: {
+          type: String,
+          minlength: 2,
+          maxlength: 2,
+        },
+        tax_number: {
+          type: String,
+          minlength: 9,
+          maxlength: 9,
+        },
+      },
 
       // Discounts
       discounts: [
@@ -194,16 +207,6 @@ module.exports =
             minlength: 9,
             maxlength: 9,
           },
-        },
-      },
-
-      // User
-      user: {
-        user_id: {
-          type: String,
-        },
-        name: {
-          type: String,
         },
       },
 

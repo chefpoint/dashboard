@@ -15,7 +15,7 @@ export default function CheckingAccounts() {
 
   function formatTableData() {
     // Transform data for table
-    if (!checkingAccounts) return;
+    if (!checkingAccounts) return [];
     // Transform data for table
     const arrayOfData = [];
     checkingAccounts.forEach((ca) => {

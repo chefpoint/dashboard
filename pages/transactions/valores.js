@@ -4,7 +4,7 @@ import Table from '../../components/Table';
 import { DateTime } from 'luxon';
 import PageContainer from '../../components/PageContainer';
 import { Grid, GridCell, Label, Value } from '../../components/Grid';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Users() {
   //
@@ -13,9 +13,11 @@ export default function Users() {
 
   const { data: transactions } = useSWR('/api/transactions/');
 
-  const [total, setTotal] = useState(0);
+  const [totalCarne, setTotalCarne] = useState(0);
+  const [totalPeixe, setTotalPeixe] = useState(0);
+  const [totalVegan, setTotalVegan] = useState(0);
 
-  function filterTransactions() {
+  function countCarne() {
     if (!transactions) return 0;
     let totalSold = 0;
     transactions.forEach((element) => {
@@ -23,15 +25,51 @@ export default function Users() {
         if (item.variation_id == '62cbf1eb58deead62da775e4') totalSold += 1;
       });
     });
-    setTotal(totalSold);
+    setTotalCarne(totalSold);
   }
+
+  function countPeixe() {
+    if (!transactions) return 0;
+    let totalSold = 0;
+    transactions.forEach((element) => {
+      element.items.forEach((item) => {
+        if (item.variation_id == '62cbf1eb58deead62da775e4') totalSold += 1;
+      });
+    });
+    setTotalPeixe(totalSold);
+  }
+
+  function countVegan() {
+    if (!transactions) return 0;
+    let totalSold = 0;
+    transactions.forEach((element) => {
+      element.items.forEach((item) => {
+        if (item.variation_id == '62cbf1eb58deead62da775e4') totalSold += 1;
+      });
+    });
+    setTotalVegan(totalSold);
+  }
+
+  useEffect(() => {
+    countCarne();
+    countPeixe();
+    countVegan();
+  });
 
   return (
     <PageContainer title={'Transações'}>
       <Grid>
         <GridCell>
-          <Label>Total</Label>
-          <Value>{total}</Value>
+          <Label>Carne</Label>
+          <Value>{totalCarne}</Value>
+        </GridCell>
+        <GridCell>
+          <Label>Peixe</Label>
+          <Value>{totalPeixe}</Value>
+        </GridCell>
+        <GridCell>
+          <Label>Vegan</Label>
+          <Value>{totalVegan}</Value>
         </GridCell>
       </Grid>
     </PageContainer>

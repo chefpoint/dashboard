@@ -50,7 +50,7 @@ export default requireAuth(async (req, res) => {
     // 4.3. Show the document in the browser (inline, not attachment) and the correct filename
     await res.setHeader('Content-Disposition', `inline; filename="${transaction.invoice.number}.pdf"`);
     // 4.4. Send the document to the client
-    return await res.status(200).json(response.body);
+    return await res.status(200).send(response.body);
   } catch (err) {
     console.log(err);
     return await res.status(500).json({ message: err.message });

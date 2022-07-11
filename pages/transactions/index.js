@@ -33,7 +33,7 @@ export default function Users() {
           minute: 'numeric',
         }),
         location: t.location?.title,
-        total_amount: t.payment?.total_amount + '€',
+        total_amount: `${t.payment?.amount_total || '?'}€`,
       };
       // console.log(formated);
       arrayOfData.push(formated);

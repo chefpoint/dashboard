@@ -117,7 +117,7 @@ export default function Users() {
         <Grid>
           <GridCell>
             <Label>Valor Total</Label>
-            <Value>{transaction.payment.total_amount + '€'}</Value>
+            <Value>{transaction.payment.amount_total + '€'}</Value>
           </GridCell>
           <GridCell>
             <Label>Método Utilizado</Label>

@@ -22,23 +22,23 @@ export default function Users() {
   }
 
   function handleOpenCustomer() {
-    router.push(`/customers/${transaction.customer.customer_id}`);
+    router.push(`/customers/${transaction.customer._id}`);
   }
 
   function handleOpenUser() {
-    router.push(`/users/${transaction.user.user_id}`);
+    router.push(`/users/${transaction.user._id}`);
   }
 
   function handleOpenDevice() {
-    router.push(`/devices/${transaction.device.device_id}`);
+    router.push(`/devices/${transaction.device._id}`);
   }
 
   function handleOpenLayout() {
-    router.push(`/layouts/${transaction.layout.layout_id}`);
+    router.push(`/layouts/${transaction.layout._id}`);
   }
 
   function handleOpenProduct(product) {
-    router.push(`/products/${product.product_id}`);
+    router.push(`/products/${product._id}`);
   }
 
   function formatTableData() {
@@ -50,7 +50,7 @@ export default function Users() {
         product_id: i.product_id,
         product_variation_title: i.product_title + ' - ' + i.variation_title,
         qty_price: i.qty + ' x ' + i.price + '€',
-        line_total: i.qty * i.price + '€' + ' (' + i.vat_percentage * 100 + '% IVA)',
+        line_total: `${i.line_total}€ (${i.tax_percentage * 100}% IVA)`,
       });
     });
     // Return array
@@ -101,7 +101,7 @@ export default function Users() {
             </GridCell>
             <GridCell>
               <Label>NIF</Label>
-              <Value>{transaction.customer.tax_country + transaction.customer.tax_number}</Value>
+              <Value>{transaction.customer.tax_region + transaction.customer.tax_number}</Value>
             </GridCell>
             <GridCell>
               <Label>Email</Label>

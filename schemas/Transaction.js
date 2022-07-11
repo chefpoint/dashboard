@@ -69,7 +69,9 @@ export default yup.object({
         .number()
         .min(0, 'Tax Percentage must be greater than or equal to ${min}.')
         .max(1, 'Tax Percentage cannot be greater than ${max}.'),
-      tax_amount: yup.number().min(0, 'Tax Amount must be greater than or equal to ${min}.'),
+      line_base: yup.number().min(0, 'Line Amount must be greater than or equal to ${min}.'),
+      line_tax: yup.number().min(0, 'Line Tax must be greater than or equal to ${min}.'),
+      line_total: yup.number().min(0, 'Line Total must be greater than or equal to ${min}.'),
     })
   ),
 
@@ -85,6 +87,15 @@ export default yup.object({
     })
   ),
 
+  // CUSTOMER (Optional)
+  // The customer associated with this transaction.
+  customer: yup.object({
+    _id: yup.string().max(30, 'Customer ID must not be longer than ${max} characters.'),
+    first_name: yup.string().max(30, 'First Name must not be longer than ${max} characters.'),
+    last_name: yup.string().max(30, 'Last Name must not be longer than ${max} characters.'),
+    reference: yup.string().max(30, 'Reference must not be longer than ${max} characters.'),
+  }),
+
   // PAYMENT
   // How was this transaction paid, the amounts involved
   // and the associated tax details.
@@ -92,8 +103,8 @@ export default yup.object({
     is_paid: yup.boolean().required('"is_paid" is a required property.'),
     method_value: yup.string().max(30, 'Payment Method Value must not be longer than ${max} characters.'),
     method_label: yup.string().max(30, 'Payment Method Label must not be longer than ${max} characters.'),
-    amount_base: yup.number().min(0, 'Base Amount must be greater than or equal to ${min}.'),
-    amount_tax: yup.number().min(0, 'Tax Amount must be greater than or equal to ${min}.'),
+    amount_subtotal: yup.number().min(0, 'Subtotal Amount must be greater than or equal to ${min}.'),
+    amount_discounts: yup.number().min(0, 'Tax Amount must be greater than or equal to ${min}.'),
     amount_total: yup.number().min(0, 'Total Amount must be greater than or equal to ${min}.'),
     tax_region: yup
       .string()
@@ -103,17 +114,6 @@ export default yup.object({
       .string()
       .matches(/^$|^[0-9]{9}$/, 'Tax Number must be exactly 9 numbers (ex: 125 321 978).')
       .transform((value) => value.replace(/\s+/g, '.')),
-    contact_email: yup.string().email(),
-    send_invoice: yup.boolean().default(false),
-  }),
-
-  // CUSTOMER (Optional)
-  // The customer associated with this transaction.
-  customer: yup.object({
-    _id: yup.string().max(30, 'Customer ID must not be longer than ${max} characters.'),
-    first_name: yup.string().max(30, 'First Name must not be longer than ${max} characters.'),
-    last_name: yup.string().max(30, 'Last Name must not be longer than ${max} characters.'),
-    reference: yup.string().max(30, 'Reference must not be longer than ${max} characters.'),
   }),
 
   // CHECKING ACCOUNT (Optional)
@@ -130,7 +130,7 @@ export default yup.object({
   // This is optional because transactions paid by checking_account
   // are not invoiced immediately but monthly, usually.
   invoice: yup.object({
-    _id: yup.string().max(30, 'Invoice ID must not be longer than ${max} characters.'),
+    invoice_id: yup.string().max(30, 'Invoice ID must not be longer than ${max} characters.'),
     type: yup.string().max(30, 'Invoice Type must not be longer than ${max} characters.'),
     number: yup.string().max(30, 'Invoice Number must not be longer than ${max} characters.'),
     date: yup.string().max(30, 'Invoice Date must not be longer than ${max} characters.'),
@@ -139,6 +139,8 @@ export default yup.object({
     amount_gross: yup.string().max(30, 'Invoice Amount Gross must not be longer than ${max} characters.'),
     amount_net: yup.string().max(30, 'Invoice Amount Net must not be longer than ${max} characters.'),
     hash: yup.string().max(30, 'Invoice Hash must not be longer than ${max} characters.'),
+    contact_email: yup.string().email(),
+    send_invoice: yup.boolean().default(false),
   }),
 
   //

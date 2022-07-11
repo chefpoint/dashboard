@@ -113,7 +113,13 @@ module.exports =
           tax_percentage: {
             type: Number,
           },
-          tax_amount: {
+          line_base: {
+            type: Number,
+          },
+          line_tax: {
+            type: Number,
+          },
+          line_total: {
             type: Number,
           },
         },
@@ -145,48 +151,6 @@ module.exports =
         },
       ],
 
-      // PAYMENT
-      // How was this transaction paid, the amounts involved
-      // and the associated tax details.
-      payment: {
-        is_paid: {
-          type: Boolean,
-        },
-        method_value: {
-          type: String,
-          maxlength: 30,
-        },
-        method_label: {
-          type: String,
-          maxlength: 30,
-        },
-        amount_base: {
-          type: Number,
-        },
-        amount_tax: {
-          type: Number,
-        },
-        amount_total: {
-          type: Number,
-        },
-        tax_region: {
-          type: String,
-          maxlength: 2,
-        },
-        tax_number: {
-          type: String,
-          maxlength: 9,
-        },
-        contact_email: {
-          type: String,
-          maxlength: 50,
-        },
-        send_invoice: {
-          type: Boolean,
-          default: false,
-        },
-      },
-
       // CUSTOMER (Optional)
       // The customer associated with this transaction.
       customer: {
@@ -206,6 +170,48 @@ module.exports =
           type: String,
           maxlength: 30,
         },
+        tax_region: {
+          type: String,
+          maxlength: 2,
+        },
+        tax_number: {
+          type: String,
+          maxlength: 9,
+        },
+        contact_email: {
+          type: String,
+          maxlength: 50,
+        },
+        send_invoice: {
+          type: Boolean,
+          default: false,
+        },
+      },
+
+      // PAYMENT
+      // How was this transaction paid, the amounts involved
+      // and the associated tax details.
+      payment: {
+        is_paid: {
+          type: Boolean,
+        },
+        method_value: {
+          type: String,
+          maxlength: 30,
+        },
+        method_label: {
+          type: String,
+          maxlength: 30,
+        },
+        amount_subtotal: {
+          type: Number,
+        },
+        amount_discounts: {
+          type: Number,
+        },
+        amount_total: {
+          type: Number,
+        },
       },
 
       // CHECKING ACCOUNT (Optional)
@@ -224,6 +230,14 @@ module.exports =
           type: String,
           maxlength: 30,
         },
+        tax_region: {
+          type: String,
+          maxlength: 2,
+        },
+        tax_number: {
+          type: String,
+          maxlength: 9,
+        },
       },
 
       // INVOICE (Optional)
@@ -231,7 +245,7 @@ module.exports =
       // This is optional because transactions paid by checking_account
       // are not invoiced immediately but monthly, usually.
       invoice: {
-        _id: {
+        invoice_id: {
           type: String,
           maxlength: 30,
         },

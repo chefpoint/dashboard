@@ -33,7 +33,7 @@ export default function Users() {
     let totalSold = 0;
     transactions.forEach((element) => {
       element.items.forEach((item) => {
-        if (item.variation_id == '62cbf1eb58deead62da775e4') totalSold += 1;
+        if (item.variation_id == '62cbf1eb58deead62da775e5') totalSold += 1;
       });
     });
     setTotalPeixe(totalSold);
@@ -44,7 +44,7 @@ export default function Users() {
     let totalSold = 0;
     transactions.forEach((element) => {
       element.items.forEach((item) => {
-        if (item.variation_id == '62cbf1eb58deead62da775e4') totalSold += 1;
+        if (item.variation_id == '62cbf1eb58deead62da775e6') totalSold += 1;
       });
     });
     setTotalVegan(totalSold);

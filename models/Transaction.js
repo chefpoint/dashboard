@@ -182,9 +182,8 @@ module.exports =
           type: String,
           maxlength: 50,
         },
-        send_invoice: {
+        send_invoices: {
           type: Boolean,
-          default: false,
         },
       },
 

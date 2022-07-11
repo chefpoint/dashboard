@@ -17,6 +17,8 @@ export default function Users() {
 
   const { data: transaction } = useSWR(`/api/transactions/${_id}`);
 
+  console.log(transaction);
+
   function handleOpenInvoice() {
     window.open(`/api/transactions/${transaction._id}/invoice`, '_blank');
   }

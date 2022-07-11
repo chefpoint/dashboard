@@ -20,7 +20,7 @@ export default mongoose.models.Product ||
       },
       short_title: {
         type: String,
-        maxlength: 10,
+        maxlength: 15,
       },
       image: {
         type: String,
@@ -37,7 +37,7 @@ export default mongoose.models.Product ||
           title: {
             type: String,
             minlength: 2,
-            maxlength: 30,
+            maxlength: 50,
           },
           price: {
             type: Number,

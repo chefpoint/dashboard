@@ -15,7 +15,7 @@ export default z.object({
     .max(30, { message: 'Title must be no longer than 30 characters' }),
   short_title: z
     .string({ message: 'Short Title must be a string' })
-    .max(10, { message: 'Short Title must be no longer than 10 characters' })
+    .max(15, { message: 'Short Title must be no longer than 15 characters' })
     .optional(),
   image: z
     .string({ message: 'Image must be a string' })
@@ -31,7 +31,7 @@ export default z.object({
         title: z
           .string({ message: 'Variation Title must be a string' })
           .min(2, { message: 'Variation Title must be 2 or more characters long' })
-          .max(30, { message: 'Variation Title must be no longer than 30 characters' }),
+          .max(50, { message: 'Variation Title must be no longer than 50 characters' }),
         price: z
           .union([z.string(), z.number()])
           .refine((value) => Number(value) >= 0, { message: 'Price cannot be negative' })

@@ -40,7 +40,7 @@ export default function Users() {
   }
 
   function handleOpenProduct(product) {
-    router.push(`/products/${product._id}`);
+    router.push(`/products/${product.product_id}`);
   }
 
   function formatTableData() {

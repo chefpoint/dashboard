@@ -1,6 +1,6 @@
 {
   "name": "@chefpoint/dashboard",
-  "version": "2022.1.84",
+  "version": "2022.1.85",
   "private": true,
   "scripts": {
     "dev": "next dev",

@@ -38,7 +38,7 @@ export default requireAuth(async (req, res) => {
   // 4. Fetch Vendus API to get invoice PDF
   try {
     // 4.1. Get the PDF from Vendus API
-    const response = await fetch('https://www.vendus.pt/ws/v1.2/documents/' + transaction.invoice.invoice_id + '.pdf', {
+    const response = await fetch(`https://www.vendus.pt/ws/v1.2/documents/${transaction.invoice.invoice_id}.pdf`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -48,9 +48,9 @@ export default requireAuth(async (req, res) => {
     // 4.2. Set response header declaring the content as a PDF document
     await res.setHeader('Content-Type', 'application/pdf');
     // 4.3. Show the document in the browser (inline, not attachment) and the correct filename
-    await res.setHeader('Content-Disposition', 'inline; filename="' + transaction.invoice.number + '.pdf"');
+    await res.setHeader('Content-Disposition', `inline; filename="${transaction.invoice.number}.pdf"`);
     // 4.4. Send the document to the client
-    return await res.status(200).send(response.body);
+    return await res.status(200).json(response.body);
   } catch (err) {
     console.log(err);
     return await res.status(500).json({ message: err.message });

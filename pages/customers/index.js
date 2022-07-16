@@ -23,7 +23,7 @@ export default function Customers() {
       //
       const formated = {
         _id: c._id,
-        name: c.first_name + c.last_name,
+        name: c.first_name || c.last_name ? `${c.first_name} ${c.last_name}` : '-',
         tax_id: c.tax_region + c.tax_number,
         contact_email: c.contact_email,
       };

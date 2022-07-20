@@ -29,7 +29,7 @@ export default requireAuth(async (req, res) => {
   // 2. Try to fetch found transactions from the database
   try {
     if (!req.query.customer_id) return await res.status(200).send([]);
-    const foundTransactions = await Transaction.find({ 'customer.customer_id': req.query.customer_id });
+    const foundTransactions = await Transaction.find({ 'customer._id': req.query.customer_id });
     return await res.status(200).send(foundTransactions);
   } catch (err) {
     console.log(err);

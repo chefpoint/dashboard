@@ -67,7 +67,7 @@ export default function Customer() {
         _id: t._id,
         date_and_time: DateTime.fromISO(t.timestamp).toFormat('yyyy-mm-dd HH:mm'),
         location: t.location?.title,
-        total_amount: t.payment?.total_amount + '€',
+        total_amount: `${t.payment?.amount_total || '?'}€`,
       };
       // console.log(formated);
       arrayOfData.push(formated);

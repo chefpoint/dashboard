@@ -26,7 +26,7 @@ export default function Users() {
       //
       const formated = {
         _id: t._id,
-        date_and_time: new DateTime(t.createdAt).toLocaleString({
+        date_and_time: DateTime.fromJSDate(t.createdAt).toLocaleString({
           ...DateTime.DATE_SHORT,
           month: 'long',
           hour: 'numeric',

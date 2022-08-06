@@ -69,7 +69,7 @@ export default function Users() {
           <GridCell>
             <Label>Data e Hora</Label>
             <Value>
-              {DateTime.fromJSDate(transaction.createdAt).toLocaleString({
+              {DateTime.fromISO(transaction.createdAt).toLocaleString({
                 ...DateTime.DATE_SHORT,
                 month: 'long',
                 hour: 'numeric',

@@ -53,7 +53,7 @@ export default function CheckingAccount() {
       //
       const formated = {
         _id: t._id,
-        date_and_time: DateTime.fromJSDate(t.createdAt).toLocaleString({
+        date_and_time: DateTime.fromISO(t.createdAt).toLocaleString({
           ...DateTime.DATE_SHORT,
           month: 'long',
           hour: 'numeric',

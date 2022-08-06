@@ -13,6 +13,7 @@ import { GoSync } from 'react-icons/go';
 export default function DashboardPlanning() {
   //
 
+  //
   // Get days from API
   const { data: daysFromDB } = useSWR('/api/planning/*');
 
@@ -43,9 +44,18 @@ export default function DashboardPlanning() {
 
   async function getRecipes() {
     try {
-      const vegan = await apicbaseAPI('/products/recipes?page_size=200&custom_fields={"Tipo de Receita": ["Vegan", "Vegetariana"]}', 'GET');
-      const fish = await apicbaseAPI('/products/recipes?page_size=200&custom_fields={"Tipo de Receita": ["Peixe"]}', 'GET');
-      const meat = await apicbaseAPI('/products/recipes?page_size=200&custom_fields={"Tipo de Receita": ["Carne"]}', 'GET');
+      const vegan = await apicbaseAPI(
+        '/products/recipes?page_size=200&custom_fields={"Tipo de Receita": ["Vegan", "Vegetariana"]}',
+        'GET'
+      );
+      const fish = await apicbaseAPI(
+        '/products/recipes?page_size=200&custom_fields={"Tipo de Receita": ["Peixe"]}',
+        'GET'
+      );
+      const meat = await apicbaseAPI(
+        '/products/recipes?page_size=200&custom_fields={"Tipo de Receita": ["Carne"]}',
+        'GET'
+      );
 
       function formatRecipes(data) {
         return data.map((item) => ({
@@ -103,7 +113,9 @@ export default function DashboardPlanning() {
   // INIT AUTH
   async function initApicbaseAuth() {
     window.location.assign(
-      'https://app.apicbase.com/oauth/authorize/?response_type=code&client_id=' + process.env.NEXT_PUBLIC_APICBASE_CLIENT_ID + '&scope=library'
+      'https://app.apicbase.com/oauth/authorize/?response_type=code&client_id=' +
+        process.env.NEXT_PUBLIC_APICBASE_CLIENT_ID +
+        '&scope=library'
     );
   }
 
@@ -128,7 +140,12 @@ export default function DashboardPlanning() {
 
       <Sidebar title={'Planeamento'}>
         <div className={styles.toolbar}>
-          <DateRangePicker amountOfMonths={2} placeholder='Pick dates range' value={dateRangeValue} onChange={setDateRangeValue} />
+          <DateRangePicker
+            amountOfMonths={2}
+            placeholder='Pick dates range'
+            value={dateRangeValue}
+            onChange={setDateRangeValue}
+          />
           <Button onClick={() => setDateRangeValue(getRangeCurrentMonth)}>Current Month</Button>
           <Button onClick={() => setDateRangeValue(getRangeNextMonth)}>Next Month</Button>
           <Button disabled={isRefreshhing || isLoading} onClick={() => refreshRecipes()}>

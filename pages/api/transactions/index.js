@@ -28,7 +28,7 @@ export default requireAuth(async (req, res) => {
 
   // 2. Try to fetch all transactions from the database
   try {
-    const allTransactions = await Transaction.find({}).limit(1000);
+    const allTransactions = await Transaction.find({}).sort({ createdAt: -1 }).limit(1000);
     await res.status(200).send(allTransactions);
     return;
   } catch (err) {

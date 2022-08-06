@@ -17,8 +17,6 @@ export default function Users() {
 
   const { data: transaction } = useSWR(`/api/transactions/${_id}`);
 
-  console.log(transaction);
-
   function handleOpenInvoice() {
     window.open(`/api/transactions/${transaction._id}/invoice`, '_blank');
   }
@@ -71,7 +69,7 @@ export default function Users() {
           <GridCell>
             <Label>Data e Hora</Label>
             <Value>
-              {DateTime.fromISO(transaction.timestamp).toLocaleString({
+              {new DateTime(transaction.createdAt).toLocaleString({
                 ...DateTime.DATE_SHORT,
                 month: 'long',
                 hour: 'numeric',
@@ -139,7 +137,7 @@ export default function Users() {
       <Table
         columns={[
           { label: 'Produto', key: 'product_variation_title' },
-          { label: 'Quantidade x Preço', key: 'qty_price' },
+          { label: 'Qtd. x Preço', key: 'qty_price' },
           { label: 'Total de Linha', key: 'line_total' },
         ]}
         data={formatTableData()}

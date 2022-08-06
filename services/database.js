@@ -6,25 +6,32 @@
 /* IMPORTS */
 import mongoose from 'mongoose';
 
-module.exports.connect = async function () {
+async function connect() {
   await mongoose
     .connect(process.env.MONGODB_CONNECTION_STRING)
-    // .then(() => console.log('Connected to MongoDB.'))
+    // .then(() => console.log('Connected.'))
     .catch((error) => {
       console.log('Connection to MongoDB failed.');
       console.log('At database.js > mongoose.connect()');
       console.log(error);
       process.exit();
     });
-};
+}
 
-module.exports.disconnect = async function () {
+async function disconnect() {
   await mongoose
     .disconnect()
-    .then(() => console.log('Disconnected from MongoDB.'))
+    // .then(() => console.log('Disconnected from MongoDB.'))
     .catch((error) => {
       console.log('Failed closing connection to MongoDB.');
       console.log('At database.js > mongoose.disconnect()');
       console.log(error);
     });
+}
+
+const database = {
+  connect,
+  disconnect,
 };
+
+export default database;

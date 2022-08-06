@@ -19,14 +19,14 @@ export default function Users() {
     // Transform data for table
     if (!transactions) return;
     // Sort array
-    transactions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    transactions.sort((a, b) => b.createdAt - a.createdAt);
     // Transform data for table
     const arrayOfData = [];
     transactions.forEach((t) => {
       //
       const formated = {
         _id: t._id,
-        date_and_time: DateTime.fromISO(t.timestamp).toLocaleString({
+        date_and_time: new DateTime(t.createdAt).toLocaleString({
           ...DateTime.DATE_SHORT,
           month: 'long',
           hour: 'numeric',

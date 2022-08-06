@@ -61,7 +61,7 @@ export default function Users() {
     <PageContainer title={'Transações › Detalhe'}>
       <Toolbar>
         {transaction.customer && <Button onClick={handleOpenCustomer}>Abrir Cliente</Button>}
-        <Button onClick={handleOpenInvoice}>Abrir Fatura</Button>
+        {transaction.invoice && <Button onClick={handleOpenInvoice}>Abrir Fatura</Button>}
       </Toolbar>
 
       <Group title={'Informações Gerais'}>

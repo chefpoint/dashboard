@@ -26,7 +26,7 @@ export default requireAuth(async (req, res) => {
 
   // 2. Try to fetch all customers from the database
   try {
-    const allCustomers = await Model.find({});
+    const allCustomers = await Model.find({}).limit(1000);
     return await res.status(200).send(allCustomers);
   } catch (err) {
     console.log(err);

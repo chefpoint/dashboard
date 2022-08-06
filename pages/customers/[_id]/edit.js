@@ -41,7 +41,6 @@ export default function CreateCustomer() {
 
   useEffect(() => {
     if (!hasUpdatedFields.current && customer) {
-      console.log(customer);
       form.setValues({
         first_name: customer.first_name || '',
         last_name: customer.last_name || '',

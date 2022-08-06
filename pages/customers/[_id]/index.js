@@ -20,7 +20,7 @@ export default function Customer() {
   const { _id } = router.query;
 
   const { data: customer } = useSWR(`/api/customers/${_id}`);
-  const { data: transactions } = useSWR(`/api/transactions/filter/customer/${_id}`);
+  const { data: transactions } = useSWR(`/api/transactions/filter?customer_id=${_id}`);
 
   async function handleEditCustomer() {
     router.push(`/customers/${_id}/edit`);
@@ -40,10 +40,10 @@ export default function Customer() {
 
   async function handleDeleteCustomer() {
     try {
-      notify(_id, 'loading', 'A eliminar produto...');
+      notify(_id, 'loading', 'A eliminar cliente...');
       await API({ service: 'customers', resourceId: _id, operation: 'delete', method: 'DELETE' });
       router.push('/customers');
-      notify(_id, 'success', 'Produto eliminado!');
+      notify(_id, 'success', 'Cliente eliminado!');
     } catch (err) {
       console.log(err);
       notify(_id, 'error', 'Ocorreu um erro.');
@@ -51,21 +51,21 @@ export default function Customer() {
   }
 
   function handleTransactionRowClick(row) {
-    router.push('/transactions/' + row._id);
+    router.push(`/transactions/${row._id}`);
   }
 
   function formatTableData() {
     // Transform data for table
     if (!transactions) return;
     // Sort array
-    transactions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    transactions.sort((a, b) => b.createdAt - a.createdAt);
     // Transform data for table
     const arrayOfData = [];
     transactions.forEach((t) => {
       //
       const formated = {
         _id: t._id,
-        date_and_time: DateTime.fromISO(t.timestamp).toLocaleString({
+        date_and_time: new DateTime(t.createdAt).toLocaleString({
           ...DateTime.DATE_SHORT,
           month: 'long',
           hour: 'numeric',
@@ -74,7 +74,6 @@ export default function Customer() {
         location: t.location?.title,
         total_amount: `${t.payment?.amount_total || '?'}€`,
       };
-      // console.log(formated);
       arrayOfData.push(formated);
     });
     // Return array

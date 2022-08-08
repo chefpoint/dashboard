@@ -10,7 +10,7 @@ import notify from '../../../services/notify';
 import { Grid } from '../../../components/Grid';
 import { useState } from 'react';
 import { IoSave, IoClose } from 'react-icons/io5';
-import { useForm, formList, zodResolver } from '@mantine/form';
+import { useForm, zodResolver } from '@mantine/form';
 import { randomId } from '@mantine/hooks';
 import Schema from '../../../schemas/Product';
 import { useEffect, useRef } from 'react';
@@ -35,7 +35,7 @@ export default function EditProduct() {
       short_title: '',
       image: '',
       description: '',
-      variations: formList([{ title: '', price: 0, tax_id: null, key: randomId() }]),
+      variations: [{ title: '', price: 0, tax_id: null, key: randomId() }],
     },
   });
 
@@ -73,7 +73,7 @@ export default function EditProduct() {
         short_title: product.short_title || '',
         image: product.image || '',
         description: product.description || '',
-        variations: formList(formatedVariations),
+        variations: formatedVariations,
       });
 
       hasUpdatedFields.current = true;
@@ -109,7 +109,7 @@ export default function EditProduct() {
                 <TextInput
                   label={'Variation Title'}
                   placeholder={'Normal'}
-                  {...form.getListInputProps('variations', index, 'title')}
+                  {...form.getInputProps(`variations.${index}.title`)}
                 />
                 <NumberInput
                   icon={<TbCurrencyEuro />}
@@ -117,7 +117,7 @@ export default function EditProduct() {
                   placeholder={'2.99'}
                   precision={2}
                   hideControls
-                  {...form.getListInputProps('variations', index, 'price')}
+                  {...form.getInputProps(`variations.${index}.price`)}
                 />
                 <Select
                   label='Tax Class'
@@ -127,7 +127,7 @@ export default function EditProduct() {
                     { value: 'INT', label: 'Intermédia (13%)' },
                     { value: 'RED', label: 'Reduzida (6%)' },
                   ]}
-                  {...form.getListInputProps('variations', index, 'tax_id')}
+                  {...form.getInputProps(`variations.${index}.tax_id`)}
                 />
               </Grid>
               <Button
@@ -141,7 +141,7 @@ export default function EditProduct() {
 
         <Button
           css={{ marginTop: '$md' }}
-          onClick={() => form.addListItem('variations', { title: '', price: 0, tax_id: '', key: randomId() })}
+          onClick={() => form.insertListItem('variations', { title: '', price: 0, tax_id: '', key: randomId() })}
         >
           Add Variation
         </Button>

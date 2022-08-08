@@ -5,7 +5,7 @@ import Toolbar from '../../components/Toolbar';
 import Group from '../../components/Group';
 import { Grid } from '../../components/Grid';
 import { IoSave, IoClose } from 'react-icons/io5';
-import { useForm, formList, zodResolver } from '@mantine/form';
+import { useForm, zodResolver } from '@mantine/form';
 import { randomId } from '@mantine/hooks';
 import API from '../../services/API';
 import notify from '../../services/notify';
@@ -28,7 +28,7 @@ export default function CreateProduct() {
       short_title: '',
       image: '',
       description: '',
-      variations: formList([{ title: '', price: 0, tax_id: null, key: randomId() }]),
+      variations: [{ title: '', price: 0, tax_id: null, key: randomId() }],
     },
   });
 
@@ -80,7 +80,7 @@ export default function CreateProduct() {
                 <TextInput
                   label={'Variation Title'}
                   placeholder={'Normal'}
-                  {...form.getListInputProps('variations', index, 'title')}
+                  {...form.getInputProps(`variations.${index}.title`)}
                 />
                 <NumberInput
                   icon={<TbCurrencyEuro />}
@@ -88,7 +88,7 @@ export default function CreateProduct() {
                   placeholder={'2.99'}
                   precision={2}
                   hideControls
-                  {...form.getListInputProps('variations', index, 'price')}
+                  {...form.getInputProps(`variations.${index}.price`)}
                 />
                 <Select
                   label='Tax Class'
@@ -98,7 +98,7 @@ export default function CreateProduct() {
                     { value: 'INT', label: 'Intermédia (13%)' },
                     { value: 'RED', label: 'Reduzida (6%)' },
                   ]}
-                  {...form.getListInputProps('variations', index, 'tax_id')}
+                  {...form.getInputProps(`variations.${index}.tax_id`)}
                 />
               </Grid>
               <Button
@@ -112,7 +112,7 @@ export default function CreateProduct() {
 
         <Button
           color={'primary'}
-          onClick={() => form.addListItem('variations', { title: '', price: 0, tax_id: '', key: randomId() })}
+          onClick={() => form.insertListItem('variations', { title: '', price: 0, tax_id: '', key: randomId() })}
         >
           Add Variation
         </Button>

@@ -4,6 +4,7 @@ import Toolbar from '../../components/Toolbar';
 import Button from '../../components/Button';
 import { Grid, GridCell, Label, Value } from '../../components/Grid';
 import { DateRangePicker } from '@mantine/dates';
+import StatCard from '../../components/StatCard';
 
 import { useState, useEffect } from 'react';
 import useSWR from 'swr';
@@ -18,6 +19,8 @@ export default function Reports() {
   const [selectedLocation, setSelectedLocation] = useState();
 
   // const [totalRevenue, setTotalRevenue] = useState(0);
+
+  const { data: availableLocations } = useSWR('/api/locations/');
 
   const queryString =
     (selectedLocation ? `&location_id=${selectedLocation}` : '') +
@@ -35,8 +38,6 @@ export default function Reports() {
   const { data: salad } = useSWR(`/api/reports/variation_count?${queryString}&variation_id=62cbf1fa58deead62da775fd`);
   const { data: bread } = useSWR(`/api/reports/variation_count?${queryString}&variation_id=62cbf1f358deead62da775f3`);
 
-  const { data: availableLocations } = useSWR('/api/locations/');
-
   function handleChangeDate(selection) {
     const utcStartDate = selection[0]
       ? new Date(selection[0].getTime() - selection[0].getTimezoneOffset() * 60000)
@@ -50,7 +51,7 @@ export default function Reports() {
 
   function formatAvailableLocations() {
     if (!availableLocations) return [];
-    const formatedLocations = [];
+    const formatedLocations = [{ label: 'All Locations', value: null }];
     availableLocations.forEach((location) => {
       formatedLocations.push({ label: location.title, value: location._id });
     });
@@ -61,12 +62,16 @@ export default function Reports() {
     <PageContainer title={'Reports'}>
       <LoadingOverlay visible={isLoading} />
       <Toolbar>
-        <DateRangePicker placeholder='Pick dates range' value={selectedDate} onChange={handleChangeDate} />
+        <DateRangePicker
+          placeholder='Pick dates range'
+          value={selectedDate}
+          maxDate={new Date()}
+          onChange={handleChangeDate}
+        />
         <Select
-          placeholder='Location'
+          placeholder='Locations'
           data={formatAvailableLocations()}
           value={selectedLocation}
-          clearable
           onChange={setSelectedLocation}
         />
       </Toolbar>
@@ -84,42 +89,19 @@ export default function Reports() {
         </Grid>
       </Group> */}
 
-      <Group title={'Produtos Comparticipados'}>
-        <Grid>
-          <GridCell>
-            <Label>Prato Vegan</Label>
-            <Value>{vegan || 0}</Value>
-          </GridCell>
-          <GridCell>
-            <Label>Prato de Peixe</Label>
-            <Value>{fish || 0}</Value>
-          </GridCell>
-          <GridCell>
-            <Label>Prato de Carne</Label>
-            <Value>{meat || 0}</Value>
-          </GridCell>
-        </Grid>
-        <Grid>
-          <GridCell>
-            <Label>Sopa</Label>
-            <Value>{soup || 0}</Value>
-          </GridCell>
-          <GridCell>
-            <Label>Fruta</Label>
-            <Value>{fruit || 0}</Value>
-          </GridCell>
-          <GridCell>
-            <Label>Pão</Label>
-            <Value>{bread || 0}</Value>
-          </GridCell>
-          <GridCell>
-            <Label>Salada</Label>
-            <Value>{salad || 0}</Value>
-          </GridCell>
-        </Grid>
-      </Group>
-
-      <Divider my='xs' label='' labelPosition='center' />
+      <Divider my='xs' labelPosition='center' />
+      <Grid>
+        <StatCard title={'Prato Vegan'} value={vegan} />
+        <StatCard title={'Prato de Peixe'} value={fish} />
+        <StatCard title={'Prato de Carne'} value={meat} />
+      </Grid>
+      <Grid>
+        <StatCard title={'Sopa'} value={soup} />
+        <StatCard title={'Fruta'} value={fruit} />
+        <StatCard title={'Pão'} value={bread} />
+        <StatCard title={'Salada'} value={salad} />
+      </Grid>
+      <Divider my='xs' labelPosition='center' />
     </PageContainer>
   );
 }

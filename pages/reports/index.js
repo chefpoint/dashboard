@@ -88,15 +88,15 @@ export default function Reports() {
         <Grid>
           <GridCell>
             <Label>Prato Vegan</Label>
-            <Value>{'524' || '• • •'}</Value>
+            <Value>{vegan || 0}</Value>
           </GridCell>
           <GridCell>
             <Label>Prato de Peixe</Label>
-            <Value>{'524,26€' || '• • •'}</Value>
+            <Value>{fish || 0}</Value>
           </GridCell>
           <GridCell>
             <Label>Prato de Carne</Label>
-            <Value>{'524,26€' || '• • •'}</Value>
+            <Value>{meat || 0}</Value>
           </GridCell>
         </Grid>
         <Grid>

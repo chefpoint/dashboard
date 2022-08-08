@@ -70,7 +70,7 @@ export default function Navigation({ children }) {
         <NavContainer>
           <NavigationButton icon={<IoStorefront />} label={'Home'} destination={'/'} />
           <NavigationButton disabled icon={<IoCalendar />} label={'Planning'} destination={'/planning'} />
-          <NavigationButton disabled icon={<IoBarChart />} label={'Reports'} destination={'/reports'} />
+          <NavigationButton icon={<IoBarChart />} label={'Reports'} destination={'/reports'} />
           <NavigationButton icon={<IoReceipt />} label={'Transactions'} destination={'/transactions'} />
           <NavigationButton icon={<IoPricetags />} label={'Products'} destination={'/products'} />
           <NavigationButton icon={<IoPeople />} label={'Customers'} destination={'/customers'} />

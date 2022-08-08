@@ -101,16 +101,16 @@ export default function Reports() {
         </Grid>
         <Grid>
           <GridCell>
+            <Label>Sopa</Label>
+            <Value>{soup || 0}</Value>
+          </GridCell>
+          <GridCell>
             <Label>Fruta</Label>
             <Value>{fruit || 0}</Value>
           </GridCell>
           <GridCell>
             <Label>Pão</Label>
             <Value>{bread || 0}</Value>
-          </GridCell>
-          <GridCell>
-            <Label>Sopa</Label>
-            <Value>{soup || 0}</Value>
           </GridCell>
           <GridCell>
             <Label>Salada</Label>

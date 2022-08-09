@@ -1,6 +1,4 @@
 import { styled } from '@stitches/react';
-import { GoX } from 'react-icons/go';
-import { useContext } from 'react';
 import { CopyButton, Loader } from '@mantine/core';
 
 /* * */

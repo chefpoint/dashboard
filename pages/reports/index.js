@@ -26,7 +26,7 @@ export default function Reports() {
     (selectedDate[0] ? `&date_start=${selectedDate[0]?.toISOString()}` : '') +
     (selectedDate[1] ? `&date_end=${selectedDate[1]?.toISOString()}` : '');
 
-  // const { data: totalRevenue } = useSWR(`/api/reports/total_revenue?${queryString}`);
+  const { data: totalRevenue } = useSWR(`/api/reports/total_revenue?${queryString}`);
 
   const { data: vegan } = useSWR(`/api/reports/variation_count?${queryString}&variation_id=62cbf1eb58deead62da775e6`);
   const { data: fish } = useSWR(`/api/reports/variation_count?${queryString}&variation_id=62cbf1eb58deead62da775e5`);
@@ -75,18 +75,12 @@ export default function Reports() {
         />
       </Toolbar>
 
-      {/* <Group title={'Visão Geral'}>
-        <Grid>
-          <GridCell>
-            <Label>Faturação c/ IVA</Label>
-            <Value>{`${totalRevenue?.totalWithTax.toFixed(2) || '0.00'}€`}</Value>
-          </GridCell>
-          <GridCell>
-            <Label>Faturação s/ IVA</Label>
-            <Value>{'524,26€' || '• • •'}</Value>
-          </GridCell>
-        </Grid>
-      </Group> */}
+      <Grid>
+        <StatCard
+          title={'Faturação s/ IVA'}
+          value={totalRevenue?.totalWithoutTax ? `${totalRevenue?.totalWithoutTax?.toFixed(2)}€` : null}
+        />
+      </Grid>
 
       <Divider my='xs' labelPosition='center' />
       <Grid>

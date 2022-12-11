@@ -5,4 +5,4 @@
 
 This is the control panel for all of Chef Point's digital infrastructure. The goal is to have one centralized place where it is possible to customize
 the POS, manage customers, analyze sale reports, and manage users. In the medium-term it will be possible to also analyze feedback and plan the
-monthly menu.
+monthly menu. -

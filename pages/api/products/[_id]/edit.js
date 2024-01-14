@@ -47,7 +47,6 @@ export default requireAuth(async (req, res) => {
 
   // 4. Try to update the correct Product
   try {
-    console.log(req.body);
     const editedProduct = await Model.findOneAndUpdate({ _id: req.query._id }, req.body, { new: true }); // Return the edited document
     if (!editedProduct) return await res.status(404).json({ message: `Product with _id: ${req.query._id} not found.` });
     return await res.status(200).json(editedProduct);

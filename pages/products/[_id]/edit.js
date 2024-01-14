@@ -35,7 +35,7 @@ export default function EditProduct() {
       short_title: '',
       image: '',
       description: '',
-      variations: [{ title: '', price: 0, tax_id: null, key: randomId() }],
+      variations: [{ title: '', price: 0, tax_id: null, _id: '' }],
     },
   });
 
@@ -47,7 +47,7 @@ export default function EditProduct() {
     try {
       notify(_id, 'loading', 'A guardar alterações...');
       await API({ service: 'products', resourceId: _id, operation: 'edit', method: 'PUT', body: values });
-      mutate({ ...product, ...values });
+      mutate();
       router.push(`/products/${_id}`);
       notify(_id, 'success', 'Alterações guardadas!');
     } catch (err) {
@@ -58,24 +58,7 @@ export default function EditProduct() {
 
   useEffect(() => {
     if (!hasUpdatedFields.current && product) {
-      let formatedVariations = [];
-      for (const [index, variation] of product.variations.entries()) {
-        formatedVariations.push({
-          title: variation.title,
-          price: variation.price,
-          tax_id: variation.tax_id,
-          key: index,
-        });
-      }
-
-      form.setValues({
-        title: product.title || '',
-        short_title: product.short_title || '',
-        image: product.image || '',
-        description: product.description || '',
-        variations: formatedVariations,
-      });
-
+      form.setValues(product);
       hasUpdatedFields.current = true;
     }
   }, [product, form]);
@@ -95,33 +78,18 @@ export default function EditProduct() {
             <TextInput label={'Short Title'} placeholder={'Choco Bar'} {...form.getInputProps('short_title')} />
             <TextInput label={'Image Key'} placeholder={'filename.jpg'} {...form.getInputProps('image')} />
           </Grid>
-          <Textarea
-            label='Description'
-            placeholder={'How should this product be presented'}
-            {...form.getInputProps('description')}
-          />
+          <Textarea label="Description" placeholder={'How should this product be presented'} {...form.getInputProps('description')} />
         </Group>
 
         <Group title={'Variations'}>
           {form.values.variations.map((item, index) => (
-            <Group key={item.key}>
+            <Group key={item._id}>
               <Grid>
-                <TextInput
-                  label={'Variation Title'}
-                  placeholder={'Normal'}
-                  {...form.getInputProps(`variations.${index}.title`)}
-                />
-                <NumberInput
-                  icon={<TbCurrencyEuro />}
-                  label={'Price'}
-                  placeholder={'2.99'}
-                  precision={2}
-                  hideControls
-                  {...form.getInputProps(`variations.${index}.price`)}
-                />
+                <TextInput label={'Variation Title'} placeholder={'Normal'} {...form.getInputProps(`variations.${index}.title`)} />
+                <NumberInput icon={<TbCurrencyEuro />} label={'Price'} placeholder={'2.99'} precision={2} hideControls {...form.getInputProps(`variations.${index}.price`)} />
                 <Select
-                  label='Tax Class'
-                  placeholder='Pick one'
+                  label="Tax Class"
+                  placeholder="Pick one"
                   data={[
                     { value: 'NOR', label: 'Normal (23%)' },
                     { value: 'INT', label: 'Intermédia (13%)' },
@@ -129,20 +97,14 @@ export default function EditProduct() {
                   ]}
                   {...form.getInputProps(`variations.${index}.tax_id`)}
                 />
+                <TextInput label={'Variation ID'} placeholder={'Normal'} {...form.getInputProps(`variations.${index}._id`)} />
               </Grid>
-              <Button
-                icon={<IoClose />}
-                label={'Remove Variation'}
-                onClick={() => form.removeListItem('variations', index)}
-              />
+              <Button icon={<IoClose />} label={'Remove Variation'} onClick={() => form.removeListItem('variations', index)} />
             </Group>
           ))}
         </Group>
 
-        <Button
-          css={{ marginTop: '$md' }}
-          onClick={() => form.insertListItem('variations', { title: '', price: 0, tax_id: '', key: randomId() })}
-        >
+        <Button css={{ marginTop: '$md' }} onClick={() => form.insertListItem('variations', { title: '', price: 0, tax_id: '', key: randomId() })}>
           Add Variation
         </Button>
       </PageContainer>

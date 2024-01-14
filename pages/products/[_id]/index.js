@@ -52,20 +52,7 @@ export default function ViewProduct() {
       <Toolbar>
         <Button icon={<IoPencil />} label={'Edit'} onClick={handleEditProduct} />
         <Button icon={<IoDuplicate />} label={'Duplicate'} onClick={handleDuplicateProduct} />
-        <Button
-          icon={<IoTrash />}
-          label={'Delete'}
-          color={'danger'}
-          alert={
-            <Alert
-              color={'danger'}
-              title={'Delete Product'}
-              subtitle={'Are you sure you want to delete this product?'}
-              message={'This action is irreversible and immediate.'}
-              onConfirm={handleDeleteProduct}
-            />
-          }
-        />
+        <Button icon={<IoTrash />} label={'Delete'} color={'danger'} alert={<Alert color={'danger'} title={'Delete Product'} subtitle={'Are you sure you want to delete this product?'} message={'This action is irreversible and immediate.'} onConfirm={handleDeleteProduct} />} />
       </Toolbar>
 
       <Group title={'About this Product'}>
@@ -106,6 +93,10 @@ export default function ViewProduct() {
               <GridCell>
                 <Label>Tax ID</Label>
                 <Value>{variation.tax_id || '-'}</Value>
+              </GridCell>
+              <GridCell>
+                <Label>Variation ID</Label>
+                <Value>{variation._id || '-'}</Value>
               </GridCell>
             </Grid>
           </Group>

@@ -29,7 +29,7 @@ export default requireAuth(async (req, res) => {
   // 2. Try to fetch all Discounts from the database
   try {
     const allDiscounts = await Discount.find({});
-    await res.status(200).send(allDiscounts);
+    await res.status(200).send(allDiscounts.sort((a, b) => a.title - b.title));
     return;
   } catch (err) {
     console.log(err);

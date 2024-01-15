@@ -15,7 +15,7 @@ module.exports =
     new mongoose.Schema({
       title: {
         type: String,
-        maxlength: 30,
+        maxlength: 100,
       },
       subtitle: {
         type: String,
@@ -23,7 +23,7 @@ module.exports =
       },
       description: {
         type: String,
-        maxlength: 50,
+        maxlength: 500,
       },
       rules: [[{ type: mongoose.Schema.Types.ObjectId, ref: 'Product.variations' }]],
       amount: {

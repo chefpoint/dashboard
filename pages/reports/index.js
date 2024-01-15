@@ -21,16 +21,13 @@ export default function Reports() {
 
   const { data: availableLocations } = useSWR('/api/locations/');
 
-  const queryString =
-    (selectedLocation ? `&location_id=${selectedLocation}` : '') +
-    (selectedDate[0] ? `&date_start=${selectedDate[0]?.toISOString()}` : '') +
-    (selectedDate[1] ? `&date_end=${selectedDate[1]?.toISOString()}` : '');
+  const queryString = (selectedLocation ? `&location_id=${selectedLocation}` : '') + (selectedDate[0] ? `&date_start=${selectedDate[0]?.toISOString()}` : '') + (selectedDate[1] ? `&date_end=${selectedDate[1]?.toISOString()}` : '');
 
   const { data: totalRevenue } = useSWR(`/api/reports/total_revenue?${queryString}`);
 
-  const { data: vegan } = useSWR(`/api/reports/variation_count?${queryString}&variation_id=62cbf1eb58deead62da775e6`);
-  const { data: fish } = useSWR(`/api/reports/variation_count?${queryString}&variation_id=62cbf1eb58deead62da775e5`);
-  const { data: meat } = useSWR(`/api/reports/variation_count?${queryString}&variation_id=62cbf1eb58deead62da775e4`);
+  const { data: vegan } = useSWR(`/api/reports/variation_count?${queryString}&variation_id=62cbf1eb58deead62da775e6`); // 659b46e7d16a6bbc7d415d58
+  const { data: fish } = useSWR(`/api/reports/variation_count?${queryString}&variation_id=62cbf1eb58deead62da775e5`); // 659b46e7d16a6bbc7d415d59
+  const { data: meat } = useSWR(`/api/reports/variation_count?${queryString}&variation_id=62cbf1eb58deead62da775e4`); // 659b46e7d16a6bbc7d415d5a
 
   const { data: soup } = useSWR(`/api/reports/variation_count?${queryString}&variation_id=62cbf21058deead62da77616`);
   const { data: fruit } = useSWR(`/api/reports/variation_count?${queryString}&variation_id=62d0280e230ccd07b06f2c88`);
@@ -38,12 +35,8 @@ export default function Reports() {
   const { data: bread } = useSWR(`/api/reports/variation_count?${queryString}&variation_id=62cbf1f358deead62da775f3`);
 
   function handleChangeDate(selection) {
-    const utcStartDate = selection[0]
-      ? new Date(selection[0].getTime() - selection[0].getTimezoneOffset() * 60000)
-      : null;
-    const utcEndDate = selection[1]
-      ? new Date(selection[1].getTime() - selection[1].getTimezoneOffset() * 60000)
-      : null;
+    const utcStartDate = selection[0] ? new Date(selection[0].getTime() - selection[0].getTimezoneOffset() * 60000) : null;
+    const utcEndDate = selection[1] ? new Date(selection[1].getTime() - selection[1].getTimezoneOffset() * 60000) : null;
     console.log(selection);
     setSelectedDate([utcStartDate, utcEndDate]);
   }
@@ -61,28 +54,15 @@ export default function Reports() {
     <PageContainer title={'Reports'}>
       <LoadingOverlay visible={isLoading} />
       <Toolbar>
-        <DateRangePicker
-          placeholder='Pick dates range'
-          value={selectedDate}
-          maxDate={new Date()}
-          onChange={handleChangeDate}
-        />
-        <Select
-          placeholder='Locations'
-          data={formatAvailableLocations()}
-          value={selectedLocation}
-          onChange={setSelectedLocation}
-        />
+        <DateRangePicker placeholder="Pick dates range" value={selectedDate} maxDate={new Date()} onChange={handleChangeDate} />
+        <Select placeholder="Locations" data={formatAvailableLocations()} value={selectedLocation} onChange={setSelectedLocation} />
       </Toolbar>
 
       <Grid>
-        <StatCard
-          title={'Faturação s/ IVA'}
-          value={totalRevenue?.totalWithoutTax ? `${totalRevenue?.totalWithoutTax?.toFixed(2)}€` : null}
-        />
+        <StatCard title={'Faturação s/ IVA'} value={totalRevenue?.totalWithoutTax ? `${totalRevenue?.totalWithoutTax?.toFixed(2)}€` : null} />
       </Grid>
 
-      <Divider my='xs' labelPosition='center' />
+      <Divider my="xs" labelPosition="center" />
       <Grid>
         <StatCard title={'Prato Vegan'} value={vegan} />
         <StatCard title={'Prato de Peixe'} value={fish} />
@@ -94,7 +74,7 @@ export default function Reports() {
         <StatCard title={'Pão'} value={bread} />
         <StatCard title={'Salada'} value={salad} />
       </Grid>
-      <Divider my='xs' labelPosition='center' />
+      <Divider my="xs" labelPosition="center" />
     </PageContainer>
   );
 }
